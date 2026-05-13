@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Liorajewelry - Trang Sức Bạc Cao Cấp Dành Cho Giới Trẻ – Liorajewelry.shop</title>
+<meta name="description" content="Liorajewelry cung cấp các sản phẩm trang sức bạc, đá quý, kim cương cao cấp như dây chuyền, lắc tay, nhẫn đôi, nhẫn đơn, bông tai, khuyên tai dành cho giới trẻ." />
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand:    { 50:'#eef1f8', 100:'#dde3ef', 200:'#b9c4dc', 300:'#8da0c4', 400:'#5a72a8', 500:'#2a3f7a', 600:'#1f2f5e', 700:'#172347', 800:'#101938', 900:'#0a1128' },
+          ink:      '#1f1f1f',
+          ink2:     '#4a4a4a',
+          mute:     '#8a8a8a',
+          rule:     '#ececec',
+          soft:     '#fbfafa',
+        },
+        fontFamily: {
+          sans: ['"Be Vietnam Pro"','system-ui','sans-serif'],
+        },
+        boxShadow: {
+          card: '0 1px 2px rgba(0,0,0,0.04), 0 4px 18px -8px rgba(0,0,0,0.08)',
+          cardHover: '0 8px 30px -8px rgba(42,63,122,0.25)',
+          float: '0 6px 22px rgba(42,63,122,0.35)',
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html, body { font-family: "Be Vietnam Pro", system-ui, sans-serif; color: #1f1f1f; background: #ffffff; }
+
+  /* Generic */
+  .container-x { max-width: 1280px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+  @media (min-width: 768px) { .container-x { padding-left: 24px; padding-right: 24px; } }
+
+  /* Photo placeholder for products — clean white with subtle gradient + silhouette */
+  .photo {
+    position: relative; overflow: hidden; background: #f7f5f6;
+    background-image: radial-gradient(120% 80% at 50% 30%, #ffffff, var(--p-tint, #fef2f5) 75%, var(--p-tint2, #fde7ee));
+  }
+  .photo .sil {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--p-accent, #f9a8c0); opacity: 0.85;
+  }
+  .photo .sil svg { width: 55%; height: 55%; filter: drop-shadow(0 6px 10px rgba(244,48,98,0.12)); }
+  .photo .ribbon {
+    position: absolute; top: 10px; left: 10px;
+    background: #f43062; color: white; font-size: 10px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px; letter-spacing: 0.04em;
+  }
+  .photo .ribbon-out {
+    position: absolute; top: 10px; right: 10px;
+    background: #1f1f1f; color: white; font-size: 10px; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+  }
+
+  /* Product card */
+  .pcard { background: #fff; border-radius: 14px; overflow: hidden; transition: transform 0.35s cubic-bezier(.2,.6,.2,1), box-shadow 0.35s ease, border-color 0.35s ease; border: 1px solid transparent; position: relative; }
+  .pcard:hover { box-shadow: 0 14px 38px -12px rgba(244,48,98,0.28); border-color: #ffe0e7; transform: translateY(-4px); }
+  .pcard .photo { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); will-change: transform; }
+  .pcard:hover .photo { transform: scale(1.06); }
+  .pcard .photo .sil { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); }
+  .pcard:hover .photo .sil { transform: scale(1.04) rotate(-2deg); }
+  .pcard .buy-cta {
+    position: absolute; left: 50%; bottom: -44px; transform: translateX(-50%);
+    background: #f43062; color: #fff; padding: 9px 20px; border-radius: 999px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+    transition: bottom 0.35s cubic-bezier(.2,.6,.2,1), box-shadow 0.25s ease;
+    white-space: nowrap; box-shadow: 0 6px 18px -4px rgba(244,48,98,0.5);
+  }
+  .pcard:hover .buy-cta { bottom: 14px; }
+  .pcard .buy-cta:hover { box-shadow: 0 10px 24px -4px rgba(244,48,98,0.7); }
+  .pcard h3 { transition: color 0.2s ease; }
+
+  /* Wishlist heart on cards */
+  .wish-btn {
+    position: absolute; top: 12px; right: 12px;
+    width: 36px; height: 36px; border-radius: 999px;
+    background: rgba(255,255,255,0.95);
+    display: flex; align-items: center; justify-content: center;
+    color: #8a8a8a; z-index: 3;
+    opacity: 0; transform: translateY(-8px) scale(0.9);
+    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), background 0.2s, color 0.2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .pcard:hover .wish-btn { opacity: 1; transform: translateY(0) scale(1); }
+  .wish-btn:hover { background: #f43062; color: #fff; transform: scale(1.1); }
+  .wish-btn.wished { color: #f43062; background: #fff; }
+  .wish-btn.wished:hover { background: #f43062; color: #fff; }
+
+  /* Buttons */
+  .btn-pink { background: #f43062; color: #fff; padding: 12px 24px; border-radius: 999px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease; box-shadow: 0 4px 14px -4px rgba(244,48,98,0.35); }
+  .btn-pink:hover { background: #d8174a; transform: translateY(-2px); box-shadow: 0 10px 24px -6px rgba(244,48,98,0.55); }
+  .btn-pink:active { transform: translateY(0); }
+  .btn-outline { border: 1.5px solid #f43062; color: #f43062; padding: 11px 24px; border-radius: 999px; font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s ease; background: #fff; }
+  .btn-outline:hover { background: #f43062; color: #fff; transform: translateY(-2px); box-shadow: 0 10px 24px -6px rgba(244,48,98,0.45); }
+  .btn-outline:active { transform: translateY(0); }
+
+  /* Nav link underline animation */
+  .nav-link { position: relative; }
+  .nav-link::after {
+    content: ''; position: absolute; left: 50%; bottom: -2px;
+    width: 0; height: 2px; background: #f43062;
+    transition: width 0.3s cubic-bezier(.2,.6,.2,1);
+    transform: translateX(-50%); border-radius: 2px;
+  }
+  .nav-link:hover::after, .nav-link.active::after { width: calc(100% - 28px); }
+  .nav-link { transition: color 0.2s ease; }
+
+  /* Logo bounce on hover */
+  .logo-link .logo-gem { transition: transform 0.5s cubic-bezier(.2,.6,.2,1); }
+  .logo-link:hover .logo-gem { transform: rotate(-6deg) scale(1.08); }
+
+  /* Handwriting font */
+  .script { font-family: 'Dancing Script', cursive; }
+
+  /* Curly squiggle background pattern */
+  .squiggle-bg {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><g fill='none' stroke='%23b9c4dc' stroke-width='1.2' opacity='0.5' stroke-linecap='round'><path d='M10 30 q5 -8 12 0 t12 0'/><path d='M70 20 q4 -6 9 0 t9 0'/><path d='M20 70 q4 -5 8 0 t8 0'/><path d='M80 75 q5 -7 11 0 t11 0'/><circle cx='55' cy='50' r='1.5' fill='%23b9c4dc'/><circle cx='100' cy='100' r='1.5' fill='%23b9c4dc'/><circle cx='30' cy='105' r='1.5' fill='%23b9c4dc'/><path d='M45 95 l3 3 M48 95 l-3 3'/><path d='M105 45 l3 3 M108 45 l-3 3'/></g></svg>");
+  }
+
+  /* Hero slider */
+  .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s; }
+  .slide.active { opacity: 1; }
+
+  /* Dropdown */
+  .has-drop { position: relative; }
+  .drop { position: absolute; top: 100%; left: 0; background: #fff; border-radius: 14px; padding: 10px 0; min-width: 260px;
+          box-shadow: 0 18px 40px -10px rgba(0,0,0,0.18); opacity: 0; visibility: hidden; transform: translateY(10px);
+          transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), visibility 0s linear 0.3s;
+          z-index: 40; border: 1px solid #f5f5f5;
+  }
+  .has-drop:hover .drop { opacity: 1; visibility: visible; transform: translateY(0); transition-delay: 0s; }
+  .drop a { display: block; padding: 10px 22px; font-size: 14px; color: #1f1f1f; transition: padding-left 0.2s ease, background 0.2s ease, color 0.2s ease; }
+  .drop a:hover { background: #fff1f4; color: #f43062; padding-left: 28px; }
+  .has-drop > a > svg { transition: transform 0.3s ease; }
+  .has-drop:hover > a > svg { transform: rotate(180deg); }
+
+  /* Section heading */
+  .sec-title { font-weight: 700; font-size: 26px; }
+  @media (min-width:768px){ .sec-title { font-size: 30px; } }
+
+  /* Cart drawer + search */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 100%; max-width: 420px;
+            background: #fff; z-index: 60; transform: translateX(100%); transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+            display: flex; flex-direction: column; }
+  .drawer.open { transform: translateX(0); }
+  .search-panel { position: fixed; top: 0; left: 0; right: 0; background: #fff; z-index: 60;
+                  transform: translateY(-100%); transition: transform 0.35s cubic-bezier(.4,0,.2,1); padding: 22px 0; border-bottom: 1px solid #ececec; }
+  .search-panel.open { transform: translateY(0); }
+
+  /* Voucher popup */
+  .voucher { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.9);
+             background: #fff; z-index: 70; border-radius: 16px; overflow: hidden; max-width: 520px; width: calc(100% - 32px);
+             opacity: 0; pointer-events: none; transition: all 0.35s cubic-bezier(.4,0,.2,1); }
+  .voucher.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(120%);
+           background: #1f1f1f; color: #fff; padding: 12px 22px; font-size: 13px; border-radius: 999px;
+           z-index: 80; transition: transform 0.35s cubic-bezier(.4,0,.2,1); }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Chip */
+  .chip { border: 1.5px solid #ececec; padding: 8px 18px; font-size: 13px; border-radius: 999px; cursor: pointer; transition: all 0.25s cubic-bezier(.2,.6,.2,1); background: #fff; color: #4a4a4a; font-weight: 500; }
+  .chip:hover { border-color: #f43062; color: #f43062; transform: translateY(-1px); box-shadow: 0 4px 12px -4px rgba(244,48,98,0.25); }
+  .chip.active { background: #f43062; color: #fff; border-color: #f43062; box-shadow: 0 6px 16px -4px rgba(244,48,98,0.45); }
+  .chip.active:hover { background: #d8174a; }
+
+  /* Category icon hover */
+  .cat-tile { transition: transform 0.35s cubic-bezier(.2,.6,.2,1); }
+  .cat-tile:hover { transform: translateY(-6px); }
+  .cat-tile .photo { transition: box-shadow 0.35s ease; }
+  .cat-tile:hover .photo { box-shadow: 0 14px 30px -10px rgba(244,48,98,0.35); }
+  .cat-tile .sil { transition: transform 0.5s cubic-bezier(.2,.6,.2,1); }
+  .cat-tile:hover .sil { transform: rotate(-8deg) scale(1.1); }
+
+  /* News card hover */
+  .news-card { transition: transform 0.35s cubic-bezier(.2,.6,.2,1), box-shadow 0.35s ease; }
+  .news-card:hover { transform: translateY(-6px); }
+  .news-card .photo { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); }
+  .news-card:hover .photo { transform: scale(1.05); }
+
+  /* Float buttons pulse-on-load */
+  @keyframes floatPulse { 0%, 100% { box-shadow: 0 6px 22px rgba(42,63,122,0.35); } 50% { box-shadow: 0 6px 28px rgba(244,48,98,0.45); } }
+  .fab-call { animation: floatPulse 2.4s ease-in-out infinite; }
+
+  /* Slide-in animation for sections */
+  @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .section-reveal { animation: slideUp 0.6s cubic-bezier(.2,.6,.2,1) both; }
+
+  /* Smoother slide transition */
+  .slide { transition: opacity 1s cubic-bezier(.2,.6,.2,1); }
+
+  /* Smooth hover for floating action buttons */
+  .fab { transition: transform 0.25s cubic-bezier(.2,.6,.2,1), box-shadow 0.25s ease, background 0.2s ease; }
+  .fab:hover { transform: translateY(-3px) scale(1.06); }
+
+  /* Quantity buttons */
+  .qty-btn { transition: background 0.2s ease, color 0.2s ease; }
+  .qty-btn:hover { background: #fff1f4; color: #f43062; }
+
+  /* Smooth focus styles */
+  input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(244,48,98,0.12); }
+
+  /* Hide scrollbar */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+
+  /* Page fade */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .page { animation: fadeUp 0.4s ease; }
+
+  /* PDP gallery thumb */
+  .thumb { cursor: pointer; transition: all 0.2s; border: 2px solid transparent; border-radius: 10px; overflow: hidden; }
+  .thumb.active { border-color: #f43062; }
+  .thumb:hover { border-color: #ffc2cf; }
+</style>
+</head>
+<body>
+
+
+
+<div id="app"></div>
+
+<!-- Floating action buttons -->
+<div class="fixed bottom-5 right-5 z-30 flex flex-col gap-3">
+  <a href="tel:0982463691" class="fab fab-call w-12 h-12 rounded-full bg-brand-500 text-white shadow-float flex items-center justify-center hover:bg-brand-600" aria-label="Gọi ngay" title="Gọi ngay">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92Z"/></svg>
+  </a>
+  <a href="#" class="fab w-12 h-12 rounded-full bg-white shadow-float flex items-center justify-center hover:bg-brand-50 border border-rule" aria-label="Bản đồ" title="Xem địa chỉ shop">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43062" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+  </a>
+  <a href="#" class="fab w-12 h-12 rounded-full bg-blue-500 text-white shadow-float flex items-center justify-center hover:bg-blue-600" aria-label="Messenger" title="Chat messenger">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.14 2 11.25c0 2.9 1.43 5.49 3.66 7.18V22l3.34-1.83c.89.25 1.83.38 2.8.38 5.5 0 10-4.14 10-9.25S17.5 2 12 2Zm.98 12.36-2.55-2.72-4.98 2.72 5.47-5.8 2.6 2.7 4.94-2.7-5.48 5.8Z"/></svg>
+  </a>
+  <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="fab w-12 h-12 rounded-full bg-brand-700 text-white shadow-float flex items-center justify-center hover:bg-brand-900" aria-label="Lên đầu trang" title="Lên đầu trang">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+</div>
+
+<!-- Voucher popup -->
+<div id="voucher" class="voucher" role="dialog" aria-modal="true">
+  <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-ink flex items-center justify-center z-10" onclick="closeVoucher()" aria-label="Đóng">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <div class="grid md:grid-cols-2">
+    <div class="bg-gradient-to-br from-brand-400 to-brand-600 p-8 text-white text-center flex flex-col justify-center">
+      <div class="text-5xl mb-3">🎁</div>
+      <div class="text-2xl font-bold mb-1">VOUCHER 50K</div>
+      <div class="text-sm opacity-90">Cho đơn từ 500.000₫</div>
+    </div>
+    <div class="p-7">
+      <h3 class="font-bold text-xl mb-2">Đăng Ký Nhận Ngay Voucher 50k</h3>
+      <p class="text-sm text-ink2 mb-4">Cùng nhiều ưu đãi cực hấp dẫn từ Liorajewelry!</p>
+      <div class="bg-brand-50 border border-dashed border-brand-300 rounded-lg px-4 py-3 mb-4 text-center">
+        <div class="text-[10px] tracking-widest text-brand-600 mb-1">MÃ GIẢM GIÁ</div>
+        <div class="font-bold text-xl text-brand-600 tracking-wider">LIORANEW</div>
+      </div>
+      <form onsubmit="event.preventDefault(); closeVoucher(); toast('🎉 Đã gửi voucher tới email của bạn!')">
+        <input type="email" placeholder="Email của bạn" required class="w-full border border-rule rounded-full px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 mb-3" />
+        <button class="btn-pink w-full justify-center">Nhận voucher ngay</button>
+      </form>
+      <p class="text-[11px] text-mute mt-3 text-center">Nhập mã LIORANEW để được giảm 50k. Thời gian sử dụng 7 ngày.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- Scrim -->
+<div id="scrim" class="scrim" onclick="closeAll()"></div>
+
+<!-- Search panel -->
+<div id="searchPanel" class="search-panel">
+  <div class="container-x">
+    <div class="flex items-center gap-4 border-b border-rule pb-3">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="searchInput" type="text" placeholder="Tìm sản phẩm, mã sản phẩm…" class="flex-1 bg-transparent text-lg outline-none placeholder-mute" />
+      <button class="text-xs text-mute hover:text-brand-500 uppercase tracking-wider" onclick="closeAll()">ĐÓNG</button>
+    </div>
+    <div id="searchResults" class="py-4 max-h-[60vh] overflow-y-auto"></div>
+  </div>
+</div>
+
+<!-- Cart drawer -->
+<aside id="cartDrawer" class="drawer">
+  <div class="flex items-center justify-between px-5 py-4 border-b border-rule">
+    <div class="font-bold text-lg flex items-center gap-2">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 7h14l-1.5 12h-11L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+      Giỏ hàng <span id="cartCountLabel" class="text-brand-500"></span>
+    </div>
+    <button class="w-8 h-8 rounded-full hover:bg-rule flex items-center justify-center" onclick="closeAll()" aria-label="Đóng">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+  </div>
+  <div id="cartBody" class="flex-1 overflow-y-auto no-scrollbar"></div>
+  <div id="cartFoot" class="border-t border-rule p-5"></div>
+</aside>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// PRODUCTS — based on real Liorajewelry catalog
+// ─────────────────────────────────────────────────────────
+const PRODUCTS = [
+  // Kim Cương Moissanite — Bông tai
+  { slug:'btj5-bowtie',     code:'BTJ5',  name:'Bông Tai Bạc Gắn Kim Cương Moissanite Xi Bạch Kim "Bowtie" BTJ5',           cat:'moissanite', subcat:'bong-tai', price:658000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', hot:true,  shape:'bow' },
+  { slug:'btj2-petal',      code:'BTJ2',  name:'Bông Tai Bạc Gắn Kim Cương Moissanite Xi Bạch Kim "Petal" BTJ2',            cat:'moissanite', subcat:'bong-tai', price:518000, tint:'#fef2f5', tint2:'#ffe0e7', accent:'#ec4899', shape:'flower' },
+  { slug:'btj1-crystal',    code:'BTJ1',  name:'Bông Tai Bạc Gắn Kim Cương Moissanite "Crystal Flower" BTJ1',                cat:'moissanite', subcat:'bong-tai', price:428000, tint:'#fff1f8', tint2:'#ffd9e8', accent:'#db2777', shape:'flower' },
+  { slug:'btj3-frostflake', code:'BTJ3',  name:'Bông Tai Bạc Gắn Kim Cương Moissanite "Frostflake" BTJ3',                    cat:'moissanite', subcat:'bong-tai', price:398000, tint:'#f0f9ff', tint2:'#dbeafe', accent:'#3b82f6', shape:'snow' },
+  // Moissanite — Dây chuyền
+  { slug:'vcj1-julia',      code:'VCJ1',  name:'Dây Chuyền Kim Cương Moissanite 5 Ly "Julia" VCJ1 - Vòng Cổ Bạc Nữ',         cat:'moissanite', subcat:'day-chuyen', price:978000, tint:'#fff1f4', tint2:'#ffd9e0', accent:'#f43062', hot:true,  shape:'gem' },
+  { slug:'vcj2-lilac',      code:'VCJ2',  name:'Dây Chuyền Kim Cương Moissanite 5 Ly "Lilac Soul" VCJ2 - Vòng Cổ Bạc',       cat:'moissanite', subcat:'day-chuyen', price:1078000, tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', shape:'gem' },
+  { slug:'vcj-aurea',       code:'VCBG0QYDQ', name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Aurea" - Vòng Cổ Bạc Nữ',         cat:'moissanite', subcat:'day-chuyen', price:818000, tint:'#fffbeb', tint2:'#fef3c7', accent:'#d97706', shape:'gem' },
+  { slug:'vcj5-aurora',     code:'VCJ5',  name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Aurora" VCJ5 - Vòng Cổ Bạc',           cat:'moissanite', subcat:'day-chuyen', price:848000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', sold:true, shape:'bow' },
+  { slug:'vcj6-celestial',  code:'VCJ6',  name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Celestial Spark" VCJ6',                cat:'moissanite', subcat:'day-chuyen', price:868000, tint:'#ecfeff', tint2:'#cffafe', accent:'#06b6d4', shape:'star' },
+  { slug:'vcj4-kristal',    code:'VCJ4',  name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Kristal Ayna" VCJ4',                   cat:'moissanite', subcat:'day-chuyen', price:818000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', shape:'gem' },
+  // Moissanite — Lắc tay
+  { slug:'ltj4-frosted',    code:'LTJ4',  name:'Lắc Tay Bạc Gắn Kim Cương Moissanite 7 Ly "Frosted Aura" LTJ4',              cat:'moissanite', subcat:'lac-tay', price:858000, tint:'#fef2f5', tint2:'#ffd9e0', accent:'#ec4899', shape:'bracelet' },
+  { slug:'ltj6-lace',       code:'LTJ6',  name:'Lắc Tay Bạc Gắn Kim Cương Moissanite "Lace Bloom" LTJ6',                     cat:'moissanite', subcat:'lac-tay', price:748000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', shape:'bracelet' },
+  { slug:'ltj7-moonlit',    code:'LTJ7',  name:'Lắc Tay Bạc Gắn Kim Cương Moissanite "Moonlit Grace" LTJ7',                  cat:'moissanite', subcat:'lac-tay', price:1548000, tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', sold:true, shape:'bracelet' },
+  { slug:'ltj5-sweet',      code:'LTJ5',  name:'Lắc Tay Bạc Kim Cương Moissanite 6 Ly "Sweet Gleam" LTJ5',                   cat:'moissanite', subcat:'lac-tay', price:928000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'bracelet' },
+  // Moissanite — Nhẫn
+  { slug:'nlj2-aliyah',     code:'NLJ2',  name:'Nhẫn Bạc Gắn Kim Cương Moissanite "Aliyah" NLJ2',                            cat:'moissanite', subcat:'nhan-don', price:728000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', shape:'ring' },
+  { slug:'nljc5-balmy',     code:'NLJC5', name:'Nhẫn Bạc Gắn Kim Cương Moissanite "Balmy" NLJC5',                            cat:'moissanite', subcat:'nhan-don', price:578000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'ring' },
+
+  // Best Sellers
+  { slug:'bttl1-monas',     code:'BTTL1', name:'Bông Tai Bạc Nữ S925 LIORA Đính Đá Cao Cấp "Monas" BTTL1',                   cat:'best-seller', subcat:'bong-tai', price:508000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', hot:true, shape:'butterfly' },
+  { slug:'vctl9-dahlia',    code:'VCTL9', name:'Dây Chuyền Bạc Nữ 925 LIORA Hình Nơ Siêu Xinh "Dahlia" VCTL9',               cat:'best-seller', subcat:'day-chuyen', price:478000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'bow' },
+  { slug:'vctl2-fluffy',    code:'VCTL2', name:'Dây Chuyền Bạc Nữ LIORA Dây Xù Đính Đá CZ "Fluffy Flow" VCTL2',              cat:'best-seller', subcat:'day-chuyen', price:938000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', shape:'gem' },
+  { slug:'vctl3-ribbonnie', code:'VCTL3', name:'Dây Chuyền Bạc Nữ LIORA Hot Trend "Ribbonnie" VCTL3',                        cat:'best-seller', subcat:'day-chuyen', price:548000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'bow' },
+  { slug:'vcard7952-kismet',code:'VCARD7952', name:'Dây Chuyền Bạc S925 LIORA Cỏ 4 Lá "KISMET" VCARD7952',                   cat:'best-seller', subcat:'day-chuyen', price:558000, tint:'#fff7e6', tint2:'#feeec0', accent:'#d97706', shape:'clover' },
+  { slug:'vcard7212-sana',  code:'VCARD7212', name:'Dây Chuyền Bạc S925 LIORA Đính Đá CZ "SANA" VCARD7212',                  cat:'best-seller', subcat:'day-chuyen', price:498000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', hot:true, shape:'gem' },
+  { slug:'vcdj1-couple',    code:'VCDJ1', name:'Dây Chuyền Đôi Bạc S925 LIORA "Couple Ring" VCDJ1',                          cat:'best-seller', subcat:'cap-doi', price:858000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'heart' },
+  { slug:'ltars5983-audrey',code:'LTARS5983', name:'Lắc Tay Bạc Nữ LIORA Nơ Mix Đá Dây Rút "Audrey" LTARS5983',              cat:'best-seller', subcat:'lac-tay', price:888000, tint:'#fff1f4', tint2:'#ffe0e7', accent:'#f43062', shape:'bracelet' },
+  { slug:'lttl5-serena',    code:'LTTL5', name:'Lắc Tay Bạc Nữ Dây Xù LIORA "Serena" LTTL5',                                 cat:'best-seller', subcat:'lac-tay', price:378000, tint:'#fef2f5', tint2:'#fde7ee', accent:'#ec4899', shape:'bracelet' },
+  { slug:'lttl4-luena',     code:'LTTL4', name:'Lắc Tay Bạc Nữ LIORA Đính Đá Đổi Màu "Luena" LTTL4',                         cat:'best-seller', subcat:'lac-tay', price:468000, tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', shape:'bracelet' },
+];
+
+const CATEGORIES = [
+  { slug:'all',            label:'Tất Cả Sản Phẩm',     icon:'sparkle' },
+  { slug:'cap-doi',        label:'Cặp Đôi',             icon:'heart',
+    sub:[
+      { slug:'nhan-doi',   label:'Nhẫn Đôi Bạc' },
+      { slug:'lac-doi',    label:'Lắc Tay Đôi Bạc' },
+      { slug:'vc-doi',     label:'Dây Chuyền Đôi' },
+    ]
+  },
+  { slug:'khac-ten',       label:'Khắc Tên',            icon:'pen',
+    sub:[
+      { slug:'lac-khac-ten', label:'Lắc Tay Khắc Tên' },
+      { slug:'nhan-khac-ten', label:'Nhẫn Khắc Tên' },
+    ]
+  },
+  { slug:'day-chuyen',     label:'Dây Chuyền Bạc',      icon:'necklace' },
+  { slug:'lac-tay',        label:'Lắc Tay Bạc',         icon:'bracelet' },
+  { slug:'lac-chan',       label:'Lắc Chân Bạc',        icon:'anklet' },
+  { slug:'nhan-don',       label:'Nhẫn Đơn Bạc',        icon:'ring' },
+  { slug:'bong-tai',       label:'Bông Tai / Khuyên Tai', icon:'earring' },
+  { slug:'moissanite',     label:'Kim Cương Moissanite', icon:'gem' },
+  { slug:'set-qua',        label:'Set Quà Tặng',        icon:'gift' },
+  { slug:'bao-duong',      label:'Bảo Dưỡng',           icon:'spray' },
+];
+
+const HERO_CATS = [
+  { slug:'lac-tay',    label:'Lắc Tay / Vòng Tay', tint:'#fff1f4', accent:'#f43062' },
+  { slug:'day-chuyen', label:'Dây Chuyền',         tint:'#fef2f5', accent:'#ec4899' },
+  { slug:'cap-doi',    label:'Nhẫn Đôi',           tint:'#f3eaff', accent:'#a855f7' },
+  { slug:'nhan-don',   label:'Nhẫn Đơn',           tint:'#fff7e6', accent:'#d97706' },
+  { slug:'bong-tai',   label:'Bông Tai',           tint:'#ecfeff', accent:'#06b6d4' },
+];
+
+const fmt = n => n.toLocaleString('vi-VN') + '₫';
+const findProduct = slug => PRODUCTS.find(p => p.slug === slug);
+
+// ─────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────
+const state = {
+  route: '/',
+  cart: JSON.parse(localStorage.getItem('liora_cart') || '[]'),
+  wishlist: JSON.parse(localStorage.getItem('liora_wishlist') || '[]'),
+  filter: 'all',
+  sort: 'default',
+  pdpImageIdx: 0,
+  pdpQty: 1,
+  pdpSize: null,
+  slide: 0,
+};
+function saveCart() { localStorage.setItem('liora_cart', JSON.stringify(state.cart)); }
+
+// ─────────────────────────────────────────────────────────
+// SILHOUETTE SHAPES (simple SVG per product type)
+// ─────────────────────────────────────────────────────────
+const SHAPES = {
+  bow: `<svg viewBox="0 0 100 100"><path d="M50 50 L20 30 Q15 32 15 50 Q15 68 20 70 Z M50 50 L80 30 Q85 32 85 50 Q85 68 80 70 Z M44 50 Q44 42 50 42 Q56 42 56 50 Q56 58 50 58 Q44 58 44 50 Z" fill="currentColor"/><circle cx="50" cy="50" r="2.5" fill="white"/></svg>`,
+  flower: `<svg viewBox="0 0 100 100"><g fill="currentColor"><ellipse cx="50" cy="30" rx="10" ry="14"/><ellipse cx="50" cy="70" rx="10" ry="14"/><ellipse cx="30" cy="50" rx="14" ry="10"/><ellipse cx="70" cy="50" rx="14" ry="10"/><circle cx="50" cy="50" r="6" fill="white"/><circle cx="50" cy="50" r="3" fill="currentColor"/></g></svg>`,
+  snow: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M50 10v80M14 30l72 40M14 70l72-40"/><path d="M50 10l-6 8M50 10l6 8M50 90l-6-8M50 90l6-8M14 30l3 9M14 30l9 3M86 70l-3-9M86 70l-9-3M14 70l3-9M14 70l9-3M86 30l-3 9M86 30l-9 3"/></svg>`,
+  gem: `<svg viewBox="0 0 100 100"><path d="M30 35 L50 20 L70 35 L60 75 L40 75 Z" fill="currentColor" opacity="0.85"/><path d="M30 35 L50 50 L70 35" stroke="white" stroke-width="1.5" fill="none"/><path d="M50 50 L40 75 M50 50 L60 75" stroke="white" stroke-width="1.5"/></svg>`,
+  star: `<svg viewBox="0 0 100 100"><path d="M50 15 L58 40 L84 40 L63 55 L71 80 L50 65 L29 80 L37 55 L16 40 L42 40 Z" fill="currentColor"/></svg>`,
+  bracelet: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3"><ellipse cx="50" cy="50" rx="36" ry="28"/><circle cx="50" cy="22" r="6" fill="currentColor"/><circle cx="78" cy="50" r="3" fill="currentColor"/><circle cx="22" cy="50" r="3" fill="currentColor"/></svg>`,
+  ring: `<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4"><circle cx="50" cy="60" r="26"/><path d="M40 36 L50 22 L60 36 Z" fill="currentColor"/></svg>`,
+  butterfly: `<svg viewBox="0 0 100 100"><g fill="currentColor"><path d="M50 50 Q30 25 18 35 Q12 45 22 58 Q35 65 50 50Z"/><path d="M50 50 Q70 25 82 35 Q88 45 78 58 Q65 65 50 50Z"/><path d="M50 50 Q35 55 30 75 Q40 82 50 75Z"/><path d="M50 50 Q65 55 70 75 Q60 82 50 75Z"/><rect x="48" y="35" width="4" height="40" rx="2"/></g></svg>`,
+  clover: `<svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="30" r="13"/><circle cx="70" cy="50" r="13"/><circle cx="50" cy="70" r="13"/><circle cx="30" cy="50" r="13"/><circle cx="50" cy="50" r="6" fill="white"/></svg>`,
+  heart: `<svg viewBox="0 0 100 100"><path d="M50 80 C 20 60, 15 35, 35 25 C 45 25, 50 35, 50 40 C 50 35, 55 25, 65 25 C 85 35, 80 60, 50 80 Z" fill="currentColor"/></svg>`,
+  sparkle: `<svg viewBox="0 0 100 100"><path d="M50 15 L55 45 L85 50 L55 55 L50 85 L45 55 L15 50 L45 45 Z" fill="currentColor"/></svg>`,
+};
+
+function photo({ p, ratio='1/1', big=false }) {
+  const shape = SHAPES[p.shape] || SHAPES.gem;
+  return `
+    <div class="photo" style="--p-tint:${p.tint}; --p-tint2:${p.tint2}; --p-accent:${p.accent}; aspect-ratio:${ratio};">
+      <div class="sil">${shape}</div>
+      ${p.hot ? `<div class="ribbon">HOT 🔥</div>` : ''}
+      ${p.sold ? `<div class="ribbon-out">Hết hàng</div>` : ''}
+    </div>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────
+function header() {
+  const cartCount = state.cart.reduce((s,i) => s + i.qty, 0);
+  return `
+    <header class="sticky top-0 z-30 bg-white border-b border-rule">
+      <!-- Row 1: Logo + Search + Account + Cart -->
+      <div class="container-x grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 py-4">
+        <a href="#/" class="flex items-center gap-2 text-brand-700 logo-link">
+          <svg width="40" height="40" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" class="logo-gem">
+            <path d="M30 8 L48 22 L42 50 L18 50 L12 22 Z"/>
+            <path d="M12 22 L30 26 L48 22"/>
+            <path d="M30 26 L24 50 M30 26 L36 50"/>
+          </svg>
+          <span class="font-bold text-2xl md:text-3xl tracking-[0.22em] hidden sm:block">LIORA</span>
+        </a>
+        <form onsubmit="event.preventDefault(); doInlineSearch()" class="flex items-stretch border border-rule rounded-md overflow-hidden focus-within:border-brand-500 transition">
+          <input id="inlineSearch" type="text" placeholder="Tìm kiếm sản phẩm…" class="flex-1 px-4 py-2.5 text-sm outline-none placeholder-mute" />
+          <button class="bg-soft hover:bg-brand-50 px-4 md:px-5 flex items-center justify-center text-ink2" aria-label="Tìm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </button>
+        </form>
+        <div class="flex items-center gap-4 md:gap-6">
+          <button class="flex flex-col items-center text-ink2 hover:text-brand-500" aria-label="Tài khoản">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+          </button>
+          <button class="flex items-center gap-2 text-ink2 hover:text-brand-500" onclick="openCart()" aria-label="Giỏ hàng">
+            <span class="relative">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14l-1.5 12h-11L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>
+              <span class="absolute -top-1.5 -right-2 bg-brand-200 text-brand-700 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">${cartCount}</span>
+            </span>
+            <span class="hidden md:inline text-sm">Giỏ hàng</span>
+          </button>
+          <button class="w-10 h-10 rounded hover:bg-soft lg:hidden flex items-center justify-center text-ink2" onclick="toggleMobileMenu()" aria-label="Menu" id="mobileBurger">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Row 2: Main nav -->
+      <div class="border-t border-rule">
+        <nav class="container-x hidden lg:flex items-center justify-center gap-1 text-[15px] font-medium text-brand-700 py-3">
+          <a href="#/" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/' ? 'active' : ''}">Trang chủ</a>
+          <div class="has-drop">
+            <a href="#/shop" class="nav-link px-5 py-1 hover:text-brand-500 flex items-center gap-1 ${state.route === '/shop' ? 'active' : ''}">
+              Sản Phẩm
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="drop">
+              ${CATEGORIES.map(c => `<a href="#/shop?cat=${c.slug}" onclick="event.preventDefault(); setFilterNav('${c.slug}')">${c.label}</a>`).join('')}
+            </div>
+          </div>
+          <div class="has-drop">
+            <a href="#/about" class="nav-link px-5 py-1 hover:text-brand-500 flex items-center gap-1 ${state.route === '/about' ? 'active' : ''}">
+              Giới Thiệu
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="drop">
+              <a href="#/about" onclick="event.preventDefault(); navigate('/about')">Về Liorajewelry</a>
+              <a href="#/lien-he" onclick="event.preventDefault(); navigate('/lien-he')">Liên hệ</a>
+            </div>
+          </div>
+          <a href="#/kiem-dinh" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/kiem-dinh' ? 'active' : ''}">Kiểm Định</a>
+          <a href="#/feedback" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/feedback' ? 'active' : ''}">Feedback</a>
+          <a href="#/huong-dan" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/huong-dan' ? 'active' : ''}">Hướng Dẫn</a>
+          <a href="#/news" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/news' ? 'active' : ''}">Tin Tức</a>
+          <a href="#/lien-he" class="nav-link px-5 py-1 hover:text-brand-500 ${state.route === '/lien-he' ? 'active' : ''}">Liên Hệ</a>
+        </nav>
+      </div>
+      <div id="mobileMenu" class="lg:hidden border-t border-rule bg-white hidden">
+        <nav class="container-x py-3 flex flex-col text-sm font-medium">
+          <a href="#/" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Trang chủ</a>
+          <a href="#/shop" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Sản Phẩm</a>
+          <a href="#/about" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Giới Thiệu</a>
+          <a href="#/kiem-dinh" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Kiểm Định</a>
+          <a href="#/feedback" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Feedback</a>
+          <a href="#/huong-dan" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Hướng Dẫn</a>
+          <a href="#/news" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Tin Tức</a>
+          <a href="#/lien-he" class="py-2 hover:text-brand-500" onclick="toggleMobileMenu()">Liên Hệ</a>
+        </nav>
+      </div>
+    </header>
+  `;
+}
+
+function toggleMobileMenu() {
+  const m = document.getElementById('mobileMenu');
+  if (m) m.classList.toggle('hidden');
+}
+window.toggleMobileMenu = toggleMobileMenu;
+
+function setFilterNav(slug) {
+  state.filter = slug;
+  navigate('/shop');
+}
+window.setFilterNav = setFilterNav;
+
+// ─────────────────────────────────────────────────────────
+// FOOTER
+// ─────────────────────────────────────────────────────────
+function footer() {
+  return `
+    <section class="border-t border-rule bg-soft py-10 mt-16">
+      <div class="container-x max-w-2xl mx-auto text-center">
+        <h3 class="font-bold text-xl mb-2">Đăng ký nhận tin</h3>
+        <p class="text-sm text-ink2 mb-5">Nhận ưu đãi sớm và thông tin sản phẩm mới nhất từ Liorajewelry</p>
+        <form class="flex gap-2 max-w-md mx-auto" onsubmit="event.preventDefault(); toast('🎉 Cảm ơn bạn đã đăng ký!')">
+          <input type="email" required placeholder="Nhập email của bạn…" class="flex-1 border border-rule rounded-full px-5 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <button class="btn-pink">Đăng ký</button>
+        </form>
+      </div>
+    </section>
+
+    <footer class="bg-ink text-white/80 pt-14 pb-6">
+      <div class="container-x grid md:grid-cols-12 gap-10">
+        <div class="md:col-span-4">
+          <div class="flex items-center gap-3 mb-4">
+            <svg width="40" height="40" viewBox="0 0 60 60" fill="none" stroke="#f9a8c0" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M30 8 L48 22 L42 50 L18 50 L12 22 Z"/>
+              <path d="M12 22 L30 26 L48 22"/>
+              <path d="M30 26 L24 50 M30 26 L36 50"/>
+            </svg>
+            <div class="font-bold text-2xl text-white tracking-wider">Liorajewelry<span class="text-brand-400">.shop</span></div>
+          </div>
+          <p class="text-sm leading-relaxed mb-4">LIORAJEWELRY.SHOP Bản Quyền Được Bảo Hộ. Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.</p>
+          <div class="text-xs leading-relaxed text-white/60 space-y-0.5 mb-4">
+            <div>Chủ Sở Hữu: Hộ Kinh Doanh Thái Bình Dương</div>
+            <div>Số ĐKKD: 01U8017787 · Cấp ngày 08/05/2023</div>
+            <div>Nơi Cấp: Phòng TC & KH Hoài Đức</div>
+            <div>Mã Số Thuế: 8662980683-001</div>
+          </div>
+          <div class="inline-block bg-white/5 border border-white/10 rounded px-3 py-2 text-[11px]">
+            ✓ Đã đăng ký với Bộ Công Thương
+          </div>
+        </div>
+        <div class="md:col-span-3">
+          <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Chính Sách</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#/about" class="hover:text-brand-400">Giới Thiệu</a></li>
+            <li><a href="#" class="hover:text-brand-400">Bảo Hành, Đổi Trả</a></li>
+            <li><a href="#" class="hover:text-brand-400">Chính Sách Kiểm Hàng</a></li>
+            <li><a href="#" class="hover:text-brand-400">Chính Sách Mua Hàng</a></li>
+            <li><a href="#" class="hover:text-brand-400">Chính Sách Giao Hàng</a></li>
+            <li><a href="#" class="hover:text-brand-400">Bảo Mật Thông Tin</a></li>
+            <li><a href="#" class="hover:text-brand-400">Nghĩa Vụ Mua & Bán</a></li>
+          </ul>
+        </div>
+        <div class="md:col-span-3">
+          <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Liên Hệ</h4>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start gap-2"><span>📍</span><span>159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</span></li>
+            <li class="flex items-start gap-2"><span>📞</span><a href="tel:0982463691" class="hover:text-brand-400">0982463691</a></li>
+            <li class="flex items-start gap-2"><span>✉</span><a href="mailto:hello@liorajewelry.shop" class="hover:text-brand-400">hello@liorajewelry.shop</a></li>
+          </ul>
+        </div>
+        <div class="md:col-span-2">
+          <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Fanpage</h4>
+          <div class="flex gap-3 mb-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition" title="Facebook">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition" title="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-500 flex items-center justify-center transition" title="TikTok">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8.5a6 6 0 0 1-3.5-1.1v7.4a5.5 5.5 0 1 1-5.5-5.5v3a2.5 2.5 0 1 0 2.5 2.5V2h3a3 3 0 0 0 3 3v3.5Z"/></svg>
+            </a>
+          </div>
+          <p class="text-xs text-white/60">Theo dõi để cập nhật xu hướng mới nhất</p>
+        </div>
+      </div>
+      <div class="border-t border-white/10 mt-10 pt-6 container-x flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/50">
+        <div>Copyright © 2026 Liorajewelry.shop — All rights reserved</div>
+        <div class="flex items-center gap-2">Phương thức thanh toán:
+          <span class="bg-white/10 px-2 py-1 rounded">VISA</span>
+          <span class="bg-white/10 px-2 py-1 rounded">Mastercard</span>
+          <span class="bg-white/10 px-2 py-1 rounded">Momo</span>
+          <span class="bg-white/10 px-2 py-1 rounded">COD</span>
+        </div>
+      </div>
+    </footer>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────
+// HOME PAGE
+// ─────────────────────────────────────────────────────────
+function homePage() {
+  return `
+    <main class="page">
+      <!-- Hero slider -->
+      <section class="relative">
+        <div class="relative aspect-[16/7] md:aspect-[24/9] overflow-hidden squiggle-bg" style="background-color:#f3f3f3;">
+          ${heroSlide(0)}
+          ${heroSlide(1)}
+          ${heroSlide(2)}
+          <button class="absolute left-2 md:left-5 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center z-10 text-ink2" onclick="goSlide(state.slide-1)" aria-label="Trước">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="absolute right-2 md:right-5 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 hover:bg-white shadow flex items-center justify-center z-10 text-ink2" onclick="goSlide(state.slide+1)" aria-label="Sau">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+            ${[0,1,2].map(i => `<button data-dot="${i}" onclick="goSlide(${i})" class="w-2 h-2 rounded-full bg-brand-700/30 hover:bg-brand-700 transition" aria-label="Slide ${i+1}"></button>`).join('')}
+          </div>
+        </div>
+      </section>
+
+      <!-- Hero category strip -->
+      <section class="container-x py-10">
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-5">
+          ${HERO_CATS.map(c => `
+            <a href="#/shop" onclick="event.preventDefault(); setFilterNav('${c.slug}')" class="group cat-tile block">
+              <div class="rounded-2xl overflow-hidden aspect-[4/5] photo" style="--p-tint:${c.tint}; --p-tint2:${c.tint}; --p-accent:${c.accent};">
+                <div class="sil">${SHAPES[c.slug === 'lac-tay' ? 'bracelet' : c.slug === 'day-chuyen' ? 'gem' : c.slug === 'cap-doi' ? 'heart' : c.slug === 'nhan-don' ? 'ring' : 'bow']}</div>
+              </div>
+              <div class="text-center mt-3">
+                <div class="font-semibold text-sm md:text-base group-hover:text-brand-500 transition">${c.label}</div>
+                <div class="text-xs text-brand-500 mt-1 inline-flex items-center gap-1 group-hover:gap-2 transition-all">Xem ngay <span class="transition-transform group-hover:translate-x-1">→</span></div>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Section: Kim Cương Moissanite -->
+      <section class="container-x py-8">
+        <div class="text-center mb-8">
+          <div class="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">💎 BỘ SƯU TẬP NỔI BẬT</div>
+          <h2 class="sec-title">Kim Cương Moissanite</h2>
+          <p class="text-sm text-ink2 mt-2 max-w-xl mx-auto">Đính kim cương Moissanite, xi bạch kim, kiểm định GRA chính hãng</p>
+        </div>
+        ${productGrid(PRODUCTS.filter(p => p.cat === 'moissanite').slice(0, 12))}
+        <div class="text-center mt-8">
+          <a href="#/shop" onclick="event.preventDefault(); setFilterNav('moissanite')" class="btn-outline">TÌM HIỂU THÊM →</a>
+        </div>
+      </section>
+
+      <!-- Trust badges -->
+      <section class="bg-soft py-12 my-12">
+        <div class="container-x grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+          ${[
+            { i:'🚚', t:'Giao hàng miễn phí', s:'Với đơn hàng từ 500k trở lên' },
+            { i:'💬', t:'Hỗ trợ 24/7',        s:'Hỗ trợ online / offline 24/7' },
+            { i:'↻',  t:'Miễn phí đổi trả',   s:'Trong vòng 7 ngày' },
+            { i:'📞', t:'Đặt hàng trực tuyến', s:'Hotline: 0982463691' },
+          ].map(b => `
+            <div class="text-center">
+              <div class="w-14 h-14 mx-auto rounded-full bg-white shadow-card flex items-center justify-center text-2xl mb-3">${b.i}</div>
+              <div class="font-semibold mb-1">${b.t}</div>
+              <div class="text-xs text-mute">${b.s}</div>
+            </div>
+          `).join('')}
+        </div>
+      </section>
+
+      <!-- Sản Phẩm Bán Chạy -->
+      <section class="container-x py-8">
+        <div class="text-center mb-8">
+          <div class="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">🔥 HOT TREND 2026</div>
+          <h2 class="sec-title">Sản Phẩm Bán Chạy</h2>
+        </div>
+        ${productGrid(PRODUCTS.filter(p => p.cat === 'best-seller').slice(0, 12))}
+        <div class="text-center mt-8">
+          <a href="#/shop" onclick="event.preventDefault(); navigate('/shop')" class="btn-pink">Xem tất cả sản phẩm →</a>
+        </div>
+      </section>
+
+      <!-- News -->
+      <section class="container-x py-14">
+        <div class="text-center mb-8">
+          <div class="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">📝 BLOG</div>
+          <h2 class="sec-title">Tin tức</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+          ${[
+            { date:'16/02', title:'✨ CHÚC MỪNG NĂM MỚI 2026 – LIORA ✨', excerpt:'Cảm ơn bạn đã luôn đồng hành cùng Liorajewelry trong suốt năm qua 💙 Bước sang năm mới, chúc bạn An Khang – Hạnh Phúc…', tint:'#fff1f4', accent:'#f43062' },
+            { date:'14/02', title:'Happy Valentine!', excerpt:'Tình yêu luôn được tạo nên từ những điều tinh tế và chân thành ✨ là những khoảnh khắc nhỏ nhưng đủ làm trái tim rung động…', tint:'#fef2f5', accent:'#ec4899' },
+            { date:'09/02', title:'Món quà bạn tặng nói lên điều gì?', excerpt:'Món quà bạn tặng đang "nói" gì với cô ấy? 💌 Ưu đãi nhỏ, yêu thương to: 🌷 Đơn từ 500K → Tặng kèm thiệp xinh…', tint:'#f3eaff', accent:'#a855f7' },
+          ].map(n => `
+            <a href="#/news" onclick="event.preventDefault(); navigate('/news')" class="news-card group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-cardHover">
+              <div class="overflow-hidden">
+                <div class="photo aspect-[16/10]" style="--p-tint:${n.tint}; --p-tint2:${n.tint}; --p-accent:${n.accent};">
+                  <div class="sil">${SHAPES.sparkle}</div>
+                </div>
+              </div>
+              <div class="p-5">
+                <div class="text-xs text-mute mb-2">📅 ${n.date}/2026</div>
+                <h3 class="font-semibold text-lg mb-2 group-hover:text-brand-500 line-clamp-2 transition">${n.title}</h3>
+                <p class="text-sm text-ink2 line-clamp-2 mb-3">${n.excerpt}</p>
+                <span class="text-brand-500 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">Xem thêm <span class="transition-transform group-hover:translate-x-1">→</span></span>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </section>
+    </main>
+  `;
+}
+
+const HERO_SLIDES = [
+  { plaque:'Trang Sức Bạc<br/>Dành Cho Giới Trẻ', script:'Lấp lánh em xinh', tint:'#c7d3e8' },
+  { plaque:'Kim Cương Moissanite<br/>Kiểm Định GRA',  script:'Sang trọng tinh tế', tint:'#d8d2e8' },
+  { plaque:'Khắc Tên Cá Nhân Hoá<br/>Quà Tặng Yêu Thương', script:'Ý nghĩa từng nét', tint:'#dde0d8' },
+];
+function heroSlide(idx) {
+  const s = HERO_SLIDES[idx];
+  return `
+    <div class="slide ${state.slide === idx ? 'active' : ''}" data-slide="${idx}">
+      <div class="absolute inset-0 flex items-center" style="background:linear-gradient(110deg, ${s.tint} 0%, #f3f3f3 55%, ${s.tint} 100%);">
+        <div class="container-x grid md:grid-cols-2 gap-2 items-center w-full relative">
+          <div class="text-center px-4 md:px-8 py-6 relative z-10">
+            <div class="flex flex-col items-center mb-4 md:mb-6">
+              <svg width="56" height="60" viewBox="0 0 60 60" fill="none" stroke="#172347" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" class="mb-1">
+                <path d="M30 8 L48 22 L42 50 L18 50 L12 22 Z"/>
+                <path d="M12 22 L30 26 L48 22"/>
+                <path d="M30 26 L24 50 M30 26 L36 50"/>
+              </svg>
+              <div class="font-bold text-2xl md:text-3xl tracking-[0.32em] text-brand-700">LIORA</div>
+            </div>
+            <div class="inline-block relative">
+              <div class="bg-brand-700 text-white px-6 md:px-12 py-4 md:py-6 rounded relative" style="box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), inset 0 0 0 4px #172347, inset 0 0 0 5px rgba(255,255,255,0.25);">
+                <div class="text-lg md:text-2xl lg:text-3xl font-semibold tracking-[0.12em] uppercase leading-tight">${s.plaque}</div>
+              </div>
+            </div>
+            <div class="flex justify-center items-end gap-3 md:gap-6 mt-6 md:mt-8">
+              <div class="w-16 md:w-24 aspect-[2/3] flex items-end justify-center text-brand-700">
+                <svg viewBox="0 0 60 100" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M30 5 v45"/><circle cx="30" cy="62" r="10" fill="#dde3ef" stroke="#8da0c4"/><path d="M26 58 l4 4 l4 -4 M26 66 l4 -4 l4 4" stroke="#172347"/></svg>
+              </div>
+              <div class="w-16 md:w-20 aspect-square flex items-center justify-center text-brand-700">
+                <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="12" y="12" width="36" height="36" rx="4" fill="#dde3ef" stroke="#8da0c4"/><circle cx="30" cy="30" r="8" fill="white" stroke="#172347"/><path d="M30 24 l2 4 l4 0 l-3 3 l1 4 l-4 -2 l-4 2 l1 -4 l-3 -3 l4 0 z" fill="#172347"/></svg>
+              </div>
+              <div class="w-16 md:w-20 aspect-square flex items-center justify-center text-brand-700">
+                <svg viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="12" y="12" width="36" height="36" rx="4" fill="#dde3ef" stroke="#8da0c4"/><circle cx="30" cy="30" r="8" fill="white" stroke="#172347"/><path d="M30 24 l2 4 l4 0 l-3 3 l1 4 l-4 -2 l-4 2 l1 -4 l-3 -3 l4 0 z" fill="#172347"/></svg>
+              </div>
+              <div class="w-16 md:w-24 aspect-[3/4] flex items-center justify-center text-brand-700">
+                <svg viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="30" cy="50" r="18" fill="none" stroke="#172347" stroke-width="2"/><circle cx="30" cy="36" r="8" fill="#dde3ef" stroke="#8da0c4"/><path d="M27 33 l3 4 l3 -4" stroke="#172347"/></svg>
+              </div>
+            </div>
+            <div class="script text-2xl md:text-3xl text-brand-700 mt-4">
+              <span class="text-brand-500">✦</span> ${s.script}
+            </div>
+          </div>
+          <div class="hidden md:flex justify-center items-center relative">
+            <svg class="absolute -left-12 top-1/2 -translate-y-1/2 text-white/80 z-0" width="260" height="320" viewBox="0 0 260 320" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 160 C 60 80, 160 100, 230 30"/>
+              <path d="M10 200 C 80 280, 180 240, 250 280"/>
+            </svg>
+            <div class="relative w-64 h-80 md:w-80 md:h-96 lg:w-96 lg:h-[28rem] rounded-full overflow-hidden bg-gradient-to-b from-brand-200 to-brand-300 shadow-xl border-4 border-white">
+              <svg viewBox="0 0 200 280" class="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMax meet">
+                <defs>
+                  <linearGradient id="hair${idx}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#1a1a1a"/><stop offset="1" stop-color="#3a3a3a"/>
+                  </linearGradient>
+                  <linearGradient id="skin${idx}" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#f4d4c0"/><stop offset="1" stop-color="#e8b89e"/>
+                  </linearGradient>
+                </defs>
+                <path d="M30 280 Q40 200 80 180 L120 180 Q160 200 170 280 Z" fill="#5a72a8"/>
+                <ellipse cx="100" cy="125" rx="55" ry="70" fill="url(#hair${idx})"/>
+                <ellipse cx="100" cy="130" rx="38" ry="48" fill="url(#skin${idx})"/>
+                <rect x="88" y="170" width="24" height="22" fill="url(#skin${idx})"/>
+                <path d="M62 110 Q100 80 138 110 Q140 90 100 78 Q60 90 62 110 Z" fill="url(#hair${idx})"/>
+                <path d="M138 110 Q145 150 142 175 Q150 130 138 110 Z" fill="url(#hair${idx})"/>
+                <path d="M62 110 Q55 150 58 175 Q50 130 62 110 Z" fill="url(#hair${idx})"/>
+                <ellipse cx="86" cy="132" rx="3" ry="2" fill="#2a201c"/>
+                <ellipse cx="114" cy="132" rx="3" ry="2" fill="#2a201c"/>
+                <path d="M93 152 Q100 156 107 152 Q103 158 100 158 Q97 158 93 152" fill="#c9665f"/>
+                <circle cx="63" cy="148" r="2.5" fill="#fff" stroke="#172347"/>
+                <circle cx="100" cy="205" r="4" fill="#dde3ef" stroke="#172347"/>
+                <path d="M75 188 Q100 200 125 188" stroke="#cfd8e8" stroke-width="1" fill="none"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function goSlide(i) {
+  state.slide = ((i % 3) + 3) % 3;
+  document.querySelectorAll('.slide').forEach(s => {
+    s.classList.toggle('active', +s.dataset.slide === state.slide);
+  });
+  document.querySelectorAll('[data-dot]').forEach(d => {
+    d.classList.toggle('bg-white', +d.dataset.dot === state.slide);
+    d.classList.toggle('bg-white/60', +d.dataset.dot !== state.slide);
+  });
+}
+window.goSlide = goSlide;
+
+// Auto-advance hero slider
+setInterval(() => {
+  if (state.route === '/' || state.route === '') goSlide(state.slide + 1);
+}, 5000);
+
+// ─────────────────────────────────────────────────────────
+// PRODUCT CARD + GRID
+// ─────────────────────────────────────────────────────────
+function productCard(p) {
+  const wished = (state.wishlist || []).includes(p.slug);
+  return `
+    <div class="pcard shadow-card group">
+      <button class="wish-btn ${wished ? 'wished' : ''}" onclick="event.stopPropagation(); toggleWish('${p.slug}')" aria-label="Yêu thích">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="${wished ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
+      <a href="#/product/${p.slug}" onclick="event.preventDefault(); navigate('/product/${p.slug}')" class="block relative">
+        ${photo({ p, ratio:'1/1' })}
+        <button class="buy-cta" onclick="event.preventDefault(); event.stopPropagation(); quickAdd('${p.slug}')">🛒 Mua ngay</button>
+      </a>
+      <div class="p-3 md:p-4">
+        <a href="#/product/${p.slug}" onclick="event.preventDefault(); navigate('/product/${p.slug}')" class="block">
+          <h3 class="text-[13px] md:text-sm font-medium leading-snug line-clamp-2 hover:text-brand-500 transition min-h-[2.6em] mb-2">${p.name}</h3>
+        </a>
+        <div class="flex items-center justify-between">
+          <div class="font-bold text-brand-500 text-base md:text-lg">${fmt(p.price)}</div>
+          <div class="flex text-yellow-400 text-xs">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleWish(slug) {
+  state.wishlist = state.wishlist || [];
+  const i = state.wishlist.indexOf(slug);
+  if (i >= 0) { state.wishlist.splice(i, 1); toast('💔 Đã bỏ yêu thích'); }
+  else { state.wishlist.push(slug); toast('💖 Đã thêm vào yêu thích'); }
+  localStorage.setItem('liora_wishlist', JSON.stringify(state.wishlist));
+  render();
+}
+window.toggleWish = toggleWish;
+
+function productGrid(items) {
+  if (!items || items.length === 0) {
+    return `<div class="text-center text-mute py-12">Chưa có sản phẩm nào trong danh mục này.</div>`;
+  }
+  return `<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+    ${items.map(productCard).join('')}
+  </div>`;
+}
+
+function quickAdd(slug) {
+  const p = findProduct(slug);
+  if (!p) return;
+  if (p.sold) { toast('⚠ Sản phẩm tạm hết hàng'); return; }
+  const cartId = `${slug}__default`;
+  const existing = state.cart.find(i => i.cartId === cartId);
+  if (existing) existing.qty += 1;
+  else state.cart.push({ cartId, slug, name: p.name, price: p.price, qty: 1, tint: p.tint, tint2: p.tint2, accent: p.accent, shape: p.shape });
+  saveCart();
+  toast(`✓ Đã thêm "${p.name.slice(0, 30)}..." vào giỏ`);
+  renderHeader();
+}
+window.quickAdd = quickAdd;
+
+// ─────────────────────────────────────────────────────────
+// SHOP PAGE (PLP)
+// ─────────────────────────────────────────────────────────
+function shopPage() {
+  let list = state.filter === 'all'
+    ? [...PRODUCTS]
+    : state.filter === 'moissanite' || state.filter === 'best-seller'
+      ? PRODUCTS.filter(p => p.cat === state.filter)
+      : PRODUCTS.filter(p => p.subcat === state.filter);
+  if (state.sort === 'price-low')  list.sort((a,b) => a.price - b.price);
+  if (state.sort === 'price-high') list.sort((a,b) => b.price - a.price);
+  if (state.sort === 'name')       list.sort((a,b) => a.name.localeCompare(b.name, 'vi'));
+
+  const activeCat = CATEGORIES.find(c => c.slug === state.filter);
+  const title = activeCat ? activeCat.label : 'Tất Cả Sản Phẩm';
+
+  return `
+    <main class="page">
+      <!-- Breadcrumb -->
+      <div class="container-x py-4 text-xs text-mute">
+        <a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <span class="text-ink">${title}</span>
+      </div>
+
+      <section class="container-x">
+        <h1 class="text-2xl md:text-3xl font-bold mb-2">${title}</h1>
+        <p class="text-sm text-ink2 mb-6">Hiển thị ${list.length} sản phẩm</p>
+
+        <div class="grid lg:grid-cols-12 gap-6 md:gap-8">
+          <!-- Sidebar filter -->
+          <aside class="lg:col-span-3 space-y-6">
+            <div class="bg-soft rounded-2xl p-5">
+              <h3 class="font-bold mb-3 text-sm uppercase tracking-wider">Danh mục</h3>
+              <ul class="space-y-1.5">
+                ${CATEGORIES.map(c => `
+                  <li>
+                    <button class="text-left text-sm w-full py-1.5 hover:text-brand-500 ${state.filter === c.slug ? 'text-brand-500 font-semibold' : 'text-ink2'}" onclick="setFilterNav('${c.slug}')">
+                      ${state.filter === c.slug ? '▸ ' : ''}${c.label}
+                    </button>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <div class="bg-soft rounded-2xl p-5">
+              <h3 class="font-bold mb-3 text-sm uppercase tracking-wider">Khoảng giá</h3>
+              <div class="space-y-2 text-sm">
+                ${[
+                  { lo:0, hi:500000, label:'Dưới 500.000₫' },
+                  { lo:500000, hi:1000000, label:'500.000₫ — 1.000.000₫' },
+                  { lo:1000000, hi:99999999, label:'Trên 1.000.000₫' },
+                ].map((r,i) => `
+                  <label class="flex items-center gap-2 cursor-pointer hover:text-brand-500">
+                    <input type="checkbox" class="accent-brand-500" />
+                    <span>${r.label}</span>
+                  </label>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-brand-50 to-brand-100 rounded-2xl p-5">
+              <div class="text-3xl mb-2">🎁</div>
+              <h3 class="font-bold mb-1">Voucher 50K</h3>
+              <p class="text-xs text-ink2 mb-3">Cho đơn từ 500K. Mã: <strong class="text-brand-600">LIORANEW</strong></p>
+              <button class="btn-pink text-xs px-4 py-2" onclick="openVoucher()">Lấy ngay →</button>
+            </div>
+          </aside>
+
+          <!-- Products -->
+          <div class="lg:col-span-9">
+            <div class="bg-soft rounded-xl p-3 md:p-4 mb-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex gap-2 flex-wrap overflow-x-auto">
+                ${['all','moissanite','best-seller','day-chuyen','lac-tay','nhan-don','bong-tai'].map(s => {
+                  const c = CATEGORIES.find(x => x.slug === s) || { label: s === 'moissanite' ? 'Moissanite' : s === 'best-seller' ? 'Bán chạy' : s };
+                  return `<button class="chip ${state.filter === s ? 'active' : ''}" onclick="setFilterNav('${s}')">${c.label}</button>`;
+                }).join('')}
+              </div>
+              <div class="flex items-center gap-2 text-sm flex-shrink-0">
+                <label class="text-mute">Sắp xếp:</label>
+                <select onchange="setSort(this.value)" class="border border-rule rounded-full px-3 py-1.5 text-sm focus:outline-none focus:border-brand-500 bg-white">
+                  <option value="default" ${state.sort==='default'?'selected':''}>Mặc định</option>
+                  <option value="name" ${state.sort==='name'?'selected':''}>Tên A–Z</option>
+                  <option value="price-low" ${state.sort==='price-low'?'selected':''}>Giá tăng dần</option>
+                  <option value="price-high" ${state.sort==='price-high'?'selected':''}>Giá giảm dần</option>
+                </select>
+              </div>
+            </div>
+            ${productGrid(list)}
+          </div>
+        </div>
+      </section>
+    </main>
+  `;
+}
+function setSort(v) { state.sort = v; render(); }
+window.setSort = setSort;
+
+// ─────────────────────────────────────────────────────────
+// PRODUCT PAGE (PDP)
+// ─────────────────────────────────────────────────────────
+function productPage(slug) {
+  const p = findProduct(slug);
+  if (!p) {
+    return `<main class="page container-x py-20 text-center min-h-[50vh]">
+      <h1 class="text-2xl font-bold mb-4">Không tìm thấy sản phẩm</h1>
+      <a class="btn-pink" href="#/shop" onclick="event.preventDefault(); navigate('/shop')">← Quay lại Shop</a>
+    </main>`;
+  }
+  const sizes = ['#5','#6','#7','#8','#9'];
+  if (!state.pdpSize) state.pdpSize = sizes[2];
+  const gallery = [
+    { ...p, shape: p.shape },
+    { ...p, tint: p.tint2, shape: p.shape },
+    { ...p, tint: p.accent, tint2: p.tint2, shape: p.shape },
+    { ...p, tint: '#1f1f1f', tint2: p.accent, shape: p.shape },
+  ];
+  const main = gallery[state.pdpImageIdx];
+  const related = PRODUCTS.filter(x => x.subcat === p.subcat && x.slug !== p.slug).slice(0, 4);
+
+  return `
+    <main class="page">
+      <div class="container-x py-4 text-xs text-mute">
+        <a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <a href="#/shop" onclick="event.preventDefault(); navigate('/shop')" class="hover:text-brand-500">Sản Phẩm</a>
+        <span class="mx-2">/</span>
+        <span class="text-ink line-clamp-1">${p.name}</span>
+      </div>
+
+      <section class="container-x grid md:grid-cols-2 gap-8 md:gap-12 pb-12">
+        <!-- Gallery -->
+        <div>
+          <div class="rounded-2xl overflow-hidden shadow-card mb-3">
+            ${photo({ p: main, ratio:'1/1' })}
+          </div>
+          <div class="grid grid-cols-4 gap-2 md:gap-3">
+            ${gallery.map((g,i) => `
+              <button class="thumb ${state.pdpImageIdx === i ? 'active' : ''}" onclick="setPdpImage(${i})">
+                ${photo({ p: g, ratio:'1/1' })}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <div class="text-xs text-mute mb-2">Mã SP: <span class="font-semibold text-ink">${p.code}</span></div>
+          <h1 class="text-xl md:text-2xl font-bold leading-snug mb-3">${p.name}</h1>
+          <div class="flex items-center gap-3 mb-4 text-sm">
+            <div class="flex text-yellow-400">★★★★★</div>
+            <span class="text-mute">(124 đánh giá)</span>
+            <span class="text-mute">|</span>
+            <span class="text-green-600">✓ Còn hàng</span>
+          </div>
+
+          <div class="bg-brand-50 rounded-2xl p-5 mb-5">
+            <div class="flex items-baseline gap-3 mb-1">
+              <div class="text-3xl font-bold text-brand-500">${fmt(p.price)}</div>
+              <div class="text-mute line-through text-sm">${fmt(Math.round(p.price * 1.3 / 1000) * 1000)}</div>
+              <span class="bg-brand-500 text-white text-xs px-2 py-1 rounded-full font-semibold">-23%</span>
+            </div>
+            <div class="text-xs text-ink2 mt-1">💰 Tiết kiệm ${fmt(Math.round(p.price * 0.3 / 1000) * 1000)} hôm nay</div>
+          </div>
+
+          <!-- Size -->
+          <div class="mb-5">
+            <div class="flex items-baseline justify-between mb-2">
+              <span class="text-sm font-semibold">Kích thước:</span>
+              <button class="text-xs text-brand-500 hover:underline" onclick="toast('📏 Liên hệ Liorajewelry để được tư vấn chọn size')">Hướng dẫn chọn size</button>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              ${sizes.map(s => `<button class="chip ${state.pdpSize === s ? 'active' : ''}" onclick="setPdpSize('${s}')">${s}</button>`).join('')}
+            </div>
+          </div>
+
+          <!-- Qty + buy -->
+          <div class="flex items-stretch gap-3 mb-3">
+            <div class="flex items-center border border-rule rounded-full overflow-hidden">
+              <button class="qty-btn px-4 py-2.5" onclick="setPdpQty(${state.pdpQty - 1})" aria-label="Giảm">−</button>
+              <span class="px-3 min-w-[40px] text-center font-semibold">${state.pdpQty}</span>
+              <button class="qty-btn px-4 py-2.5" onclick="setPdpQty(${state.pdpQty + 1})" aria-label="Tăng">+</button>
+            </div>
+            <button class="btn-pink flex-1 justify-center" ${p.sold ? 'disabled' : ''} onclick="addToCartFromPdp('${p.slug}')">
+              ${p.sold ? 'Hết hàng' : '🛒 Thêm vào giỏ'}
+            </button>
+          </div>
+          <button class="btn-outline w-full justify-center mb-5" onclick="addToCartFromPdp('${p.slug}'); setTimeout(() => navigate('/checkout'), 200)">
+            ⚡ Mua ngay
+          </button>
+
+          <!-- Trust -->
+          <div class="border border-rule rounded-2xl p-4 grid grid-cols-2 gap-3 text-xs mb-5">
+            <div class="flex items-center gap-2"><span class="text-base">🚚</span><span>Miễn phí giao hàng từ 500K</span></div>
+            <div class="flex items-center gap-2"><span class="text-base">↻</span><span>Đổi trả trong 7 ngày</span></div>
+            <div class="flex items-center gap-2"><span class="text-base">✓</span><span>Kiểm định GRA chính hãng</span></div>
+            <div class="flex items-center gap-2"><span class="text-base">🎁</span><span>Hộp quà sang trọng</span></div>
+          </div>
+
+          <!-- Accordions -->
+          <details class="border-t border-rule" open>
+            <summary class="flex items-center justify-between py-4 cursor-pointer list-none font-semibold">
+              <span>Mô tả sản phẩm</span>
+              <span class="text-mute group-open:rotate-45">+</span>
+            </summary>
+            <div class="pb-4 text-sm text-ink2 leading-relaxed">
+              <p class="mb-3">${p.name} là một trong những thiết kế cao cấp của Liorajewelry. Được chế tác tỉ mỉ từ bạc S925, đính kim cương Moissanite kiểm định GRA, xi bạch kim chống xỉn màu.</p>
+              <ul class="space-y-1.5">
+                <li>✓ Chất liệu: Bạc S925 cao cấp</li>
+                <li>✓ Xi bạch kim chống xỉn màu, không gây dị ứng</li>
+                <li>✓ Đính kim cương Moissanite (nếu có) kiểm định GRA</li>
+                <li>✓ Tặng kèm hộp quà sang trọng + thẻ bảo hành</li>
+                <li>✓ Bảo hành trọn đời sản phẩm</li>
+              </ul>
+            </div>
+          </details>
+          <details class="border-t border-rule">
+            <summary class="flex items-center justify-between py-4 cursor-pointer list-none font-semibold">
+              <span>Bảo quản & Bảo hành</span>
+              <span class="text-mute">+</span>
+            </summary>
+            <div class="pb-4 text-sm text-ink2 leading-relaxed">
+              <p>Tránh tiếp xúc với nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau mỗi lần đeo. Đem đến cửa hàng Liorajewelry để được vệ sinh miễn phí trọn đời.</p>
+            </div>
+          </details>
+          <details class="border-t border-rule border-b">
+            <summary class="flex items-center justify-between py-4 cursor-pointer list-none font-semibold">
+              <span>Vận chuyển & Đổi trả</span>
+              <span class="text-mute">+</span>
+            </summary>
+            <div class="pb-4 text-sm text-ink2 leading-relaxed">
+              <p>Giao hàng toàn quốc 2–4 ngày. Miễn phí giao hàng cho đơn từ 500.000₫. Hỗ trợ kiểm hàng trước khi thanh toán. Đổi trả miễn phí trong 7 ngày với sản phẩm còn nguyên vẹn.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      ${related.length > 0 ? `
+      <section class="container-x py-10 border-t border-rule">
+        <h2 class="sec-title text-center mb-8">Sản phẩm liên quan</h2>
+        ${productGrid(related)}
+      </section>
+      ` : ''}
+    </main>
+  `;
+}
+
+function setPdpImage(i) { state.pdpImageIdx = i; render(); }
+function setPdpSize(s) { state.pdpSize = s; render(); }
+function setPdpQty(q) { state.pdpQty = Math.max(1, Math.min(20, q)); render(); }
+window.setPdpImage = setPdpImage; window.setPdpSize = setPdpSize; window.setPdpQty = setPdpQty;
+
+function addToCartFromPdp(slug) {
+  const p = findProduct(slug);
+  if (!p || p.sold) { toast('⚠ Sản phẩm tạm hết hàng'); return; }
+  const cartId = `${slug}__${state.pdpSize}`;
+  const existing = state.cart.find(i => i.cartId === cartId);
+  if (existing) existing.qty += state.pdpQty;
+  else state.cart.push({ cartId, slug, name: p.name, price: p.price, qty: state.pdpQty, size: state.pdpSize, tint: p.tint, tint2: p.tint2, accent: p.accent, shape: p.shape });
+  saveCart();
+  toast(`✓ Đã thêm vào giỏ hàng`);
+  state.pdpQty = 1;
+  render();
+  setTimeout(openCart, 250);
+}
+window.addToCartFromPdp = addToCartFromPdp;
+
+// ─────────────────────────────────────────────────────────
+// CHECKOUT (simple form)
+// ─────────────────────────────────────────────────────────
+function checkoutPage() {
+  const subtotal = state.cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const ship = subtotal >= 500000 ? 0 : 30000;
+  const total = subtotal + ship;
+
+  if (state.cart.length === 0) {
+    return `<main class="page container-x py-20 text-center min-h-[50vh]">
+      <div class="text-6xl mb-4">🛒</div>
+      <h1 class="text-2xl font-bold mb-3">Giỏ hàng trống</h1>
+      <p class="text-ink2 mb-6">Hãy thêm sản phẩm vào giỏ trước khi thanh toán</p>
+      <a class="btn-pink" href="#/shop" onclick="event.preventDefault(); navigate('/shop')">Khám phá sản phẩm →</a>
+    </main>`;
+  }
+
+  return `
+    <main class="page">
+      <div class="container-x py-4 text-xs text-mute">
+        <a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a>
+        <span class="mx-2">/</span>
+        <span class="text-ink">Thanh toán</span>
+      </div>
+      <section class="container-x grid lg:grid-cols-5 gap-8 pb-12">
+        <form class="lg:col-span-3 space-y-5" onsubmit="event.preventDefault(); placeOrder()">
+          <h2 class="text-xl font-bold mb-2">Thông tin giao hàng</h2>
+          <div class="grid grid-cols-2 gap-3">
+            <input required placeholder="Họ và tên *" class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" />
+            <input required type="tel" placeholder="Số điện thoại *" class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+            <input type="email" placeholder="Email" class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+            <input required placeholder="Địa chỉ chi tiết *" class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" />
+            <select class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500"><option>Hà Nội</option><option>TP. Hồ Chí Minh</option><option>Đà Nẵng</option></select>
+            <select class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500"><option>Quận / Huyện</option></select>
+            <textarea placeholder="Ghi chú (tuỳ chọn)" class="border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" rows="3"></textarea>
+          </div>
+
+          <h2 class="text-xl font-bold mt-8 mb-2">Phương thức thanh toán</h2>
+          <div class="space-y-2">
+            ${[
+              { v:'cod', label:'Thanh toán khi nhận hàng (COD)', icon:'💵' },
+              { v:'bank', label:'Chuyển khoản ngân hàng', icon:'🏦' },
+              { v:'momo', label:'Ví điện tử MoMo', icon:'📱' },
+            ].map((pm,i) => `
+              <label class="flex items-center gap-3 border border-rule rounded-lg p-3 cursor-pointer hover:border-brand-500 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                <input type="radio" name="pm" value="${pm.v}" ${i===0?'checked':''} class="accent-brand-500" />
+                <span class="text-2xl">${pm.icon}</span>
+                <span class="font-medium text-sm">${pm.label}</span>
+              </label>
+            `).join('')}
+          </div>
+
+          <button class="btn-pink w-full justify-center text-base py-4 mt-4">Đặt hàng — ${fmt(total)}</button>
+        </form>
+
+        <aside class="lg:col-span-2 lg:sticky lg:top-24 self-start">
+          <div class="bg-soft rounded-2xl p-5">
+            <h3 class="font-bold mb-4">Đơn hàng (${state.cart.length} sản phẩm)</h3>
+            <div class="space-y-3 mb-4 max-h-80 overflow-y-auto pr-1 no-scrollbar">
+              ${state.cart.map(it => `
+                <div class="flex gap-3">
+                  <div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
+                    <div class="photo h-full w-full" style="--p-tint:${it.tint}; --p-tint2:${it.tint2}; --p-accent:${it.accent}; aspect-ratio:auto;">
+                      <div class="sil">${SHAPES[it.shape] || SHAPES.gem}</div>
+                    </div>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-xs font-medium line-clamp-2">${it.name}</div>
+                    <div class="text-xs text-mute mt-0.5">SL: ${it.qty}${it.size ? ' · '+it.size : ''}</div>
+                  </div>
+                  <div class="text-xs font-bold whitespace-nowrap">${fmt(it.price * it.qty)}</div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="flex gap-2 mb-4">
+              <input placeholder="Nhập mã giảm giá" class="flex-1 border border-rule rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-500" />
+              <button type="button" class="btn-outline px-5 py-2 text-sm">Áp dụng</button>
+            </div>
+            <div class="space-y-2 text-sm border-t border-rule pt-3">
+              <div class="flex justify-between"><span class="text-ink2">Tạm tính</span><span>${fmt(subtotal)}</span></div>
+              <div class="flex justify-between"><span class="text-ink2">Phí vận chuyển</span><span>${ship === 0 ? '<span class="text-green-600">Miễn phí</span>' : fmt(ship)}</span></div>
+              <div class="flex justify-between text-lg font-bold border-t border-rule pt-2 mt-2"><span>Tổng tiền</span><span class="text-brand-500">${fmt(total)}</span></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  `;
+}
+
+function placeOrder() {
+  toast('🎉 Đặt hàng thành công! Liorajewelry sẽ liên hệ với bạn sớm.');
+  state.cart = [];
+  saveCart();
+  setTimeout(() => navigate('/'), 1500);
+}
+window.placeOrder = placeOrder;
+
+// ─────────────────────────────────────────────────────────
+// STATIC PAGES
+// ─────────────────────────────────────────────────────────
+function aboutPage() {
+  return `
+    <main class="page container-x py-10">
+      <div class="text-xs text-mute mb-4"><a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a> / Giới Thiệu</div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-3">Về Liorajewelry</h1>
+      <div class="text-brand-500 font-medium mb-8">Trang Sức Bạc Cao Cấp Dành Cho Giới Trẻ</div>
+      <div class="grid md:grid-cols-2 gap-10 mb-10">
+        <div class="rounded-2xl overflow-hidden photo aspect-[4/3]" style="--p-tint:#fff1f4; --p-tint2:#ffe0e7; --p-accent:#f43062;">
+          <div class="sil">${SHAPES.gem}</div>
+        </div>
+        <div class="space-y-4 text-ink2 leading-relaxed">
+          <p>Liorajewelry được thành lập với sứ mệnh mang đến những món trang sức bạc cao cấp, đẹp – sang – độc – lạ dành cho giới trẻ Việt Nam.</p>
+          <p>Tại Liorajewelry, chúng mình luôn cập nhật những xu hướng thời trang mới nhất, thiết kế những sản phẩm tinh tế giúp các bạn trẻ luôn tự tin và toả sáng.</p>
+          <p>Mỗi sản phẩm Liorajewelry đều được chế tác từ bạc S925 cao cấp, xi bạch kim chống xỉn màu, đính kim cương Moissanite kiểm định GRA chính hãng.</p>
+        </div>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5 bg-soft rounded-2xl p-6">
+        ${[
+          { n:'5+', l:'Năm kinh nghiệm' },
+          { n:'10K+', l:'Khách hàng yêu thương' },
+          { n:'500+', l:'Mẫu sản phẩm' },
+        ].map(s => `<div class="text-center"><div class="text-4xl font-bold text-brand-500 mb-1">${s.n}</div><div class="text-sm text-ink2">${s.l}</div></div>`).join('')}
+      </div>
+    </main>
+  `;
+}
+
+function newsPage() {
+  return `
+    <main class="page container-x py-10">
+      <div class="text-xs text-mute mb-4"><a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a> / Tin Tức</div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-8">Tin tức & Blog</h1>
+      <div class="grid md:grid-cols-3 gap-6">
+        ${[
+          { date:'16/02/2026', title:'✨ CHÚC MỪNG NĂM MỚI 2026 – LIORA ✨', excerpt:'Cảm ơn bạn đã luôn đồng hành cùng Liorajewelry trong suốt năm qua. Bước sang năm mới, chúc bạn An Khang – Hạnh Phúc...', tint:'#fff1f4', accent:'#f43062' },
+          { date:'14/02/2026', title:'Happy Valentine!', excerpt:'Tình yêu luôn được tạo nên từ những điều tinh tế và chân thành...', tint:'#fef2f5', accent:'#ec4899' },
+          { date:'09/02/2026', title:'Món quà bạn tặng nói lên điều gì?', excerpt:'Món quà bạn tặng đang nói gì với cô ấy? Ưu đãi nhỏ, yêu thương to...', tint:'#f3eaff', accent:'#a855f7' },
+          { date:'02/02/2026', title:'Cách bảo quản trang sức bạc bền đẹp', excerpt:'Mẹo nhỏ giúp món trang sức yêu thích của bạn luôn sáng bóng như mới...', tint:'#fff7e6', accent:'#d97706' },
+          { date:'28/01/2026', title:'Hướng dẫn chọn size nhẫn chuẩn', excerpt:'Bí quyết đo size ngón tay tại nhà cực đơn giản với dây và thước...', tint:'#ecfeff', accent:'#06b6d4' },
+          { date:'20/01/2026', title:'Kim cương Moissanite là gì?', excerpt:'Tìm hiểu về loại đá quý lấp lánh không kém kim cương thật với giá hợp lý...', tint:'#fff1f4', accent:'#f43062' },
+        ].map(n => `
+          <a href="#/news" onclick="event.preventDefault();" class="group block bg-white rounded-2xl overflow-hidden shadow-card hover:shadow-cardHover transition">
+            <div class="photo aspect-[16/10]" style="--p-tint:${n.tint}; --p-tint2:${n.tint}; --p-accent:${n.accent};">
+              <div class="sil">${SHAPES.sparkle}</div>
+            </div>
+            <div class="p-5">
+              <div class="text-xs text-mute mb-2">📅 ${n.date}</div>
+              <h3 class="font-semibold text-lg mb-2 group-hover:text-brand-500 line-clamp-2">${n.title}</h3>
+              <p class="text-sm text-ink2 line-clamp-3 mb-3">${n.excerpt}</p>
+              <span class="text-brand-500 text-sm font-medium">Đọc tiếp →</span>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    </main>
+  `;
+}
+
+function contactPage() {
+  return `
+    <main class="page container-x py-10">
+      <div class="text-xs text-mute mb-4"><a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a> / Liên Hệ</div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-8">Liên hệ với Liorajewelry</h1>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="font-bold text-lg mb-4">Thông tin cửa hàng</h3>
+          <ul class="space-y-3 text-sm">
+            <li class="flex items-start gap-3"><span class="text-xl">📍</span><div><div class="font-semibold">Địa chỉ</div><div class="text-ink2">159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</div></div></li>
+            <li class="flex items-start gap-3"><span class="text-xl">📞</span><div><div class="font-semibold">Hotline</div><a href="tel:0982463691" class="text-brand-500 hover:underline">0982463691</a></div></li>
+            <li class="flex items-start gap-3"><span class="text-xl">✉</span><div><div class="font-semibold">Email</div><a href="mailto:hello@liorajewelry.shop" class="text-brand-500 hover:underline">hello@liorajewelry.shop</a></div></li>
+            <li class="flex items-start gap-3"><span class="text-xl">🕐</span><div><div class="font-semibold">Giờ làm việc</div><div class="text-ink2">Thứ 2 – CN: 9:00 – 22:00</div></div></li>
+          </ul>
+        </div>
+        <form class="space-y-3" onsubmit="event.preventDefault(); toast('✓ Đã gửi tin nhắn! Liorajewelry sẽ phản hồi sớm.')">
+          <h3 class="font-bold text-lg mb-2">Gửi tin nhắn cho chúng mình</h3>
+          <input required placeholder="Họ tên" class="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <input required type="tel" placeholder="Số điện thoại" class="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <input type="email" placeholder="Email" class="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <textarea required rows="5" placeholder="Nội dung tin nhắn…" class="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500"></textarea>
+          <button class="btn-pink w-full justify-center">Gửi tin nhắn →</button>
+        </form>
+      </div>
+    </main>
+  `;
+}
+
+function simplePage(title, body) {
+  return `
+    <main class="page container-x py-10">
+      <div class="text-xs text-mute mb-4"><a href="#/" onclick="event.preventDefault(); navigate('/')" class="hover:text-brand-500">Trang chủ</a> / ${title}</div>
+      <h1 class="text-3xl md:text-4xl font-bold mb-6">${title}</h1>
+      <div class="prose max-w-3xl text-ink2 leading-relaxed space-y-4">${body}</div>
+    </main>
+  `;
+}
+
+// ─────────────────────────────────────────────────────────
+// CART DRAWER
+// ─────────────────────────────────────────────────────────
+function renderCartDrawer() {
+  const cart = state.cart;
+  const subtotal = cart.reduce((s,i) => s + i.price * i.qty, 0);
+  const body = document.getElementById('cartBody');
+  const foot = document.getElementById('cartFoot');
+  const lbl  = document.getElementById('cartCountLabel');
+  if (lbl) lbl.textContent = cart.length > 0 ? `(${cart.length})` : '';
+
+  if (cart.length === 0) {
+    body.innerHTML = `
+      <div class="flex flex-col items-center justify-center text-center px-6 py-16 h-full">
+        <div class="text-6xl mb-5">🛒</div>
+        <h3 class="font-bold text-lg mb-2">Giỏ hàng trống</h3>
+        <p class="text-ink2 mb-6 text-sm">Hãy chọn sản phẩm yêu thích nhé!</p>
+        <button class="btn-pink" onclick="closeAll(); navigate('/shop')">Khám phá →</button>
+      </div>`;
+    foot.innerHTML = '';
+    return;
+  }
+
+  body.innerHTML = `<div class="divide-y divide-rule">
+    ${cart.map(it => `
+      <div class="p-4 flex gap-3">
+        <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+          <div class="photo h-full w-full" style="--p-tint:${it.tint}; --p-tint2:${it.tint2}; --p-accent:${it.accent}; aspect-ratio:auto;">
+            <div class="sil">${SHAPES[it.shape] || SHAPES.gem}</div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium line-clamp-2 mb-1">${it.name}</div>
+          ${it.size ? `<div class="text-xs text-mute mb-2">Size: ${it.size}</div>` : '<div class="mb-2"></div>'}
+          <div class="flex items-center justify-between">
+            <div class="flex items-center border border-rule rounded-full overflow-hidden text-sm">
+              <button class="px-2 py-1 hover:bg-brand-50" onclick="updateCartQty('${it.cartId}', ${it.qty - 1})">−</button>
+              <span class="px-2 min-w-[24px] text-center">${it.qty}</span>
+              <button class="px-2 py-1 hover:bg-brand-50" onclick="updateCartQty('${it.cartId}', ${it.qty + 1})">+</button>
+            </div>
+            <div class="font-bold text-brand-500">${fmt(it.price * it.qty)}</div>
+          </div>
+          <button class="text-xs text-mute hover:text-brand-500 mt-2" onclick="removeCartItem('${it.cartId}')">✕ Xoá</button>
+        </div>
+      </div>
+    `).join('')}</div>`;
+
+  foot.innerHTML = `
+    <div class="flex justify-between text-sm mb-1"><span class="text-ink2">Tạm tính</span><span>${fmt(subtotal)}</span></div>
+    <div class="flex justify-between font-bold mb-4"><span>TỔNG TIỀN</span><span class="text-brand-500 text-xl">${fmt(subtotal)}</span></div>
+    <div class="grid grid-cols-2 gap-2">
+      <button class="btn-outline justify-center" onclick="closeAll(); navigate('/cart-view')">Xem giỏ hàng</button>
+      <button class="btn-pink justify-center" onclick="closeAll(); navigate('/checkout')">Thanh toán</button>
+    </div>
+  `;
+}
+function updateCartQty(cid, q) {
+  if (q < 1) return removeCartItem(cid);
+  const it = state.cart.find(i => i.cartId === cid);
+  if (it) { it.qty = Math.min(20, q); saveCart(); renderHeader(); renderCartDrawer(); }
+}
+function removeCartItem(cid) { state.cart = state.cart.filter(i => i.cartId !== cid); saveCart(); renderHeader(); renderCartDrawer(); }
+window.updateCartQty = updateCartQty; window.removeCartItem = removeCartItem;
+
+// ─────────────────────────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────────────────────────
+function renderSearch(q) {
+  const c = document.getElementById('searchResults');
+  if (!q.trim()) {
+    c.innerHTML = `
+      <div class="text-xs text-mute mb-3 uppercase tracking-wider">Tìm kiếm phổ biến</div>
+      <div class="flex gap-2 flex-wrap">
+        ${['Moissanite','Bông tai','Dây chuyền','Lắc tay','Nhẫn đôi','Cỏ 4 lá'].map(t =>
+          `<button class="chip" onclick="document.getElementById('searchInput').value='${t}'; renderSearch('${t}')">${t}</button>`
+        ).join('')}
+      </div>`;
+    return;
+  }
+  const tl = q.toLowerCase();
+  const r = PRODUCTS.filter(p => p.name.toLowerCase().includes(tl) || p.code.toLowerCase().includes(tl) || p.subcat.includes(tl));
+  if (r.length === 0) {
+    c.innerHTML = `<div class="text-center py-10 text-mute">Không tìm thấy "${q}"</div>`;
+    return;
+  }
+  c.innerHTML = `<div class="text-xs text-mute mb-3 uppercase tracking-wider">${r.length} kết quả</div>
+    <div class="divide-y divide-rule">${r.map(p => `
+      <a href="#/product/${p.slug}" onclick="closeAll(); navigate('/product/${p.slug}')" class="flex items-center gap-3 py-3 hover:bg-brand-50 px-2 -mx-2 rounded-lg">
+        <div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0">
+          <div class="photo h-full w-full" style="--p-tint:${p.tint}; --p-tint2:${p.tint2}; --p-accent:${p.accent}; aspect-ratio:auto;">
+            <div class="sil">${SHAPES[p.shape] || SHAPES.gem}</div>
+          </div>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium line-clamp-1">${p.name}</div>
+          <div class="text-xs text-mute">Mã: ${p.code}</div>
+        </div>
+        <div class="font-bold text-brand-500 text-sm whitespace-nowrap">${fmt(p.price)}</div>
+      </a>
+    `).join('')}</div>`;
+}
+
+// ─────────────────────────────────────────────────────────
+// DRAWER CONTROLS
+// ─────────────────────────────────────────────────────────
+function openCart() { renderCartDrawer(); document.getElementById('cartDrawer').classList.add('open'); document.getElementById('scrim').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function openSearch() { renderSearch(''); document.getElementById('searchPanel').classList.add('open'); document.getElementById('scrim').classList.add('open'); document.body.style.overflow = 'hidden'; setTimeout(() => document.getElementById('searchInput').focus(), 100); }
+function openVoucher() { document.getElementById('voucher').classList.add('open'); document.getElementById('scrim').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeVoucher() { document.getElementById('voucher').classList.remove('open'); document.getElementById('scrim').classList.remove('open'); document.body.style.overflow = ''; }
+function closeAll() {
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('searchPanel').classList.remove('open');
+  document.getElementById('voucher').classList.remove('open');
+  document.getElementById('scrim').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function doInlineSearch() { const q = document.getElementById('inlineSearch').value.trim(); if (q) { openSearch(); document.getElementById('searchInput').value = q; renderSearch(q); } else openSearch(); }
+window.doInlineSearch = doInlineSearch;
+window.openCart = openCart; window.openSearch = openSearch; window.openVoucher = openVoucher; window.closeVoucher = closeVoucher; window.closeAll = closeAll;
+
+// Voucher auto-show
+if (!localStorage.getItem('liora_voucher_seen')) {
+  setTimeout(() => {
+    openVoucher();
+    localStorage.setItem('liora_voucher_seen', '1');
+  }, 6000);
+}
+
+// ─────────────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────────────
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => el.classList.remove('show'), 2500);
+}
+window.toast = toast;
+
+// ─────────────────────────────────────────────────────────
+// ROUTING
+// ─────────────────────────────────────────────────────────
+function parseHash() { return location.hash.replace(/^#/, '') || '/'; }
+function navigate(p) { location.hash = p; }
+window.navigate = navigate;
+
+window.addEventListener('hashchange', () => {
+  state.route = parseHash();
+  state.pdpImageIdx = 0; state.pdpQty = 1; state.pdpSize = null;
+  render();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+});
+
+function renderHeader() {
+  const wrap = document.querySelector('#app header');
+  if (wrap) wrap.outerHTML = header();
+}
+
+function render() {
+  const route = state.route;
+  let content = '';
+  if (route === '/' || route === '') content = homePage();
+  else if (route === '/shop') content = shopPage();
+  else if (route.startsWith('/product/')) content = productPage(route.replace('/product/', ''));
+  else if (route === '/checkout') content = checkoutPage();
+  else if (route === '/about') content = aboutPage();
+  else if (route === '/news') content = newsPage();
+  else if (route === '/lien-he') content = contactPage();
+  else if (route === '/kiem-dinh') content = simplePage('Kiểm Định', '<p>Tất cả các sản phẩm kim cương Moissanite của Liorajewelry đều được kiểm định bởi GRA (Gemological Research Association) — đảm bảo chất lượng, độ trong và độ lấp lánh tương đương kim cương thật.</p><p>Mỗi sản phẩm đi kèm thẻ kiểm định và bảo hành để khách hàng yên tâm sử dụng.</p>');
+  else if (route === '/feedback') content = simplePage('Feedback', '<p>Cảm ơn các khách hàng đã tin tưởng và đồng hành cùng Liorajewelry. Mỗi feedback là động lực để chúng mình hoàn thiện hơn mỗi ngày 💖</p><p>Theo dõi fanpage Liorajewelry.shop để xem các đánh giá thực tế từ khách hàng.</p>');
+  else if (route === '/huong-dan') content = simplePage('Hướng Dẫn', '<p><strong>Hướng dẫn chọn size nhẫn:</strong> Dùng một sợi chỉ quấn quanh ngón tay, đo chiều dài đoạn chỉ rồi đối chiếu bảng size.</p><p><strong>Hướng dẫn bảo quản:</strong> Tránh nước hoa, hoá chất; cất trong hộp khi không sử dụng; lau bằng vải mềm.</p><p><strong>Hướng dẫn đặt hàng:</strong> Chọn sản phẩm → Thêm vào giỏ → Thanh toán → Nhận hàng và kiểm tra trước khi trả tiền (COD).</p>');
+  else if (route === '/cart-view') content = checkoutPage();
+  else content = `<main class="page container-x py-20 text-center min-h-[50vh]">
+    <h1 class="text-2xl font-bold mb-3">Không tìm thấy trang</h1>
+    <a class="btn-pink" href="#/" onclick="event.preventDefault(); navigate('/')">← Về trang chủ</a>
+  </main>`;
+  document.getElementById('app').innerHTML = header() + content + footer();
+
+  // Init slider dots state
+  if (state.route === '/' || state.route === '') goSlide(state.slide);
+}
+
+document.getElementById('searchInput').addEventListener('input', e => renderSearch(e.target.value));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+
+state.route = parseHash();
+render();
+</script>
+
+</body>
+</html>
