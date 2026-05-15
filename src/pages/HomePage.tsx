@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
-import { HERO_CATS, HERO_SLIDES, NEWS_ARTICLES, fmt } from '../data';
+import { HERO_CATS, HERO_SLIDES, NEWS_ARTICLES, BRAND_IMAGES, fmt } from '../data';
 import Shapes from '../data/shapes';
 import ProductGrid from '../components/ProductGrid';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
@@ -144,24 +144,64 @@ function HeroSlideItem({ idx }: { idx: number }) {
             </div>
 
             {/* Slogan */}
-            <div className="text-2xl md:text-3xl mt-2 mb-10 flex items-center justify-center gap-3">
+            <div className="text-2xl md:text-3xl mt-2 mb-6 flex items-center justify-center gap-3">
               <span className="font-sans font-light uppercase tracking-[0.2em] text-[#1A3050]">Lấp Lánh</span>
               <span className="script text-brand-500 lowercase text-4xl md:text-5xl">em xinh</span>
             </div>
 
-            {/* Product placeholders */}
-            <div className="flex justify-center gap-6">
-              {['gem', 'ring', 'bracelet'].map((icon, i) => (
-                <div key={i} className="w-16 h-16 rounded-full bg-white/80 backdrop-blur-sm shadow-[0_12px_24px_rgba(26,48,80,0.1)] border border-white flex items-center justify-center text-brand-500 hover:scale-110 transition-transform cursor-pointer">
-                  <div className="w-7 h-7">{Shapes[icon as keyof typeof Shapes]}</div>
+            {/* Store Info — Address, Hours, QR */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
+              {/* Address & Hours */}
+              <div className="flex flex-col gap-2.5 text-left">
+                <div className="flex items-start gap-2 text-[#1A3050]">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0 opacity-70">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span className="text-xs md:text-sm leading-snug font-medium">159 Lý Thường Kiệt, Quang Trung,<br/>Hà Đông, Hà Nội</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-2 text-[#1A3050]">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 opacity-70">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span className="text-xs md:text-sm font-medium">Mở cửa: 9:00 – 21:00 hàng ngày</span>
+                </div>
+              </div>
+              {/* Facebook QR Code */}
+              <a
+                href="https://www.facebook.com/liorajewelry.vn"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center gap-1.5 bg-white/80 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_8px_24px_rgba(26,48,80,0.1)] border border-white hover:shadow-[0_12px_32px_rgba(26,48,80,0.18)] transition-all hover:scale-105"
+              >
+                <img
+                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.facebook.com/liorajewelry.vn&color=1A3050&bgcolor=FFFFFF"
+                  alt="QR Facebook Liora"
+                  width="80"
+                  height="80"
+                  className="rounded-lg"
+                />
+                <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-[#1A3050] tracking-wide">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
+                  Follow us
+                </div>
+              </a>
             </div>
           </div>
 
           <div className="hidden md:flex justify-center items-center relative">
-            <div className="relative w-64 h-96 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[6px] border-white/50 shadow-[0_20px_50px_-12px_rgba(26,48,80,0.2)] hero-float">
-              <img src="/mkhoi.jpg" alt="Model" className="absolute inset-0 w-full h-full object-cover object-center" />
+            <div className="relative w-64 h-96 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[6px] border-white/50 shadow-[0_20px_50px_-12px_rgba(26,48,80,0.2)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
+              {s.image && (
+                <img
+                  src={s.image}
+                  alt={s.imageAlt || 'Người mẫu LIORA'}
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+              )}
+              {/* Soft inner glow */}
+              <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 80px rgba(255,255,255,0.4)' }} />
             </div>
           </div>
         </div>
@@ -282,18 +322,28 @@ export default function HomePage() {
       <section className="bg-soft section-y">
         <div className="container-x grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
           <Reveal>
-            <div className="aspect-[4/5] rounded-lg overflow-hidden hero-float bg-gradient-to-br from-brand-100 to-brand-200 relative">
-              <svg viewBox="0 0 200 280" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMax meet">
-                <defs>
-                  <linearGradient id="aboutSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f4d4c0"/><stop offset="1" stopColor="#e8b89e"/></linearGradient>
-                  <linearGradient id="aboutHair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#1a1a1a"/><stop offset="1" stopColor="#3a3a3a"/></linearGradient>
-                </defs>
-                <path d="M30 280 Q40 200 80 180 L120 180 Q160 200 170 280 Z" fill="#5a7095"/>
-                <ellipse cx="100" cy="125" rx="55" ry="70" fill="url(#aboutHair)"/>
-                <ellipse cx="100" cy="130" rx="38" ry="48" fill="url(#aboutSkin)"/>
-                <rect x="88" y="170" width="24" height="22" fill="url(#aboutSkin)"/>
-                <path d="M62 110 Q100 80 138 110 Q140 90 100 78 Q60 90 62 110 Z" fill="url(#aboutHair)"/>
-              </svg>
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-lg overflow-hidden hero-float bg-gradient-to-br from-brand-100 to-brand-200">
+                <img
+                  src={BRAND_IMAGES.aboutLifestyle}
+                  alt="LIORA — Lifestyle"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
+              {/* Decorative second image overlay (bottom right) */}
+              <div className="hidden md:block absolute -bottom-6 -right-6 w-1/2 aspect-square rounded-lg overflow-hidden border-[6px] border-white shadow-xl bg-gradient-to-br from-brand-100 to-brand-200">
+                <img
+                  src={BRAND_IMAGES.aboutLifestyle2}
+                  alt="LIORA — Chân dung"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => { (e.target as HTMLImageElement).style.opacity = '0'; }}
+                  className="w-full h-full object-cover object-center"
+                />
+              </div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>

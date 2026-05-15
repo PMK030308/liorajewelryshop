@@ -80,10 +80,24 @@ export default function AdminProducts() {
           <h1 className="text-2xl font-bold text-brand-700">Sản phẩm</h1>
           <p className="text-sm text-mute">{products.length} sản phẩm đang quản lý</p>
         </div>
-        <button onClick={startNew} className="bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-brand-800 inline-flex items-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M12 5v14M5 12h14"/></svg>
-          Thêm sản phẩm
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              if (!confirm('Khôi phục danh sách về dữ liệu seed (kèm ảnh demo)? Mọi sản phẩm tự thêm sẽ bị mất.')) return;
+              dispatch({ type: 'RESET_PRODUCTS' });
+              showToast('✓ Đã khôi phục về dữ liệu mẫu');
+            }}
+            className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2.5 rounded-md inline-flex items-center gap-1.5"
+            title="Khôi phục về dữ liệu mẫu (có ảnh demo)"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
+            Khôi phục seed
+          </button>
+          <button onClick={startNew} className="bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-brand-800 inline-flex items-center gap-2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            Thêm sản phẩm
+          </button>
+        </div>
       </header>
 
       <div className="bg-white border border-rule rounded-lg overflow-hidden">
@@ -123,14 +137,21 @@ export default function AdminProducts() {
                     <tr key={p.slug} className="hover:bg-brand-50/40">
                       <td className="py-2 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0">
-                            <div className="photo h-full w-full" style={{ aspectRatio: 'auto', backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${p.tint} 75%, ${p.tint2})` } as React.CSSProperties}>
-                              <div className="sil" style={{ color: p.accent }}>{ShapeSvg}</div>
-                            </div>
+                          <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 bg-soft">
+                            {p.image ? (
+                              <img src={p.image} alt={p.name} loading="lazy" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                            ) : (
+                              <div className="photo h-full w-full" style={{ aspectRatio: 'auto', backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${p.tint} 75%, ${p.tint2})` } as React.CSSProperties}>
+                                <div className="sil" style={{ color: p.accent }}>{ShapeSvg}</div>
+                              </div>
+                            )}
                           </div>
                           <div className="min-w-0">
                             <div className="font-medium line-clamp-1">{p.name}</div>
-                            <div className="text-[11px] text-mute">{p.slug}</div>
+                            <div className="text-[11px] text-mute flex items-center gap-2">
+                              <span>{p.slug}</span>
+                              {p.rating != null && <span className="text-yellow-500">★ {p.rating.toFixed(1)}</span>}
+                            </div>
                           </div>
                         </div>
                       </td>

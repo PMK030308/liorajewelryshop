@@ -5,6 +5,8 @@ export interface Product {
   cat: 'moissanite' | 'best-seller';
   subcat: string;
   price: number;
+  /** Original (pre-sale) price. If set and > price, UI shows a strikethrough + discount %. */
+  originalPrice?: number;
   tint: string;
   tint2: string;
   accent: string;
@@ -13,8 +15,20 @@ export interface Product {
   shape: ShapeKey;
   /** Optional product image (webp preferred). If absent, SVG placeholder is used. */
   image?: string;
-  /** Optional second image shown on hover (lifestyle / alt angle). */
+  /** Optional second image shown on hover (lifestyle / model). */
   imageHover?: string;
+  /** Additional gallery images for product detail page. */
+  gallery?: string[];
+  /** Short marketing description. */
+  description?: string;
+  /** Detailed material (e.g. "Bạc S925 xi bạch kim, đính kim cương Moissanite GRA"). */
+  material?: string;
+  /** Average rating 0-5 (with decimals). */
+  rating?: number;
+  /** Number of customer reviews. */
+  reviewCount?: number;
+  /** Available stock count. */
+  inStock?: number;
 }
 
 export interface CartItem {
@@ -48,6 +62,10 @@ export interface HeroSlide {
   plaque: string;
   script: string;
   tint: string;
+  /** Model / lifestyle image rendered on the right side of the slide. */
+  image?: string;
+  /** Alt text for accessibility. */
+  imageAlt?: string;
 }
 
 export interface NewsArticle {

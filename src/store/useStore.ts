@@ -59,7 +59,8 @@ export type Action =
   // ---- Products CRUD (admin) ----
   | { type: 'ADD_PRODUCT'; payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
-  | { type: 'DELETE_PRODUCT'; payload: string };
+  | { type: 'DELETE_PRODUCT'; payload: string }
+  | { type: 'RESET_PRODUCTS' };
 
 export const parseHash = (): string =>
   window.location.hash.replace(/^#/, '') || '/';
@@ -215,6 +216,8 @@ export function reducer(state: State, action: Action): State {
       };
     case 'DELETE_PRODUCT':
       return { ...state, products: state.products.filter(p => p.slug !== action.payload) };
+    case 'RESET_PRODUCTS':
+      return { ...state, products: SEED_PRODUCTS };
 
     default: return state;
   }

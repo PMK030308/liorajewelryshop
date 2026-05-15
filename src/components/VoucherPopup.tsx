@@ -8,13 +8,7 @@ export default function VoucherPopup() {
   const [email, setEmail] = React.useState('');
 
   useEffect(() => {
-    if (!localStorage.getItem('liora_voucher_seen')) {
-      const t = setTimeout(() => {
-        dispatch({ type: 'OPEN_VOUCHER' });
-        localStorage.setItem('liora_voucher_seen', '1');
-      }, 6000);
-      return () => clearTimeout(t);
-    }
+    dispatch({ type: 'OPEN_VOUCHER' });
   }, [dispatch]);
 
   const close = () => dispatch({ type: 'CLOSE_ALL' });
