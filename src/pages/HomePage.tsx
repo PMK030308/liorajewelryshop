@@ -188,8 +188,8 @@ function HeroSlideItem({ idx }: { idx: number }) {
             </div>
           </div>
 
-          <div className="hidden md:flex justify-center items-center relative">
-            <div className="relative w-64 h-96 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[6px] border-white/50 shadow-[0_20px_50px_-12px_rgba(26,48,80,0.2)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
+          <div className="flex justify-center items-center relative order-first md:order-last mb-4 md:mb-0">
+            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/50 shadow-[0_12px_30px_-10px_rgba(26,48,80,0.25)] md:shadow-[0_20px_50px_-12px_rgba(26,48,80,0.2)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
               {s.image && (
                 <img
                   src={s.image}
@@ -231,18 +231,46 @@ export default function HomePage() {
   const moissaniteProducts = state.products.filter(p => p.cat === 'moissanite').slice(0, 12);
   const bestSellerProducts = state.products.filter(p => p.cat === 'best-seller').slice(0, 12);
 
-  const trustBadges = [
-    { i:'🚚', t:'Giao hàng miễn phí', s:'Với đơn hàng từ 500k trở lên' },
-    { i:'💬', t:'Hỗ trợ 24/7',        s:'Hỗ trợ online / offline 24/7' },
-    { i:'↻',  t:'Miễn phí đổi trả',   s:'Trong vòng 7 ngày' },
-    { i:'📞', t:'Đặt hàng trực tuyến', s:'Hotline: 0982463691' },
+  const trustBadges: { icon: React.ReactNode; t: string; s: string }[] = [
+    {
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M16 3h-2v13H1V6a3 3 0 0 1 3-3h12v13"/><path d="M16 8h4l3 4v4h-7"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/>
+        </svg>
+      ),
+      t: 'Giao hàng miễn phí', s: 'Với đơn hàng từ 500k trở lên',
+    },
+    {
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+        </svg>
+      ),
+      t: 'Hỗ trợ 24/7', s: 'Tư vấn online / offline mọi lúc',
+    },
+    {
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>
+        </svg>
+      ),
+      t: 'Miễn phí đổi trả', s: 'Trong vòng 7 ngày kể từ ngày nhận',
+    },
+    {
+      icon: (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92Z"/>
+        </svg>
+      ),
+      t: 'Đặt hàng trực tuyến', s: 'Hotline 0982 463 691',
+    },
   ];
 
   return (
     <main className="page">
       {/* Hero Slider */}
       <section className="relative">
-        <div className="relative aspect-[16/7] md:aspect-[24/9] overflow-hidden squiggle-bg" style={{ backgroundColor: '#f3f3f3' }}>
+        <div className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg" style={{ backgroundColor: '#f3f3f3' }}>
           <AnimatePresence mode="sync" initial={false}>
             <HeroSlideItem key={state.slide} idx={state.slide} />
           </AnimatePresence>
@@ -305,7 +333,7 @@ export default function HomePage() {
       <section className="container-x section-y">
         <Reveal>
           <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">💎 BỘ SƯU TẬP NỔI BẬT</div>
+            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BỘ SƯU TẬP NỔI BẬT</div>
             <h2 className="sec-title">Kim Cương Moissanite</h2>
             <p className="text-sm text-ink2 mt-2 max-w-xl mx-auto">Đính kim cương Moissanite, xi bạch kim, kiểm định GRA chính hãng</p>
           </div>
@@ -377,8 +405,8 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
             {trustBadges.map(b => (
               <div key={b.t} className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full bg-brand-50 text-brand-700 flex items-center justify-center text-2xl mb-3">{b.i}</div>
-                <div className="font-semibold mb-1 text-brand-700">{b.t}</div>
+                <div className="w-14 h-14 mx-auto rounded-full bg-brand-50 text-brand-700 flex items-center justify-center mb-3">{b.icon}</div>
+                <div className="font-semibold mb-1 text-brand-700 text-sm">{b.t}</div>
                 <div className="text-xs text-mute">{b.s}</div>
               </div>
             ))}
@@ -390,7 +418,7 @@ export default function HomePage() {
       <section className="container-x section-y">
         <Reveal>
           <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">🔥 HOT TREND 2026</div>
+            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">HOT TREND 2026</div>
             <h2 className="sec-title">Sản phẩm bán chạy</h2>
           </div>
         </Reveal>
@@ -409,7 +437,7 @@ export default function HomePage() {
       <section className="container-x section-y">
         <Reveal>
           <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">📝 BLOG</div>
+            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BLOG</div>
             <h2 className="sec-title">Tin tức</h2>
           </div>
         </Reveal>
@@ -423,7 +451,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="p-5">
-                <div className="text-xs text-mute mb-2">📅 {n.date}</div>
+                <div className="text-xs text-mute mb-2 uppercase tracking-wider">{n.date}</div>
                 <h3 className="font-semibold text-lg mb-2 group-hover:text-brand-500 line-clamp-2 transition">{n.title}</h3>
                 <p className="text-sm text-ink2 line-clamp-2 mb-3">{n.excerpt}</p>
                 <span className="text-brand-500 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">Xem thêm <span className="transition-transform group-hover:translate-x-1">→</span></span>

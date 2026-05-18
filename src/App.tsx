@@ -7,6 +7,7 @@ import CartDrawer from './components/CartDrawer';
 import VoucherPopup from './components/VoucherPopup';
 import Toast from './components/Toast';
 import FloatButtons from './components/FloatButtons';
+import MobileBottomNav from './components/MobileBottomNav';
 import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
@@ -109,7 +110,9 @@ export default function App() {
   return (
     <>
       {!isAdminRoute && <Header />}
-      <Router />
+      <div className={!isAdminRoute ? 'pb-16 lg:pb-0' : ''}>
+        <Router />
+      </div>
       {!isAdminRoute && <Footer />}
 
       {/* Global overlays */}
@@ -117,6 +120,7 @@ export default function App() {
       <VoucherPopup />
       <Toast />
       {!isAdminRoute && <FloatButtons />}
+      {!isAdminRoute && <MobileBottomNav />}
     </>
   );
 }

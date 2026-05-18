@@ -1,5 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
+
+interface FooterLinkSectionProps {
+  title: string;
+  links: { label: string; href: string; nav?: string }[];
+  navigate: (path: string) => void;
+  span: string;
+}
+
+function FooterLinkSection({ title, links, navigate, span }: FooterLinkSectionProps) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className={span}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="md:cursor-default md:pointer-events-none w-full text-left text-white font-semibold mb-3 md:mb-4 text-sm uppercase tracking-wider flex items-center justify-between py-2 md:py-0 border-b md:border-0 border-white/10"
+        aria-expanded={open}
+      >
+        <span>{title}</span>
+        <svg
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+          className={`md:hidden transition-transform ${open ? 'rotate-180' : ''}`}
+        ><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <ul className={`space-y-2.5 text-sm pt-3 md:pt-0 md:!block ${open ? 'block' : 'hidden'}`}>
+        {links.map(({ href, label, nav }) => (
+          <li key={label}>
+            <a
+              href={href}
+              onClick={nav ? (e) => { e.preventDefault(); navigate(nav); } : undefined}
+              className="hover:text-white transition-colors"
+            >{label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function Footer() {
   const { navigate, showToast } = useStore();
@@ -7,7 +44,7 @@ export default function Footer() {
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('🎉 Cảm ơn bạn đã đăng ký!');
+    showToast('Cảm ơn bạn đã đăng ký!');
     setEmail('');
   };
 
@@ -16,7 +53,11 @@ export default function Footer() {
       <div className="container-x grid md:grid-cols-12 gap-10">
         {/* Col 1 — Brand + contact */}
         <div className="md:col-span-4">
-          <div className="flex items-center gap-2.5 mb-4 text-white">
+          <a
+            href="#/"
+            onClick={(e) => { e.preventDefault(); navigate('/'); }}
+            className="inline-flex items-center gap-2.5 mb-4 text-white hover:opacity-90 transition-opacity"
+          >
             <svg width="42" height="42" viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="30" cy="30" r="22"/>
               <path d="M18 32 C 22 22, 38 22, 42 32"/>
@@ -25,7 +66,7 @@ export default function Footer() {
               <circle cx="30" cy="33.5" r="1.6" fill="currentColor" stroke="none"/>
             </svg>
             <span className="font-bold text-2xl tracking-[0.22em]">LIORA</span>
-          </div>
+          </a>
           <p className="text-sm leading-relaxed mb-5 text-white/75">Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.</p>
           <ul className="space-y-2.5 text-sm text-white/85">
             <li className="flex items-start gap-2.5">
@@ -43,49 +84,30 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Col 2 — Policies */}
-        <div className="md:col-span-3">
-          <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Chính sách</h4>
-          <ul className="space-y-2.5 text-sm">
-            {[
-              { href:'#/about', label:'Giới thiệu', nav:'/about' },
-              { href:'#', label:'Bảo hành, Đổi trả' },
-              { href:'#', label:'Chính sách kiểm hàng' },
-              { href:'#', label:'Chính sách giao hàng' },
-              { href:'#', label:'Bảo mật thông tin' },
-            ].map(({ href, label, nav }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  onClick={nav ? (e) => { e.preventDefault(); navigate(nav); } : undefined}
-                  className="hover:text-white transition-colors"
-                >{label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Col 3 — Help */}
-        <div className="md:col-span-2">
-          <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Hỗ trợ</h4>
-          <ul className="space-y-2.5 text-sm">
-            {[
-              { href:'#/huong-dan', label:'Hướng dẫn chọn size', nav:'/huong-dan' },
-              { href:'#/huong-dan', label:'Hướng dẫn bảo quản', nav:'/huong-dan' },
-              { href:'#/kiem-dinh', label:'Kiểm định GRA', nav:'/kiem-dinh' },
-              { href:'#/feedback', label:'Feedback', nav:'/feedback' },
-              { href:'#/lien-he', label:'Liên hệ', nav:'/lien-he' },
-            ].map(({ href, label, nav }) => (
-              <li key={label}>
-                <a
-                  href={href}
-                  onClick={nav ? (e) => { e.preventDefault(); navigate(nav); } : undefined}
-                  className="hover:text-white transition-colors"
-                >{label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <FooterLinkSection
+          title="Chính sách"
+          span="md:col-span-3"
+          navigate={navigate}
+          links={[
+            { href:'#/about', label:'Giới thiệu', nav:'/about' },
+            { href:'#', label:'Bảo hành, Đổi trả' },
+            { href:'#', label:'Chính sách kiểm hàng' },
+            { href:'#', label:'Chính sách giao hàng' },
+            { href:'#', label:'Bảo mật thông tin' },
+          ]}
+        />
+        <FooterLinkSection
+          title="Hỗ trợ"
+          span="md:col-span-2"
+          navigate={navigate}
+          links={[
+            { href:'#/huong-dan', label:'Hướng dẫn chọn size', nav:'/huong-dan' },
+            { href:'#/huong-dan', label:'Hướng dẫn bảo quản', nav:'/huong-dan' },
+            { href:'#/kiem-dinh', label:'Kiểm định GRA', nav:'/kiem-dinh' },
+            { href:'#/feedback', label:'Feedback', nav:'/feedback' },
+            { href:'#/lien-he', label:'Liên hệ', nav:'/lien-he' },
+          ]}
+        />
 
         {/* Col 4 — Newsletter + Social */}
         <div className="md:col-span-3">

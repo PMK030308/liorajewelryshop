@@ -70,7 +70,7 @@ export default function PhotoPlaceholder({
           {ShapeSvg}
         </div>
       )}
-      {hot && <div className="ribbon" style={{ zIndex: 2 }}>HOT 🔥</div>}
+      {hot && <div className="ribbon" style={{ zIndex: 2 }}>HOT</div>}
       {sold && <div className="ribbon-out" style={{ zIndex: 2 }}>Hết hàng</div>}
     </div>
   );

@@ -48,13 +48,14 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background: #34507a;
+    background: #1A3050;
     color: white;
     font-size: 10px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 999px;
-    letter-spacing: 0.04em;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
   .photo .ribbon-out {
     position: absolute;
@@ -68,65 +69,49 @@
     border-radius: 999px;
   }
 
-  /* Product card */
+  /* Product card — minimal & refined */
   .pcard {
     background: #fff;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.35s cubic-bezier(.2,.6,.2,1), box-shadow 0.35s ease, border-color 0.35s ease;
-    border: 1px solid #f1f1f1;
+    transition: transform 0.4s cubic-bezier(.2,.6,.2,1), box-shadow 0.4s ease, border-color 0.3s ease;
+    border: 1px solid transparent;
     position: relative;
   }
   .pcard:hover {
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 12px 30px -10px rgba(26,48,80,0.18);
-    border-color: #e6ebf3;
-    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05), 0 16px 34px -18px rgba(26,48,80,0.20);
+    border-color: #ececec;
+    transform: translateY(-3px);
   }
   .pcard .photo { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); will-change: transform; }
-  .pcard:hover .photo { transform: scale(1.06); }
+  .pcard:hover .photo { transform: scale(1.05); }
   .pcard .photo .sil { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); }
-  .pcard:hover .photo .sil { transform: scale(1.04) rotate(-2deg); }
-  .pcard .buy-cta {
-    position: absolute;
-    left: 50%;
-    bottom: -44px;
-    transform: translateX(-50%);
-    background: #34507a;
-    color: #fff;
-    padding: 9px 20px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    transition: bottom 0.35s cubic-bezier(.2,.6,.2,1), box-shadow 0.25s ease;
-    white-space: nowrap;
-    box-shadow: 0 6px 18px -4px rgba(52,80,122,0.5);
-  }
-  .pcard:hover .buy-cta { bottom: 14px; }
-  .pcard .buy-cta:hover { box-shadow: 0 10px 24px -4px rgba(52,80,122,0.7); }
+  .pcard:hover .photo .sil { transform: scale(1.03) rotate(-2deg); }
 
-  /* Wishlist heart */
+  /* Wishlist heart — subtle */
   .wish-btn {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 36px;
-    height: 36px;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
     border-radius: 999px;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #8a8a8a;
     z-index: 3;
     opacity: 0;
-    transform: translateY(-8px) scale(0.9);
-    transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), background 0.2s, color 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-4px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), background 0.2s, color 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
-  .pcard:hover .wish-btn { opacity: 1; transform: translateY(0) scale(1); }
-  .wish-btn:hover { background: #34507a; color: #fff; transform: scale(1.1); }
-  .wish-btn.wished { color: #34507a; background: #fff; opacity: 1; transform: translateY(0) scale(1); }
+  .pcard:hover .wish-btn { opacity: 1; transform: translateY(0); }
+  .wish-btn:hover { background: #1A3050; color: #fff; }
+  .wish-btn.wished { color: #e11d48; background: #fff; opacity: 1; transform: translateY(0); }
+  .wish-btn.wished:hover { background: #e11d48; color: #fff; }
   .wish-btn.wished:hover { background: #34507a; color: #fff; }
 
   /* Buttons */

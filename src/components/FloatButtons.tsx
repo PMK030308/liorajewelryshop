@@ -11,7 +11,7 @@ export default function FloatButtons() {
   }, []);
 
   return (
-    <div className="fixed bottom-5 right-5 z-30 flex flex-col gap-3">
+    <div className="fixed bottom-20 lg:bottom-5 right-4 lg:right-5 z-20 flex flex-col gap-2.5 lg:gap-3">
       <a
         href="tel:0982463691"
         className="fab fab-call w-12 h-12 rounded-full bg-brand-500 text-white shadow-float flex items-center justify-center hover:bg-brand-600"

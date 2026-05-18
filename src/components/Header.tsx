@@ -235,26 +235,128 @@ export default function Header() {
           </nav>
         </div>
 
-        {/* Mobile menu */}
-        {mobileOpen && (
-          <div className="lg:hidden border-t border-rule bg-white">
-            <nav className="container-x py-3 flex flex-col text-sm font-medium">
-              {[
-                { path:'/', label:'Trang chủ' },
-                { path:'/shop', label:'Sản Phẩm' },
-                { path:'/about', label:'Giới Thiệu' },
-                { path:'/kiem-dinh', label:'Kiểm Định' },
-                { path:'/feedback', label:'Feedback' },
-                { path:'/huong-dan', label:'Hướng Dẫn' },
-                { path:'/news', label:'Tin Tức' },
-                { path:'/lien-he', label:'Liên Hệ' },
-              ].map(({ path, label }) => (
-                <a key={path} href={`#${path}`} className="py-2 hover:text-brand-500" onClick={(e) => { e.preventDefault(); navigate(path); setMobileOpen(false); }}>{label}</a>
-              ))}
-            </nav>
-          </div>
-        )}
       </header>
+
+      {/* Mobile slide-in drawer menu */}
+      <div
+        className={`lg:hidden fixed inset-0 z-50 transition-opacity duration-300 ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        aria-hidden={!mobileOpen}
+      >
+        <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
+        <aside
+          className={`absolute top-0 left-0 bottom-0 w-[82%] max-w-[340px] bg-white shadow-2xl flex flex-col transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu chính"
+        >
+          {/* User section */}
+          <div className="bg-brand-700 text-white p-5 pb-6">
+            <button
+              onClick={() => setMobileOpen(false)}
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white"
+              aria-label="Đóng menu"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+            {state.user ? (
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-white text-brand-700 flex items-center justify-center font-bold text-base">
+                  {state.user.name.split(' ').slice(-2).map(s => s[0]).join('').toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold truncate">{state.user.name}</div>
+                  <div className="text-xs text-white/70 truncate">{state.user.email}</div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="font-semibold mb-3">Chào mừng đến LIORA 👋</div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setMobileOpen(false); navigate('/login'); }}
+                    className="flex-1 bg-white text-brand-700 text-sm font-semibold py-2 rounded-md hover:bg-brand-50"
+                  >Đăng nhập</button>
+                  <button
+                    onClick={() => { setMobileOpen(false); navigate('/register'); }}
+                    className="flex-1 border border-white/40 text-white text-sm font-semibold py-2 rounded-md hover:bg-white/10"
+                  >Đăng ký</button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Nav links */}
+          <nav className="flex-1 overflow-y-auto py-2">
+            {[
+              { path: '/',          label: 'Trang chủ' },
+              { path: '/shop',      label: 'Sản phẩm', accent: true },
+              { path: '/about',     label: 'Giới thiệu' },
+              { path: '/kiem-dinh', label: 'Kiểm định' },
+              { path: '/feedback',  label: 'Feedback' },
+              { path: '/huong-dan', label: 'Hướng dẫn' },
+              { path: '/news',      label: 'Tin tức' },
+              { path: '/lien-he',   label: 'Liên hệ' },
+            ].map(({ path, label, accent }) => {
+              const active = isActive(path);
+              return (
+                <a
+                  key={path}
+                  href={`#${path}`}
+                  onClick={(e) => { e.preventDefault(); navigate(path); setMobileOpen(false); }}
+                  className={`flex items-center justify-between px-5 py-3 text-[15px] border-l-[3px] transition-colors ${
+                    active
+                      ? 'border-brand-700 bg-brand-50 text-brand-700 font-semibold'
+                      : 'border-transparent text-ink hover:bg-soft hover:text-brand-700'
+                  }`}
+                >
+                  <span>{label}</span>
+                  {accent && !active && <span className="text-xs text-brand-500 font-medium">{state.products.length} SP</span>}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-mute"><path d="m9 18 6-6-6-6"/></svg>
+                </a>
+              );
+            })}
+          </nav>
+
+          {/* Bottom user actions */}
+          {state.user && (
+            <div className="border-t border-rule p-3 space-y-1">
+              <button
+                onClick={() => { setMobileOpen(false); navigate('/account'); }}
+                className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-soft flex items-center gap-2"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+                Tài khoản của tôi
+              </button>
+              {state.user.role === 'admin' && (
+                <button
+                  onClick={() => { setMobileOpen(false); navigate('/admin/dashboard'); }}
+                  className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-brand-50 flex items-center gap-2 text-brand-700 font-semibold"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                  Trang quản trị
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  dispatch({ type: 'LOGOUT' });
+                  setMobileOpen(false);
+                  showToast('Đã đăng xuất');
+                  setTimeout(() => navigate('/'), 200);
+                }}
+                className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-red-50 text-red-500 flex items-center gap-2"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                Đăng xuất
+              </button>
+            </div>
+          )}
+
+          <div className="border-t border-rule px-5 py-3 text-[11px] text-mute">
+            <div className="font-semibold text-brand-700 mb-1">Hotline 0982 463 691</div>
+            <div>9:00 – 21:00 hàng ngày</div>
+          </div>
+        </aside>
+      </div>
 
       {/* Search Panel */}
       <div className={`search-panel ${state.searchOpen ? 'open' : ''}`}>
