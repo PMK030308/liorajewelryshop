@@ -69,10 +69,10 @@
     border-radius: 999px;
   }
 
-  /* Product card — minimal & refined */
+  /* Product card — minimal & refined, sharp corners */
   .pcard {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
     transition: transform 0.4s cubic-bezier(.2,.6,.2,1), box-shadow 0.4s ease, border-color 0.3s ease;
     border: 1px solid transparent;

@@ -126,11 +126,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
         <div className="container-x grid md:grid-cols-2 gap-2 items-center w-full relative z-10">
           <div className="text-center px-4 md:px-8 py-6 relative">
             <div className="flex flex-col items-center mb-4 md:mb-6">
-              <svg width="56" height="60" viewBox="0 0 60 60" fill="none" stroke="#172347" strokeWidth="2.2" strokeLinejoin="round" strokeLinecap="round" className="mb-1">
-                <path d="M30 8 L48 22 L42 50 L18 50 L12 22 Z"/>
-                <path d="M12 22 L30 26 L48 22"/>
-                <path d="M30 26 L24 50 M30 26 L36 50"/>
-              </svg>
+              <img src="/logoliora.png" alt="LIORA" className="object-contain mb-1 h-12 md:h-14 w-auto" />
               <div className="font-bold text-2xl md:text-3xl tracking-[0.32em] text-[#1A3050]">LIORA</div>
             </div>
             

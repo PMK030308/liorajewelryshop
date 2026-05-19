@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Check, Download, Printer } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import Shapes from '../data/shapes';
 import { Order } from '../types';
+import { generateInvoicePdf } from '../utils/invoice';
 
 export default function CheckoutPage() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -19,6 +21,7 @@ export default function CheckoutPage() {
   const [payment, setPayment] = useState<'cod' | 'bank' | 'momo'>('cod');
   const [coupon, setCoupon] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount: number } | null>(null);
+  const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
 
   // Auto-fill from logged-in user
   useEffect(() => {
@@ -74,9 +77,70 @@ export default function CheckoutPage() {
     };
     dispatch({ type: 'ADD_ORDER', payload: order });
     dispatch({ type: 'CLEAR_CART' });
-    showToast('🎉 Đặt hàng thành công!');
-    setTimeout(() => navigate(user ? '/account' : '/'), 1500);
+    showToast('Đặt hàng thành công!');
+    setPlacedOrder(order);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  // ====== ORDER SUCCESS SCREEN ======
+  if (placedOrder) {
+    return (
+      <main className="page container-x py-10 md:py-16 max-w-2xl min-h-[70vh]">
+        <div className="bg-white border border-rule rounded-lg shadow-card p-7 md:p-10 text-center">
+          <div className="w-16 h-16 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-5">
+            <Check size={32} strokeWidth={2.4} />
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-2">Đặt hàng thành công!</h1>
+          <p className="text-sm text-ink2 mb-1">
+            Mã đơn hàng: <span className="font-bold text-brand-700">#{placedOrder.id.slice(-8).toUpperCase()}</span>
+          </p>
+          <p className="text-sm text-mute mb-7">
+            Chúng tôi sẽ liên hệ xác nhận đơn trong vòng 15 phút.<br />
+            Hóa đơn cũng có thể tải lại bất kỳ lúc nào ở trang Tài khoản.
+          </p>
+
+          <div className="bg-soft rounded-md p-4 mb-6 text-sm text-left max-w-md mx-auto">
+            <div className="flex justify-between mb-1"><span className="text-ink2">Người nhận</span><span className="font-medium">{placedOrder.shipping.name}</span></div>
+            <div className="flex justify-between mb-1"><span className="text-ink2">SĐT</span><span className="font-medium">{placedOrder.shipping.phone}</span></div>
+            <div className="flex justify-between mb-1"><span className="text-ink2">Phương thức</span><span className="font-medium uppercase">{placedOrder.payment}</span></div>
+            <div className="flex justify-between mt-2 pt-2 border-t border-rule text-base font-bold text-brand-700"><span>Tổng tiền</span><span>{fmt(placedOrder.total)}</span></div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mb-3">
+            <button
+              onClick={() => generateInvoicePdf(placedOrder)}
+              className="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-md text-sm inline-flex items-center justify-center gap-2 transition-colors"
+            >
+              <Download size={16} strokeWidth={2} />
+              Tải hóa đơn PDF
+            </button>
+            <button
+              onClick={() => generateInvoicePdf(placedOrder, { autoPrint: true })}
+              className="flex-1 border border-brand-700 text-brand-700 hover:bg-brand-50 font-semibold py-3 rounded-md text-sm inline-flex items-center justify-center gap-2 transition-colors"
+            >
+              <Printer size={16} strokeWidth={2} />
+              In hóa đơn
+            </button>
+          </div>
+
+          <div className="flex gap-2 max-w-md mx-auto">
+            <button
+              onClick={() => navigate(user ? '/account' : '/')}
+              className="flex-1 text-sm text-brand-500 hover:text-brand-700 py-2 font-medium"
+            >
+              {user ? '→ Xem đơn của tôi' : '→ Về trang chủ'}
+            </button>
+            <button
+              onClick={() => navigate('/shop')}
+              className="flex-1 text-sm text-brand-500 hover:text-brand-700 py-2 font-medium"
+            >
+              ← Tiếp tục mua sắm
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   if (cart.length === 0) {
     return (

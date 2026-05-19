@@ -1,9 +1,32 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { Plus, RefreshCw, X, Upload, ChevronDown, Image as ImageIcon } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { fmt } from '../../data';
 import AdminLayout from './AdminLayout';
 import { Product, ShapeKey } from '../../types';
 import Shapes from '../../data/shapes';
+
+const SUBCAT_LABELS: Record<string, string> = {
+  'bong-tai':   'Bông tai / Khuyên tai',
+  'day-chuyen': 'Dây chuyền',
+  'lac-tay':    'Lắc tay / Vòng tay',
+  'nhan-don':   'Nhẫn đơn',
+  'cap-doi':    'Cặp đôi',
+};
+
+/** Convert Vietnamese text to URL-friendly slug. */
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 60);
+}
 
 const SHAPES: ShapeKey[] = ['bow','flower','snow','gem','star','bracelet','ring','butterfly','clover','heart','sparkle'];
 const CATS: Product['cat'][] = ['moissanite', 'best-seller'];
@@ -28,6 +51,7 @@ export default function AdminProducts() {
   const [q, setQ] = useState('');
   const [filterCat, setFilterCat] = useState<string>('all');
   const [editing, setEditing] = useState<Product | null>(null);
+  const [isAutoSlug, setIsAutoSlug] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
 
   const filtered = useMemo(() => {
@@ -39,29 +63,29 @@ export default function AdminProducts() {
     });
   }, [products, q, filterCat]);
 
-  const startNew = () => setEditing({ ...emptyDraft });
-  const startEdit = (p: Product) => setEditing({ ...p });
+  const startNew = () => { setIsAutoSlug(true); setEditing({ ...emptyDraft }); };
+  const startEdit = (p: Product) => { setIsAutoSlug(false); setEditing({ ...p }); };
 
   const save = () => {
     if (!editing) return;
     const slug = editing.slug.trim().toLowerCase().replace(/\s+/g, '-');
     if (!slug || !editing.name || !editing.code) {
-      showToast('⚠ Vui lòng điền slug, mã và tên sản phẩm');
+      showToast('Vui lòng điền slug, mã và tên sản phẩm');
       return;
     }
     const exists = products.find(p => p.slug === slug);
     if (exists && exists !== products.find(p => p.slug === editing.slug)) {
-      showToast('⚠ Slug đã tồn tại');
+      showToast('Slug đã tồn tại');
       return;
     }
     const isNew = !products.find(p => p.slug === editing.slug);
     const payload = { ...editing, slug };
     if (isNew) {
       dispatch({ type: 'ADD_PRODUCT', payload });
-      showToast('✓ Đã thêm sản phẩm');
+      showToast('Đã thêm sản phẩm');
     } else {
       dispatch({ type: 'UPDATE_PRODUCT', payload });
-      showToast('✓ Đã cập nhật sản phẩm');
+      showToast('Đã cập nhật sản phẩm');
     }
     setEditing(null);
   };
@@ -69,7 +93,7 @@ export default function AdminProducts() {
   const confirmRemove = () => {
     if (!confirmDelete) return;
     dispatch({ type: 'DELETE_PRODUCT', payload: confirmDelete.slug });
-    showToast('🗑 Đã xóa sản phẩm');
+    showToast('Đã xóa sản phẩm');
     setConfirmDelete(null);
   };
 
@@ -85,16 +109,16 @@ export default function AdminProducts() {
             onClick={() => {
               if (!confirm('Khôi phục danh sách về dữ liệu seed (kèm ảnh demo)? Mọi sản phẩm tự thêm sẽ bị mất.')) return;
               dispatch({ type: 'RESET_PRODUCTS' });
-              showToast('✓ Đã khôi phục về dữ liệu mẫu');
+              showToast('Đã khôi phục về dữ liệu mẫu');
             }}
             className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2.5 rounded-md inline-flex items-center gap-1.5"
             title="Khôi phục về dữ liệu mẫu (có ảnh demo)"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg>
+            <RefreshCw size={14} strokeWidth={2} />
             Khôi phục seed
           </button>
           <button onClick={startNew} className="bg-brand-700 text-white font-semibold px-5 py-2.5 rounded-md text-sm hover:bg-brand-800 inline-flex items-center gap-2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            <Plus size={16} strokeWidth={2.4} />
             Thêm sản phẩm
           </button>
         </div>
@@ -178,89 +202,211 @@ export default function AdminProducts() {
 
       {/* Edit/Create Modal */}
       {editing && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setEditing(null)}>
-          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-            <header className="flex items-center justify-between p-5 border-b border-rule sticky top-0 bg-white">
-              <h3 className="font-bold text-lg text-brand-700">
-                {products.find(p => p.slug === editing.slug) ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới'}
-              </h3>
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-start md:items-center justify-center p-2 md:p-4" onClick={() => setEditing(null)}>
+          <div className="bg-white rounded-lg w-full max-w-3xl max-h-[95vh] md:max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <header className="flex items-center justify-between p-5 border-b border-rule sticky top-0 bg-white z-10">
+              <div>
+                <h3 className="font-bold text-lg text-brand-700">
+                  {products.find(p => p.slug === editing.slug) ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới'}
+                </h3>
+                <p className="text-xs text-mute mt-0.5">Điền đầy đủ thông tin để khách hàng dễ chọn mua</p>
+              </div>
               <button onClick={() => setEditing(null)} className="w-8 h-8 rounded-full hover:bg-soft flex items-center justify-center text-mute">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                <X size={16} strokeWidth={2} />
               </button>
             </header>
-            <div className="p-5 grid md:grid-cols-2 gap-4">
-              <Field label="Slug (định danh, không trùng)" required>
-                <input value={editing.slug} onChange={e => setEditing({ ...editing, slug: e.target.value })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <Field label="Mã sản phẩm" required>
-                <input value={editing.code} onChange={e => setEditing({ ...editing, code: e.target.value })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <Field label="Tên sản phẩm" required className="md:col-span-2">
-                <input value={editing.name} onChange={e => setEditing({ ...editing, name: e.target.value })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <Field label="Danh mục">
-                <select value={editing.cat} onChange={e => setEditing({ ...editing, cat: e.target.value as Product['cat'] })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
-                  {CATS.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </Field>
-              <Field label="Danh mục con">
-                <select value={editing.subcat} onChange={e => setEditing({ ...editing, subcat: e.target.value })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
-                  {SUBCATS.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </Field>
-              <Field label="Giá (₫)">
-                <input type="number" min={0} value={editing.price} onChange={e => setEditing({ ...editing, price: Number(e.target.value) })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <Field label="Hình dạng (placeholder)">
-                <select value={editing.shape} onChange={e => setEditing({ ...editing, shape: e.target.value as ShapeKey })}
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500">
-                  {SHAPES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </Field>
-              <Field label="Tint 1">
-                <input type="color" value={editing.tint} onChange={e => setEditing({ ...editing, tint: e.target.value })}
-                  className="h-10 w-full border border-rule rounded-md cursor-pointer" />
-              </Field>
-              <Field label="Tint 2">
-                <input type="color" value={editing.tint2} onChange={e => setEditing({ ...editing, tint2: e.target.value })}
-                  className="h-10 w-full border border-rule rounded-md cursor-pointer" />
-              </Field>
-              <Field label="Accent">
-                <input type="color" value={editing.accent} onChange={e => setEditing({ ...editing, accent: e.target.value })}
-                  className="h-10 w-full border border-rule rounded-md cursor-pointer" />
-              </Field>
-              <Field label="URL ảnh sản phẩm (tuỳ chọn)" className="md:col-span-2">
-                <input value={editing.image || ''} onChange={e => setEditing({ ...editing, image: e.target.value || undefined })}
-                  placeholder="https://..."
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <Field label="URL ảnh hover (tuỳ chọn)" className="md:col-span-2">
-                <input value={editing.imageHover || ''} onChange={e => setEditing({ ...editing, imageHover: e.target.value || undefined })}
-                  placeholder="https://..."
-                  className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500" />
-              </Field>
-              <div className="md:col-span-2 flex flex-wrap gap-5 pt-2">
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={!!editing.hot} onChange={e => setEditing({ ...editing, hot: e.target.checked })}
-                    className="accent-brand-700 w-4 h-4" />
-                  Đánh dấu HOT
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input type="checkbox" checked={!!editing.sold} onChange={e => setEditing({ ...editing, sold: e.target.checked })}
-                    className="accent-brand-700 w-4 h-4" />
-                  Hết hàng
-                </label>
-              </div>
+
+            <div className="p-5 md:p-6 space-y-7">
+
+              {/* SECTION 1 — Thông tin cơ bản */}
+              <FormSection
+                step={1}
+                title="Thông tin cơ bản"
+                desc="Tên, mã và slug sản phẩm. Slug sẽ tự sinh từ tên nếu bỏ trống."
+              >
+                <Field label="Tên sản phẩm" required className="md:col-span-2"
+                  hint="VD: Bông Tai Bạc Gắn Kim Cương Moissanite 'Aurora'">
+                  <input value={editing.name}
+                    onChange={e => {
+                      const name = e.target.value;
+                      setEditing({
+                        ...editing,
+                        name,
+                        // auto-fill slug if not yet customized
+                        slug: editing.slug && !isAutoSlug ? editing.slug : slugify(name),
+                      });
+                    }}
+                    placeholder="Ví dụ: Nhẫn Bạc Đính Đá Cao Cấp"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                </Field>
+                <Field label="Mã sản phẩm (SKU)" required hint="In trên thẻ kiểm định và hoá đơn">
+                  <input value={editing.code} onChange={e => setEditing({ ...editing, code: e.target.value.toUpperCase() })}
+                    placeholder="VD: NLJ002"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-brand-500" />
+                </Field>
+                <Field label="Slug (định danh URL)" required
+                  hint="Không trùng. Auto sinh từ tên — sửa nếu muốn">
+                  <input value={editing.slug}
+                    onChange={e => { setIsAutoSlug(false); setEditing({ ...editing, slug: e.target.value }); }}
+                    placeholder="vd: nhan-bac-aurora"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm font-mono lowercase focus:outline-none focus:border-brand-500" />
+                </Field>
+              </FormSection>
+
+              {/* SECTION 2 — Phân loại */}
+              <FormSection
+                step={2}
+                title="Phân loại sản phẩm"
+                desc="Giúp khách lọc sản phẩm dễ dàng"
+              >
+                <Field label="Bộ sưu tập">
+                  <select value={editing.cat} onChange={e => setEditing({ ...editing, cat: e.target.value as Product['cat'] })}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
+                    <option value="moissanite">Kim cương Moissanite</option>
+                    <option value="best-seller">Bán chạy</option>
+                  </select>
+                </Field>
+                <Field label="Loại trang sức">
+                  <select value={editing.subcat} onChange={e => setEditing({ ...editing, subcat: e.target.value })}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
+                    {SUBCATS.map(c => <option key={c} value={c}>{SUBCAT_LABELS[c] || c}</option>)}
+                  </select>
+                </Field>
+                <Field label="Hình dạng (silhouette)" hint="Dùng khi không có ảnh thật">
+                  <select value={editing.shape} onChange={e => setEditing({ ...editing, shape: e.target.value as ShapeKey })}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
+                    {SHAPES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </Field>
+              </FormSection>
+
+              {/* SECTION 3 — Giá */}
+              <FormSection
+                step={3}
+                title="Giá bán"
+                desc="Nếu có giá gốc cao hơn giá hiện tại, badge giảm % sẽ tự hiện trên thẻ sản phẩm"
+              >
+                <Field label="Giá bán (₫)" required
+                  hint={editing.price > 0 ? `Hiển thị: ${editing.price.toLocaleString('vi-VN')}₫` : ''}>
+                  <input type="number" min={0} step={1000} value={editing.price}
+                    onChange={e => setEditing({ ...editing, price: Number(e.target.value) })}
+                    placeholder="658000"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                </Field>
+                <Field label="Giá gốc (₫)" hint="Để trống nếu không sale">
+                  <input type="number" min={0} step={1000} value={editing.originalPrice ?? ''}
+                    onChange={e => setEditing({ ...editing, originalPrice: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="828000"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                </Field>
+                <Field label="Số lượng tồn kho">
+                  <input type="number" min={0} value={editing.inStock ?? ''}
+                    onChange={e => setEditing({ ...editing, inStock: e.target.value ? Number(e.target.value) : undefined })}
+                    placeholder="50"
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                </Field>
+              </FormSection>
+
+              {/* SECTION 4 — Hình ảnh */}
+              <FormSection
+                step={4}
+                title="Hình ảnh"
+                desc="Tải ảnh trực tiếp từ máy hoặc nhập URL. Ảnh hover là ảnh model đeo sản phẩm — sẽ hiện khi khách di chuột vào thẻ."
+                fullWidth
+              >
+                <div className="md:col-span-3 grid sm:grid-cols-2 gap-5">
+                  <ImageInput
+                    label="Ảnh sản phẩm chính"
+                    value={editing.image}
+                    onChange={(v) => setEditing({ ...editing, image: v })}
+                    hint="Ảnh flat, nền trắng/xám"
+                  />
+                  <ImageInput
+                    label="Ảnh hover (model đeo)"
+                    value={editing.imageHover}
+                    onChange={(v) => setEditing({ ...editing, imageHover: v })}
+                    hint="Tuỳ chọn — ảnh lifestyle/người mẫu"
+                  />
+                </div>
+
+                {/* Color picker — kept for placeholder fallback */}
+                <details className="md:col-span-3 mt-2 group">
+                  <summary className="cursor-pointer text-xs text-mute hover:text-brand-500 select-none flex items-center gap-1.5">
+                    <ChevronDown size={12} className="transition-transform group-open:rotate-180" />
+                    Tùy chỉnh màu nền placeholder (khi chưa có ảnh)
+                  </summary>
+                  <div className="grid grid-cols-3 gap-3 mt-3 pl-4">
+                    <Field label="Tint 1">
+                      <input type="color" value={editing.tint} onChange={e => setEditing({ ...editing, tint: e.target.value })}
+                        className="h-10 w-full border border-rule rounded-md cursor-pointer" />
+                    </Field>
+                    <Field label="Tint 2">
+                      <input type="color" value={editing.tint2} onChange={e => setEditing({ ...editing, tint2: e.target.value })}
+                        className="h-10 w-full border border-rule rounded-md cursor-pointer" />
+                    </Field>
+                    <Field label="Accent">
+                      <input type="color" value={editing.accent} onChange={e => setEditing({ ...editing, accent: e.target.value })}
+                        className="h-10 w-full border border-rule rounded-md cursor-pointer" />
+                    </Field>
+                  </div>
+                </details>
+              </FormSection>
+
+              {/* SECTION 5 — Mô tả */}
+              <FormSection
+                step={5}
+                title="Mô tả & chất liệu"
+                desc="Thông tin chi tiết giúp khách yên tâm mua"
+                fullWidth
+              >
+                <Field label="Mô tả sản phẩm" className="md:col-span-3"
+                  hint="Mô tả ngắn 2-3 câu nhấn vào điểm nổi bật (~150 ký tự)">
+                  <textarea value={editing.description ?? ''} rows={3}
+                    onChange={e => setEditing({ ...editing, description: e.target.value || undefined })}
+                    placeholder="Ví dụ: Bông tai bạc S925 thiết kế nơ tinh xảo, đính kim cương Moissanite GRA — lấp lánh từng góc nhìn."
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-none" />
+                </Field>
+                <Field label="Chất liệu" className="md:col-span-3"
+                  hint="VD: Bạc S925 xi bạch kim · Kim cương Moissanite 5 ly GRA">
+                  <input value={editing.material ?? ''}
+                    onChange={e => setEditing({ ...editing, material: e.target.value || undefined })}
+                    placeholder="Bạc S925 · Moissanite · Mạ vàng 18K..."
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                </Field>
+              </FormSection>
+
+              {/* SECTION 6 — Trạng thái */}
+              <FormSection
+                step={6}
+                title="Trạng thái hiển thị"
+                desc="Tag nổi bật trên thẻ sản phẩm"
+                fullWidth
+              >
+                <div className="md:col-span-3 flex flex-wrap gap-3">
+                  <ToggleChip
+                    checked={!!editing.hot}
+                    onChange={(c) => setEditing({ ...editing, hot: c })}
+                    label="HOT — Sản phẩm nổi bật"
+                  />
+                  <ToggleChip
+                    checked={!!editing.sold}
+                    onChange={(c) => setEditing({ ...editing, sold: c })}
+                    label="Hết hàng (tạm ẩn nút mua)"
+                    color="red"
+                  />
+                </div>
+              </FormSection>
+
             </div>
-            <footer className="flex items-center justify-end gap-2 p-5 border-t border-rule">
-              <button onClick={() => setEditing(null)} className="px-5 py-2.5 rounded-md text-sm font-semibold border border-rule text-ink2 hover:bg-soft">Hủy</button>
-              <button onClick={save} className="px-5 py-2.5 rounded-md text-sm font-semibold bg-brand-700 text-white hover:bg-brand-800">Lưu</button>
+
+            <footer className="flex items-center justify-between gap-2 p-5 border-t border-rule sticky bottom-0 bg-white">
+              <span className="text-xs text-mute hidden sm:inline">* Bắt buộc</span>
+              <div className="flex gap-2 ml-auto">
+                <button onClick={() => setEditing(null)} className="px-5 py-2.5 rounded-md text-sm font-semibold border border-rule text-ink2 hover:bg-soft">Hủy</button>
+                <button onClick={save} className="px-6 py-2.5 rounded-md text-sm font-semibold bg-brand-700 text-white hover:bg-brand-800">
+                  {products.find(p => p.slug === editing.slug) ? 'Cập nhật' : 'Thêm sản phẩm'}
+                </button>
+              </div>
             </footer>
           </div>
         </div>
@@ -285,13 +431,120 @@ export default function AdminProducts() {
   );
 }
 
-function Field({ label, required, className, children }: { label: string; required?: boolean; className?: string; children: React.ReactNode }) {
+function Field({
+  label, required, className, hint, children,
+}: { label: string; required?: boolean; className?: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className={className}>
       <label className="block text-xs font-semibold text-ink2 mb-1.5">
         {label}{required && <span className="text-red-500"> *</span>}
       </label>
       {children}
+      {hint && <div className="text-[11px] text-mute mt-1">{hint}</div>}
+    </div>
+  );
+}
+
+function FormSection({
+  step, title, desc, children, fullWidth,
+}: { step: number; title: string; desc?: string; children: React.ReactNode; fullWidth?: boolean }) {
+  return (
+    <section className="border border-rule rounded-lg p-4 md:p-5">
+      <header className="flex items-start gap-3 mb-4">
+        <span className="w-7 h-7 rounded-full bg-brand-700 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{step}</span>
+        <div>
+          <h4 className="font-semibold text-brand-700 text-sm md:text-base">{title}</h4>
+          {desc && <p className="text-xs text-mute mt-0.5">{desc}</p>}
+        </div>
+      </header>
+      <div className={fullWidth ? 'space-y-4' : 'grid md:grid-cols-3 gap-4'}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function ToggleChip({
+  checked, onChange, label, color = 'brand',
+}: { checked: boolean; onChange: (c: boolean) => void; label: string; color?: 'brand' | 'red' }) {
+  const onCls = color === 'red' ? 'bg-red-50 border-red-300 text-red-600' : 'bg-brand-50 border-brand-500 text-brand-700';
+  return (
+    <label className={`flex items-center gap-2.5 border rounded-md px-4 py-2.5 cursor-pointer transition-colors text-sm font-medium ${
+      checked ? onCls : 'border-rule text-ink2 hover:border-brand-400'
+    }`}>
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)}
+        className={color === 'red' ? 'accent-red-500 w-4 h-4' : 'accent-brand-700 w-4 h-4'} />
+      {label}
+    </label>
+  );
+}
+
+function ImageInput({
+  label, value, onChange, hint,
+}: { label: string; value: string | undefined; onChange: (v: string | undefined) => void; hint?: string }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [mode, setMode] = useState<'upload' | 'url'>('upload');
+  const [error, setError] = useState('');
+
+  const handleFile = (file: File | undefined) => {
+    setError('');
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError('File phải là hình ảnh.'); return; }
+    const maxBytes = 800 * 1024; // 800 KB
+    if (file.size > maxBytes) {
+      setError(`Ảnh quá lớn (${(file.size / 1024).toFixed(0)} KB). Tối đa 800 KB — hãy nén/resize trước khi tải lên.`);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => onChange(typeof reader.result === 'string' ? reader.result : undefined);
+    reader.onerror = () => setError('Đọc file thất bại.');
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-2">
+        <label className="text-xs font-semibold text-ink2">{label}</label>
+        <div className="flex text-[10px] border border-rule rounded overflow-hidden">
+          <button type="button" onClick={() => setMode('upload')}
+            className={`px-2 py-0.5 ${mode === 'upload' ? 'bg-brand-700 text-white' : 'bg-white text-mute hover:text-brand-700'}`}>Tải lên</button>
+          <button type="button" onClick={() => setMode('url')}
+            className={`px-2 py-0.5 ${mode === 'url' ? 'bg-brand-700 text-white' : 'bg-white text-mute hover:text-brand-700'}`}>URL</button>
+        </div>
+      </div>
+
+      {value ? (
+        <div className="relative group border border-rule rounded-md overflow-hidden bg-soft">
+          <img src={value} alt={label} className="w-full aspect-square object-cover" />
+          <button type="button" onClick={() => onChange(undefined)}
+            className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/95 shadow text-red-500 hover:bg-red-50 flex items-center justify-center"
+            aria-label="Xóa ảnh">
+            <X size={14} strokeWidth={2} />
+          </button>
+        </div>
+      ) : mode === 'upload' ? (
+        <div
+          onClick={() => fileRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; }}
+          onDrop={(e) => { e.preventDefault(); handleFile(e.dataTransfer.files[0]); }}
+          className="border-2 border-dashed border-rule hover:border-brand-500 rounded-md aspect-square flex flex-col items-center justify-center cursor-pointer text-center px-3 transition-colors bg-soft hover:bg-brand-50/40"
+        >
+          <Upload size={28} strokeWidth={1.4} className="text-mute mb-2" />
+          <div className="text-xs font-medium text-ink">Bấm để chọn ảnh</div>
+          <div className="text-[10px] text-mute mt-0.5">hoặc kéo thả vào đây · &lt;800KB</div>
+        </div>
+      ) : (
+        <input value={value || ''}
+          onChange={e => onChange(e.target.value || undefined)}
+          placeholder="https://example.com/image.jpg"
+          className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+      )}
+
+      <input ref={fileRef} type="file" accept="image/*" className="hidden"
+        onChange={e => handleFile(e.target.files?.[0])} />
+
+      {hint && !error && <div className="text-[11px] text-mute mt-1">{hint}</div>}
+      {error && <div className="text-[11px] text-red-500 mt-1">{error}</div>}
     </div>
   );
 }

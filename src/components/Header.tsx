@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Search, ShoppingBag, User as UserIcon, Menu, ChevronDown, X, LogIn, UserPlus, LogOut, LayoutDashboard, Home } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { CATEGORIES, fmt } from '../data';
 import Shapes from '../data/shapes';
+import LogoMark from './LogoMark';
 
 export default function Header() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -95,19 +97,16 @@ export default function Header() {
 
   return (
     <>
-      <header className={`sticky top-0 z-30 bg-white border-b border-rule transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_18px_-12px_rgba(26,48,80,0.25)]' : ''}`}>
+      <header className={`sticky top-0 z-40 bg-white border-b border-rule transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_18px_-12px_rgba(26,48,80,0.25)]' : ''}`}>
         {/* Row 1 */}
         <div className={`container-x grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 transition-[padding] duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
-          <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="flex items-center gap-2.5 text-brand-700 logo-link">
-            <svg width="42" height="42" viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="logo-gem">
-              <circle cx="30" cy="30" r="22"/>
-              <path d="M18 32 C 22 22, 38 22, 42 32"/>
-              <path d="M21 34 C 24 27, 36 27, 39 34"/>
-              <path d="M24 36 C 27 31, 33 31, 36 36"/>
-              <circle cx="30" cy="33.5" r="1.6" fill="currentColor" stroke="none"/>
-            </svg>
-            <span className="font-bold text-2xl md:text-3xl tracking-[0.22em] hidden sm:block">LIORA</span>
-          </a>
+          <LogoMark
+            href="#/"
+            onClick={(e) => { e.preventDefault(); navigate('/'); }}
+            size={scrolled ? 36 : 44}
+            textClassName="hidden sm:block text-2xl md:text-3xl"
+            className="text-brand-700 logo-link transition-all"
+          />
 
           <form onSubmit={handleInlineSearch} className="flex items-stretch border border-rule rounded-md overflow-hidden focus-within:border-brand-400 transition h-11 max-w-[840px] w-full mx-auto">
             <input
@@ -118,29 +117,23 @@ export default function Header() {
               onFocus={() => dispatch({ type: 'OPEN_SEARCH' })}
             />
             <button type="submit" className="bg-[#4682b4] hover:bg-[#3b6d96] w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors" aria-label="Tìm">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
-              </svg>
+              <Search size={18} strokeWidth={2.2} />
             </button>
           </form>
 
           <div className="flex items-center gap-5 md:gap-7">
             <UserMenu />
             <button className="flex items-center gap-2 text-brand-700 hover:text-brand-500 transition-colors" onClick={() => dispatch({ type: 'OPEN_CART' })} aria-label="Giỏ hàng">
-              <span className="relative translate-y-0.5">
+              <span className="relative">
                 <span className={`inline-block ${bouncing ? 'animate-cartBounce' : ''}`} style={{ transformOrigin: 'center' }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 7h14l-1.5 12h-11L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/>
-                  </svg>
+                  <ShoppingBag size={24} strokeWidth={1.6} />
                 </span>
                 <span key={cartCount} className="absolute -top-2 -right-2 bg-brand-400 text-white text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center ring-2 ring-white animate-badgePop">{cartCount}</span>
               </span>
               <span className="hidden md:inline text-sm font-medium">Giỏ hàng</span>
             </button>
             <button className="w-10 h-10 rounded hover:bg-soft lg:hidden flex items-center justify-center text-ink2" onClick={() => setMobileOpen(v => !v)} aria-label="Menu">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 6h18M3 12h18M3 18h18"/>
-              </svg>
+              <Menu size={22} strokeWidth={2} />
             </button>
           </div>
         </div>
@@ -152,7 +145,7 @@ export default function Header() {
             <div className="relative group has-drop">
               <a href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }} className={`nav-link px-6 py-1 hover:text-brand-500 flex items-center gap-1.5 ${isActive('/shop') ? 'active' : ''}`}>
                 Sản phẩm
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                <ChevronDown size={12} strokeWidth={1.6} />
               </a>
               <div className="absolute top-full left-0 pt-2 z-[1000] opacity-0 invisible -translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
                 <div className="w-[240px] bg-[#FFFFFF] shadow-[0px_4px_12px_rgba(0,0,0,0.1)] border border-[#E0E0E0] rounded-md overflow-hidden">
@@ -216,7 +209,7 @@ export default function Header() {
             <div className="has-drop">
               <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }} className={`nav-link px-6 py-1 hover:text-brand-500 flex items-center gap-1.5 ${isActive('/about') ? 'active' : ''}`}>
                 Giới thiệu
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                <ChevronDown size={12} strokeWidth={1.6} />
               </a>
               <div className="drop">
                 <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }}>Về Liorajewelry</a>
@@ -256,7 +249,7 @@ export default function Header() {
               className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white"
               aria-label="Đóng menu"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+              <X size={16} strokeWidth={2} />
             </button>
             {state.user ? (
               <div className="flex items-center gap-3">
@@ -311,7 +304,7 @@ export default function Header() {
                 >
                   <span>{label}</span>
                   {accent && !active && <span className="text-xs text-brand-500 font-medium">{state.products.length} SP</span>}
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-mute"><path d="m9 18 6-6-6-6"/></svg>
+                  <ChevronDown size={14} strokeWidth={2} className="text-mute -rotate-90" />
                 </a>
               );
             })}
@@ -324,7 +317,7 @@ export default function Header() {
                 onClick={() => { setMobileOpen(false); navigate('/account'); }}
                 className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-soft flex items-center gap-2"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+                <UserIcon size={16} strokeWidth={1.6} />
                 Tài khoản của tôi
               </button>
               {state.user.role === 'admin' && (
@@ -332,7 +325,7 @@ export default function Header() {
                   onClick={() => { setMobileOpen(false); navigate('/admin/dashboard'); }}
                   className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-brand-50 flex items-center gap-2 text-brand-700 font-semibold"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                  <LayoutDashboard size={16} strokeWidth={1.8} />
                   Trang quản trị
                 </button>
               )}
@@ -345,7 +338,7 @@ export default function Header() {
                 }}
                 className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-red-50 text-red-500 flex items-center gap-2"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                <LogOut size={16} strokeWidth={1.8} />
                 Đăng xuất
               </button>
             </div>
@@ -362,7 +355,7 @@ export default function Header() {
       <div className={`search-panel ${state.searchOpen ? 'open' : ''}`}>
         <div className="container-x">
           <div className="flex items-center gap-4 border-b border-rule pb-3">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a8a8a" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <Search size={20} strokeWidth={1.8} className="text-mute" />
             <input
               ref={searchInputRef}
               type="text"
@@ -421,9 +414,7 @@ function UserMenu() {
             {initials}
           </span>
         ) : (
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/>
-          </svg>
+          <UserIcon size={24} strokeWidth={1.6} />
         )}
       </button>
 
@@ -442,28 +433,28 @@ function UserMenu() {
                 </div>
               </div>
               <button onClick={() => go('/account')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1"/></svg>
+                <UserIcon size={16} strokeWidth={1.6} />
                 Tài khoản của tôi
               </button>
               {user.role === 'admin' && (
                 <button onClick={() => go('/admin/dashboard')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 text-brand-700 font-semibold">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+                  <LayoutDashboard size={16} strokeWidth={1.8} />
                   Trang quản trị
                 </button>
               )}
               <button onClick={logout} className="w-full text-left px-4 py-2.5 text-sm hover:bg-red-50 flex items-center gap-2 text-red-500 border-t border-rule">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                <LogOut size={16} strokeWidth={1.8} />
                 Đăng xuất
               </button>
             </>
           ) : (
             <>
               <button onClick={() => go('/login')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 font-medium">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+                <LogIn size={16} strokeWidth={1.8} />
                 Đăng nhập
               </button>
               <button onClick={() => go('/register')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 border-t border-rule">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="8" r="4"/><path d="M3 21v-1a6 6 0 0 1 12 0v1M19 8v6M22 11h-6"/></svg>
+                <UserPlus size={16} strokeWidth={1.8} />
                 Đăng ký tài khoản
               </button>
             </>

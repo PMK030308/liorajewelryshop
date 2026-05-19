@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from 'react';
+import { X, Download, Printer } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { fmt } from '../../data';
 import AdminLayout from './AdminLayout';
 import { OrderStatus, Order } from '../../types';
 import { STATUS_META, formatDate } from '../AccountPage';
+import { generateInvoicePdf } from '../../utils/invoice';
 
 const STATUS_KEYS: OrderStatus[] = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 
@@ -29,13 +31,13 @@ export default function AdminOrders() {
 
   const changeStatus = (id: string, status: OrderStatus) => {
     dispatch({ type: 'UPDATE_ORDER_STATUS', payload: { id, status } });
-    showToast(`✓ Đã đổi trạng thái → ${STATUS_META[status].label}`);
+    showToast(`Đã đổi trạng thái → ${STATUS_META[status].label}`);
   };
 
   const remove = (id: string) => {
     if (!confirm('Xóa đơn hàng này?')) return;
     dispatch({ type: 'DELETE_ORDER', payload: id });
-    showToast('🗑 Đã xóa đơn hàng');
+    showToast('Đã xóa đơn hàng');
     if (selected?.id === id) setSelected(null);
   };
 
@@ -125,7 +127,7 @@ export default function AdminOrders() {
                 <p className="text-xs text-mute">{formatDate(selected.createdAt)}</p>
               </div>
               <button onClick={() => setSelected(null)} className="w-8 h-8 rounded-full hover:bg-soft flex items-center justify-center text-mute">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+                <X size={16} strokeWidth={2} />
               </button>
             </header>
 
@@ -183,6 +185,24 @@ export default function AdminOrders() {
                 <div className="flex justify-between text-base font-bold text-brand-700 border-t border-rule pt-2 mt-2">
                   <span>Tổng cộng</span><span>{fmt(selected.total)}</span>
                 </div>
+              </div>
+
+              {/* Invoice actions */}
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-rule">
+                <button
+                  onClick={() => generateInvoicePdf(selected)}
+                  className="text-xs font-semibold bg-brand-700 text-white hover:bg-brand-800 px-4 py-2 rounded-md inline-flex items-center gap-2"
+                >
+                  <Download size={14} strokeWidth={2} />
+                  Tải hóa đơn PDF
+                </button>
+                <button
+                  onClick={() => generateInvoicePdf(selected, { autoPrint: true })}
+                  className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md inline-flex items-center gap-2"
+                >
+                  <Printer size={14} strokeWidth={2} />
+                  In hóa đơn
+                </button>
               </div>
             </div>
           </div>

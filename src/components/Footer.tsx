@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { MapPin, Phone, Mail, ChevronDown } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import LogoMark from './LogoMark';
 
 interface FooterLinkSectionProps {
   title: string;
@@ -18,10 +20,10 @@ function FooterLinkSection({ title, links, navigate, span }: FooterLinkSectionPr
         aria-expanded={open}
       >
         <span>{title}</span>
-        <svg
-          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        <ChevronDown
+          size={14} strokeWidth={2}
           className={`md:hidden transition-transform ${open ? 'rotate-180' : ''}`}
-        ><path d="m6 9 6 6 6-6"/></svg>
+        />
       </button>
       <ul className={`space-y-2.5 text-sm pt-3 md:pt-0 md:!block ${open ? 'block' : 'hidden'}`}>
         {links.map(({ href, label, nav }) => (
@@ -53,32 +55,25 @@ export default function Footer() {
       <div className="container-x grid md:grid-cols-12 gap-10">
         {/* Col 1 — Brand + contact */}
         <div className="md:col-span-4">
-          <a
+          <LogoMark
             href="#/"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            className="inline-flex items-center gap-2.5 mb-4 text-white hover:opacity-90 transition-opacity"
-          >
-            <svg width="42" height="42" viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="30" cy="30" r="22"/>
-              <path d="M18 32 C 22 22, 38 22, 42 32"/>
-              <path d="M21 34 C 24 27, 36 27, 39 34"/>
-              <path d="M24 36 C 27 31, 33 31, 36 36"/>
-              <circle cx="30" cy="33.5" r="1.6" fill="currentColor" stroke="none"/>
-            </svg>
-            <span className="font-bold text-2xl tracking-[0.22em]">LIORA</span>
-          </a>
+            size={42}
+            textClassName="text-2xl"
+            className="mb-4 text-white hover:opacity-90 transition-opacity"
+          />
           <p className="text-sm leading-relaxed mb-5 text-white/75">Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.</p>
           <ul className="space-y-2.5 text-sm text-white/85">
             <li className="flex items-start gap-2.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <MapPin size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
               <span>159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92Z"/></svg>
+              <Phone size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
               <a href="tel:0982463691" className="hover:text-white">0982 463 691</a>
             </li>
             <li className="flex items-start gap-2.5">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z"/><path d="m22 6-10 7L2 6"/></svg>
+              <Mail size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
               <a href="mailto:hello@liorajewelry.shop" className="hover:text-white">hello@liorajewelry.shop</a>
             </li>
           </ul>
@@ -126,9 +121,18 @@ export default function Footer() {
           </form>
           <div className="flex gap-3">
             {[
-              { title:'Facebook', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg> },
-              { title:'Instagram', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg> },
-              { title:'TikTok', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8.5a6 6 0 0 1-3.5-1.1v7.4a5.5 5.5 0 1 1-5.5-5.5v3a2.5 2.5 0 1 0 2.5 2.5V2h3a3 3 0 0 0 3 3v3.5Z"/></svg> },
+              {
+                title: 'Facebook',
+                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>,
+              },
+              {
+                title: 'Instagram',
+                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>,
+              },
+              {
+                title: 'TikTok',
+                icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8.5a6 6 0 0 1-3.5-1.1v7.4a5.5 5.5 0 1 1-5.5-5.5v3a2.5 2.5 0 1 0 2.5 2.5V2h3a3 3 0 0 0 3 3v3.5Z"/></svg>,
+              },
             ].map(s => (
               <a key={s.title} href="#" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white hover:text-brand-700 flex items-center justify-center transition-all" title={s.title}>{s.icon}</a>
             ))}

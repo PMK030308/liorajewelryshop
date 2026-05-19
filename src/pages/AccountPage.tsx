@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Download, Printer, ChevronDown, Package } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import { OrderStatus } from '../types';
+import { generateInvoicePdf } from '../utils/invoice';
 
 export const STATUS_META: Record<OrderStatus, { label: string; cls: string }> = {
   pending:    { label: 'Chờ xác nhận', cls: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
@@ -135,6 +137,22 @@ export default function AccountPage() {
                       </div>
                       <div className="border-t border-rule pt-2 flex justify-between text-sm font-bold text-brand-700">
                         <span>Tổng cộng</span><span>{fmt(o.total)}</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <button
+                          onClick={() => generateInvoicePdf(o)}
+                          className="text-xs font-semibold border border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white px-3 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
+                        >
+                          <Download size={12} strokeWidth={2} />
+                          Tải PDF
+                        </button>
+                        <button
+                          onClick={() => generateInvoicePdf(o, { autoPrint: true })}
+                          className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-3 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
+                        >
+                          <Printer size={12} strokeWidth={2} />
+                          In hóa đơn
+                        </button>
                       </div>
                     </div>
                   </details>

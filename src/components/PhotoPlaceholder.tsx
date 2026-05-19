@@ -10,13 +10,15 @@ interface Props {
   ratio?: string;
   hot?: boolean;
   sold?: boolean;
+  /** Discount percent (e.g. 25 → "−25%" badge). Takes priority over `hot`. */
+  discount?: number;
   image?: string;
   imageAlt?: string;
   imageHover?: string;
 }
 
 export default function PhotoPlaceholder({
-  tint, tint2, accent, shape, ratio = '1/1', hot, sold, image, imageAlt, imageHover,
+  tint, tint2, accent, shape, ratio = '1/1', hot, sold, discount, image, imageAlt, imageHover,
 }: Props) {
   const ShapeSvg = Shapes[shape] || Shapes['gem'];
   const [loaded, setLoaded] = useState(!image);
@@ -70,8 +72,14 @@ export default function PhotoPlaceholder({
           {ShapeSvg}
         </div>
       )}
-      {hot && <div className="ribbon" style={{ zIndex: 2 }}>HOT</div>}
-      {sold && <div className="ribbon-out" style={{ zIndex: 2 }}>Hết hàng</div>}
+      {/* Unified left badge — priority: sold > discount > hot */}
+      {sold ? (
+        <div className="ribbon-out" style={{ zIndex: 2 }}>Hết hàng</div>
+      ) : discount && discount > 0 ? (
+        <div className="ribbon" style={{ zIndex: 2, background: '#b91c1c' }}>−{discount}%</div>
+      ) : hot ? (
+        <div className="ribbon" style={{ zIndex: 2 }}>HOT</div>
+      ) : null}
     </div>
   );
 }
