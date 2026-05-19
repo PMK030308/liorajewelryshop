@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Check, Download, Printer } from 'lucide-react';
+import { Check, FileText } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import Shapes from '../data/shapes';
 import { Order } from '../types';
-import { generateInvoicePdf } from '../utils/invoice';
+import InvoiceModal from '../components/InvoiceModal';
 
 export default function CheckoutPage() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -22,6 +22,7 @@ export default function CheckoutPage() {
   const [coupon, setCoupon] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount: number } | null>(null);
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
+  const [showInvoice, setShowInvoice] = useState(false);
 
   // Auto-fill from logged-in user
   useEffect(() => {
@@ -106,22 +107,20 @@ export default function CheckoutPage() {
             <div className="flex justify-between mt-2 pt-2 border-t border-rule text-base font-bold text-brand-700"><span>Tổng tiền</span><span>{fmt(placedOrder.total)}</span></div>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mb-3">
+          <div className="max-w-md mx-auto mb-3">
             <button
-              onClick={() => generateInvoicePdf(placedOrder)}
-              className="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-md text-sm inline-flex items-center justify-center gap-2 transition-colors"
+              onClick={() => setShowInvoice(true)}
+              className="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-md text-sm inline-flex items-center justify-center gap-2 transition-colors"
             >
-              <Download size={16} strokeWidth={2} />
-              Tải hóa đơn PDF
+              <FileText size={16} strokeWidth={2} />
+              Xem & in hóa đơn
             </button>
-            <button
-              onClick={() => generateInvoicePdf(placedOrder, { autoPrint: true })}
-              className="flex-1 border border-brand-700 text-brand-700 hover:bg-brand-50 font-semibold py-3 rounded-md text-sm inline-flex items-center justify-center gap-2 transition-colors"
-            >
-              <Printer size={16} strokeWidth={2} />
-              In hóa đơn
-            </button>
+            <p className="text-[11px] text-mute mt-2 text-center">
+              Mở hóa đơn để in trực tiếp hoặc lưu thành PDF từ hộp thoại in của trình duyệt
+            </p>
           </div>
+
+          <InvoiceModal order={showInvoice ? placedOrder : null} onClose={() => setShowInvoice(false)} />
 
           <div className="flex gap-2 max-w-md mx-auto">
             <button

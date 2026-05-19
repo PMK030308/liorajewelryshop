@@ -58,8 +58,7 @@ export default function Footer() {
           <LogoMark
             href="#/"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            size={42}
-            textClassName="text-2xl"
+            size={56}
             className="mb-4 text-white hover:opacity-90 transition-opacity"
           />
           <p className="text-sm leading-relaxed mb-5 text-white/75">Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.</p>
@@ -96,6 +95,7 @@ export default function Footer() {
           span="md:col-span-2"
           navigate={navigate}
           links={[
+            { href:'#/track-order', label:'Tra cứu đơn hàng', nav:'/track-order' },
             { href:'#/huong-dan', label:'Hướng dẫn chọn size', nav:'/huong-dan' },
             { href:'#/huong-dan', label:'Hướng dẫn bảo quản', nav:'/huong-dan' },
             { href:'#/kiem-dinh', label:'Kiểm định GRA', nav:'/kiem-dinh' },

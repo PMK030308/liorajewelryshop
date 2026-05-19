@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
 import { HERO_CATS, HERO_SLIDES, NEWS_ARTICLES, BRAND_IMAGES, fmt } from '../data';
@@ -6,6 +6,7 @@ import Shapes from '../data/shapes';
 import ProductGrid from '../components/ProductGrid';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
 import Testimonials from '../components/Testimonials';
+import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
 
 const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
@@ -125,10 +126,13 @@ function HeroSlideItem({ idx }: { idx: number }) {
         <div className="hidden md:block absolute inset-y-0 right-0 w-[18%] monogram-bg pointer-events-none" />
         <div className="container-x grid md:grid-cols-2 gap-2 items-center w-full relative z-10">
           <div className="text-center px-4 md:px-8 py-6 relative">
-            <div className="flex flex-col items-center mb-4 md:mb-6">
-              <img src="/logoliora.png" alt="LIORA" className="object-contain mb-1 h-12 md:h-14 w-auto" />
-              <div className="font-bold text-2xl md:text-3xl tracking-[0.32em] text-[#1A3050]">LIORA</div>
-            </div>
+            <a
+              href="#/"
+              onClick={(e) => { e.preventDefault(); navigate('/'); }}
+              className="flex flex-col items-center mb-4 md:mb-6 hover:opacity-90 transition-opacity"
+            >
+              <img src="/logoliora.png" alt="LIORA" className="object-contain h-16 md:h-20 w-auto" />
+            </a>
             
             {/* Title Frame */}
             <div className="inline-block relative mb-6">
@@ -210,13 +214,15 @@ export default function HomePage() {
   const { state, dispatch, navigate } = useStore();
   const slideRef = useRef(state.slide);
   slideRef.current = state.slide;
+  const [heroPaused, setHeroPaused] = useState(false);
 
   useEffect(() => {
+    if (heroPaused) return;
     const interval = setInterval(() => {
       dispatch({ type: 'SET_SLIDE', payload: slideRef.current + 1 });
-    }, 5000);
+    }, 7000);
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, [dispatch, heroPaused]);
 
   const setFilterNav = (slug: string) => { dispatch({ type: 'SET_FILTER', payload: slug }); navigate('/shop'); };
 
@@ -266,7 +272,12 @@ export default function HomePage() {
     <main className="page">
       {/* Hero Slider */}
       <section className="relative">
-        <div className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg" style={{ backgroundColor: '#f3f3f3' }}>
+        <div
+          className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg"
+          style={{ backgroundColor: '#f3f3f3' }}
+          onMouseEnter={() => setHeroPaused(true)}
+          onMouseLeave={() => setHeroPaused(false)}
+        >
           <AnimatePresence mode="sync" initial={false}>
             <HeroSlideItem key={state.slide} idx={state.slide} />
           </AnimatePresence>
@@ -457,6 +468,9 @@ export default function HomePage() {
         </div>
         </Reveal>
       </section>
+
+      {/* Recently viewed (localStorage) */}
+      <RecentlyViewedStrip />
     </main>
   );
 }

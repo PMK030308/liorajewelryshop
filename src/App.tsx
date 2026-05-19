@@ -19,6 +19,8 @@ import SimplePage from './pages/SimplePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
+import WishlistPage from './pages/WishlistPage';
+import TrackOrderPage from './pages/TrackOrderPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
@@ -36,6 +38,8 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/login') return <LoginPage />;
   if (route === '/register') return <RegisterPage />;
   if (route === '/account') return <AccountPage />;
+  if (route === '/wishlist') return <WishlistPage />;
+  if (route === '/track-order') return <TrackOrderPage />;
 
   // ---- Admin ----
   if (route === '/admin' || route === '/admin/dashboard') return <AdminDashboard />;

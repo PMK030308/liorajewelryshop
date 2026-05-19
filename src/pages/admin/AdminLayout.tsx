@@ -45,13 +45,14 @@ export default function AdminLayout({ children, active }: Props) {
 
   const Sidebar = (
     <>
-      <div className="flex items-center gap-2 mb-5 text-brand-700">
-        <img src="/logoliora.png" alt="LIORA" width={32} height={32} className="object-contain" style={{ height: 32, width: 'auto' }} />
-        <div>
-          <div className="font-bold tracking-[0.2em] text-sm">LIORA</div>
-          <div className="text-[10px] text-mute uppercase tracking-wider">Admin</div>
-        </div>
-      </div>
+      <a
+        href="#/"
+        onClick={(e) => { e.preventDefault(); navigate('/'); }}
+        className="flex items-center gap-2 mb-5 text-brand-700 hover:opacity-90 transition-opacity"
+      >
+        <img src="/logoliora.png" alt="LIORA" className="object-contain h-10 w-auto" />
+        <div className="text-[10px] text-mute uppercase tracking-[0.18em] font-semibold">Admin</div>
+      </a>
 
       <nav className="space-y-1">
         {items.map(it => (
@@ -96,8 +97,8 @@ export default function AdminLayout({ children, active }: Props) {
         >
           <Menu size={20} strokeWidth={2} />
         </button>
-        <div className="flex-1 flex items-center gap-2 text-brand-700">
-          <span className="font-bold tracking-[0.18em] text-sm">LIORA</span>
+        <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="flex-1 flex items-center gap-2 text-brand-700 hover:opacity-90 transition-opacity">
+          <img src="/logoliora.png" alt="LIORA" className="object-contain h-8 w-auto" />
           <span className="text-xs text-mute">/ Admin</span>
           {activeItem && (
             <>
@@ -105,7 +106,7 @@ export default function AdminLayout({ children, active }: Props) {
               <span className="text-sm font-semibold">{activeItem.label}</span>
             </>
           )}
-        </div>
+        </a>
         <button
           onClick={() => navigate('/')}
           className="w-9 h-9 rounded-md hover:bg-soft flex items-center justify-center text-mute"

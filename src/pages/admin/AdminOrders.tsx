@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { X, Download, Printer } from 'lucide-react';
+import { X, FileText } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { fmt } from '../../data';
 import AdminLayout from './AdminLayout';
 import { OrderStatus, Order } from '../../types';
 import { STATUS_META, formatDate } from '../AccountPage';
-import { generateInvoicePdf } from '../../utils/invoice';
+import InvoiceModal from '../../components/InvoiceModal';
 
 const STATUS_KEYS: OrderStatus[] = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 
@@ -15,6 +15,7 @@ export default function AdminOrders() {
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
   const [q, setQ] = useState('');
   const [selected, setSelected] = useState<Order | null>(null);
+  const [invoiceOrder, setInvoiceOrder] = useState<Order | null>(null);
 
   const filtered = useMemo(() => {
     const ql = q.toLowerCase().trim();
@@ -190,24 +191,19 @@ export default function AdminOrders() {
               {/* Invoice actions */}
               <div className="flex flex-wrap gap-2 pt-2 border-t border-rule">
                 <button
-                  onClick={() => generateInvoicePdf(selected)}
+                  onClick={() => setInvoiceOrder(selected)}
                   className="text-xs font-semibold bg-brand-700 text-white hover:bg-brand-800 px-4 py-2 rounded-md inline-flex items-center gap-2"
                 >
-                  <Download size={14} strokeWidth={2} />
-                  Tải hóa đơn PDF
-                </button>
-                <button
-                  onClick={() => generateInvoicePdf(selected, { autoPrint: true })}
-                  className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md inline-flex items-center gap-2"
-                >
-                  <Printer size={14} strokeWidth={2} />
-                  In hóa đơn
+                  <FileText size={14} strokeWidth={2} />
+                  Xem & in hóa đơn
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <InvoiceModal order={invoiceOrder} onClose={() => setInvoiceOrder(null)} />
     </AdminLayout>
   );
 }

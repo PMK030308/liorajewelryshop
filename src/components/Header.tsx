@@ -103,23 +103,12 @@ export default function Header() {
           <LogoMark
             href="#/"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            size={scrolled ? 36 : 44}
-            textClassName="hidden sm:block text-2xl md:text-3xl"
+            size={scrolled ? 40 : 52}
             className="text-brand-700 logo-link transition-all"
           />
 
-          <form onSubmit={handleInlineSearch} className="flex items-stretch border border-rule rounded-md overflow-hidden focus-within:border-brand-400 transition h-11 max-w-[840px] w-full mx-auto">
-            <input
-              id="inlineSearch"
-              type="text"
-              placeholder="Tìm kiếm sản phẩm..."
-              className="flex-1 px-4 text-sm outline-none placeholder-mute text-ink"
-              onFocus={() => dispatch({ type: 'OPEN_SEARCH' })}
-            />
-            <button type="submit" className="bg-[#4682b4] hover:bg-[#3b6d96] w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors" aria-label="Tìm">
-              <Search size={18} strokeWidth={2.2} />
-            </button>
-          </form>
+          <HeaderSearchBox />
+          <span style={{ display: 'none' }}>{/* legacy form reference removed */}</span>
 
           <div className="flex items-center gap-5 md:gap-7">
             <UserMenu />
@@ -458,6 +447,130 @@ function UserMenu() {
                 Đăng ký tài khoản
               </button>
             </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HeaderSearchBox() {
+  const { state, dispatch, navigate } = useStore();
+  const [q, setQ] = useState('');
+  const [focused, setFocused] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setFocused(false);
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, []);
+
+  const ql = q.toLowerCase().trim();
+  const suggestions = ql
+    ? state.products
+        .filter(p =>
+          p.name.toLowerCase().includes(ql) ||
+          p.code.toLowerCase().includes(ql) ||
+          p.subcat.toLowerCase().includes(ql)
+        )
+        .slice(0, 6)
+    : [];
+
+  const popular = ['Moissanite', 'Bông tai', 'Dây chuyền', 'Lắc tay', 'Nhẫn đôi'];
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!q.trim()) return;
+    // Open the full search panel for full results
+    dispatch({ type: 'OPEN_SEARCH' });
+    setFocused(false);
+  };
+
+  const goToProduct = (slug: string) => {
+    navigate(`/product/${slug}`);
+    setQ('');
+    setFocused(false);
+  };
+
+  return (
+    <div ref={ref} className="relative w-full max-w-[840px] mx-auto">
+      <form
+        onSubmit={submit}
+        className="flex items-stretch border border-rule rounded-md overflow-hidden focus-within:border-brand-400 transition h-11 bg-white"
+      >
+        <input
+          type="text"
+          value={q}
+          onChange={(e) => { setQ(e.target.value); setFocused(true); }}
+          onFocus={() => setFocused(true)}
+          placeholder="Tìm kiếm sản phẩm..."
+          className="flex-1 px-4 text-sm outline-none placeholder-mute text-ink"
+        />
+        <button
+          type="submit"
+          className="bg-[#4682b4] hover:bg-[#3b6d96] w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors"
+          aria-label="Tìm"
+        >
+          <Search size={18} strokeWidth={2.2} />
+        </button>
+      </form>
+
+      {/* Autocomplete dropdown */}
+      {focused && (
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-rule shadow-lg rounded-md overflow-hidden z-50 animate-fadeUp">
+          {ql ? (
+            suggestions.length > 0 ? (
+              <ul className="max-h-[400px] overflow-y-auto">
+                {suggestions.map(p => (
+                  <li key={p.slug}>
+                    <button
+                      onClick={() => goToProduct(p.slug)}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-brand-50 text-left transition-colors"
+                    >
+                      <div className="w-10 h-10 bg-soft flex-shrink-0 overflow-hidden">
+                        {p.image ? (
+                          <img src={p.image} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full" style={{ background: p.tint }} />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-medium line-clamp-1 text-ink">{p.name}</div>
+                        <div className="text-[11px] text-mute">{fmt(p.price)}</div>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+                <li className="border-t border-rule">
+                  <button
+                    onClick={() => { dispatch({ type: 'OPEN_SEARCH' }); setFocused(false); }}
+                    className="w-full text-center text-xs text-brand-500 hover:text-brand-700 hover:bg-brand-50 py-2.5 font-semibold"
+                  >
+                    Xem tất cả kết quả cho "{q}" →
+                  </button>
+                </li>
+              </ul>
+            ) : (
+              <div className="px-4 py-6 text-center text-sm text-mute">
+                Không có kết quả cho <b>"{q}"</b>
+              </div>
+            )
+          ) : (
+            <div className="px-3 py-3">
+              <div className="text-[10px] uppercase tracking-wider text-mute mb-2 px-1">Tìm kiếm phổ biến</div>
+              <div className="flex flex-wrap gap-1.5">
+                {popular.map(t => (
+                  <button
+                    key={t}
+                    onClick={() => setQ(t)}
+                    className="text-xs border border-rule hover:border-brand-500 hover:text-brand-700 px-3 py-1.5 rounded-full text-ink2"
+                  >{t}</button>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       )}

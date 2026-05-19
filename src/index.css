@@ -69,24 +69,21 @@
     border-radius: 999px;
   }
 
-  /* Product card — minimal & refined, sharp corners */
+  /* Product card — minimal & refined, sharp corners, no zoom (only image swap) */
   .pcard {
     background: #fff;
     border-radius: 0;
     overflow: hidden;
-    transition: transform 0.4s cubic-bezier(.2,.6,.2,1), box-shadow 0.4s ease, border-color 0.3s ease;
+    transition: box-shadow 0.4s ease, border-color 0.3s ease;
     border: 1px solid transparent;
     position: relative;
   }
   .pcard:hover {
     box-shadow: 0 4px 20px rgba(0,0,0,0.05), 0 16px 34px -18px rgba(26,48,80,0.20);
     border-color: #ececec;
-    transform: translateY(-3px);
   }
-  .pcard .photo { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); will-change: transform; }
-  .pcard:hover .photo { transform: scale(1.05); }
-  .pcard .photo .sil { transition: transform 0.7s cubic-bezier(.2,.6,.2,1); }
-  .pcard:hover .photo .sil { transform: scale(1.03) rotate(-2deg); }
+  /* Note: hover image swap is handled by PhotoPlaceholder via opacity crossfade
+     (group-hover:opacity classes on the <img> elements). No transform here. */
 
   /* Wishlist heart — subtle */
   .wish-btn {
@@ -391,6 +388,41 @@
 
 @keyframes shimmer {
   from { transform: translateX(-100%); }
+}
+
+/* ============================================================ */
+/* Print stylesheet — only the invoice prints, everything else  */
+/* (header, modal chrome, buttons, drawers) is hidden.          */
+/* ============================================================ */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  .invoice-print-area,
+  .invoice-print-area * {
+    visibility: visible !important;
+  }
+  .invoice-print-area {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .invoice-no-print {
+    display: none !important;
+  }
 }
 
 /* Voucher Ticket — semicircle notches on both sides at vertical center */

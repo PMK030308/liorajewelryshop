@@ -37,10 +37,10 @@ export default function MobileBottomNav() {
     },
     {
       label: 'Yêu thích',
-      path: '/account',
+      path: '/wishlist',
       icon: <Heart size={22} strokeWidth={1.8} />,
       badge: wishCount,
-      active: false,
+      active: isActive('/wishlist'),
     },
     {
       label: 'Giỏ hàng',

@@ -19,7 +19,7 @@ interface Props {
 
 export default function LogoMark({
   size = 40,
-  withText = true,
+  withText = false,
   textColor,
   className = '',
   textClassName = '',

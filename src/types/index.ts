@@ -81,7 +81,7 @@ export type ShapeKey =
   | 'bracelet' | 'ring' | 'butterfly' | 'clover'
   | 'heart' | 'sparkle';
 
-export type SortOption = 'default' | 'name' | 'price-low' | 'price-high';
+export type SortOption = 'default' | 'name' | 'price-low' | 'price-high' | 'bestseller' | 'newest';
 
 export type Route =
   | '/'

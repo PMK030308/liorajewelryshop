@@ -23,16 +23,42 @@ export default function CartDrawer() {
     <>
       <div className={`scrim ${isOpen ? 'open' : ''}`} onClick={close} />
       <aside className={`drawer ${isOpen ? 'open' : ''}`}>
-        <div className="flex items-center justify-between px-5 py-4 border-b border-rule">
-          <div className="font-bold text-lg flex items-center gap-2">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 7h14l-1.5 12h-11L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/>
-            </svg>
-            Giỏ hàng {cart.length > 0 && <span className="text-brand-500">({cart.length})</span>}
+        <div className="px-5 pt-4 pb-2 border-b border-rule">
+          <div className="flex items-center justify-between mb-3">
+            <div className="font-bold text-lg flex items-center gap-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M5 7h14l-1.5 12h-11L5 7Z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/>
+              </svg>
+              Giỏ hàng {cart.length > 0 && <span className="text-brand-500">({cart.length})</span>}
+            </div>
+            <button className="w-8 h-8 rounded-full hover:bg-rule flex items-center justify-center" onClick={close} aria-label="Đóng">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
           </div>
-          <button className="w-8 h-8 rounded-full hover:bg-rule flex items-center justify-center" onClick={close} aria-label="Đóng">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 6l12 12M18 6 6 18"/></svg>
-          </button>
+
+          {/* Freeship progress bar */}
+          {cart.length > 0 && (() => {
+            const FREESHIP_MIN = 500000;
+            const remaining = Math.max(0, FREESHIP_MIN - subtotal);
+            const pct = Math.min(100, (subtotal / FREESHIP_MIN) * 100);
+            return (
+              <div className="text-xs">
+                {remaining > 0 ? (
+                  <div className="text-ink2 mb-1.5">
+                    Mua thêm <b className="text-brand-700">{fmt(remaining)}</b> để được <b className="text-brand-700">miễn phí vận chuyển</b>
+                  </div>
+                ) : (
+                  <div className="text-green-700 mb-1.5 font-semibold">✓ Đơn hàng của bạn được miễn phí vận chuyển!</div>
+                )}
+                <div className="h-1.5 bg-rule rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${remaining > 0 ? 'bg-brand-500' : 'bg-green-500'}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })()}
         </div>
 
         <div className="flex-1 overflow-y-auto no-scrollbar">
