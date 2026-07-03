@@ -45,7 +45,7 @@
     filter: drop-shadow(0 6px 10px rgba(52,80,122,0.12));
   }
   .photo .ribbon {
-    position: absolute;
+    position: absolute; 
     top: 10px;
     left: 10px;
     background: #1A3050;
