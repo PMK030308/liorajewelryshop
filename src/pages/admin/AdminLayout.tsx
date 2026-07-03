@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, Package, Receipt, ArrowLeft, LogOut, Menu, X, Home } from 'lucide-react';
+import { LayoutDashboard, Package, Receipt, ArrowLeft, LogOut, Menu, X, Home, Settings } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
-interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders'; }
+interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders' | 'wordpress'; }
 
 export default function AdminLayout({ children, active }: Props) {
-  const { state, dispatch, navigate, showToast } = useStore();
+  const state = useStore().state;
+  const dispatch = useStore().dispatch;
+  const navigate = useStore().navigate;
+  const showToast = useStore().showToast;
   const user = state.user;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -39,6 +42,7 @@ export default function AdminLayout({ children, active }: Props) {
     { key: 'dashboard', label: 'Bảng điều khiển', path: '/admin/dashboard', icon: <LayoutDashboard size={18} strokeWidth={1.8} /> },
     { key: 'products',  label: 'Sản phẩm',         path: '/admin/products',  icon: <Package size={18} strokeWidth={1.8} /> },
     { key: 'orders',    label: 'Đơn hàng',         path: '/admin/orders',    icon: <Receipt size={18} strokeWidth={1.8} /> },
+    { key: 'wordpress', label: 'Cấu hình WP',     path: '/admin/wordpress', icon: <Settings size={18} strokeWidth={1.8} /> },
   ];
 
   const activeItem = items.find(it => it.key === active);

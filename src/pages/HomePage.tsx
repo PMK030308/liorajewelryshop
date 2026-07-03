@@ -7,6 +7,8 @@ import ProductGrid from '../components/ProductGrid';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
 import Testimonials from '../components/Testimonials';
 import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
+import { getWordPressConfig, fetchWordPressPosts } from '../utils/wordpressService';
+import { NewsArticle } from '../types';
 
 const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
@@ -215,6 +217,7 @@ export default function HomePage() {
   const slideRef = useRef(state.slide);
   slideRef.current = state.slide;
   const [heroPaused, setHeroPaused] = useState(false);
+  const [articles, setArticles] = useState<NewsArticle[]>(NEWS_ARTICLES);
 
   useEffect(() => {
     if (heroPaused) return;
@@ -223,6 +226,21 @@ export default function HomePage() {
     }, 7000);
     return () => clearInterval(interval);
   }, [dispatch, heroPaused]);
+
+  useEffect(() => {
+    const config = getWordPressConfig();
+    if (config.useWordPress && config.apiUrl) {
+      fetchWordPressPosts(config)
+        .then(data => {
+          if (data && data.length > 0) {
+            setArticles(data);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to sync posts for homepage:', err);
+        });
+    }
+  }, []);
 
   const setFilterNav = (slug: string) => { dispatch({ type: 'SET_FILTER', payload: slug }); navigate('/shop'); };
 
@@ -450,11 +468,17 @@ export default function HomePage() {
         </Reveal>
         <Reveal delay={0.1}>
         <div className="grid md:grid-cols-3 gap-6">
-          {NEWS_ARTICLES.slice(0, 3).map(n => (
+          {articles.slice(0, 3).map(n => (
             <a key={n.title} href="#/news" onClick={(e) => { e.preventDefault(); navigate('/news'); }} className="news-card group block bg-white rounded-lg overflow-hidden shadow-card hover:shadow-cardHover border border-rule">
-              <div className="overflow-hidden">
-                <div className="photo aspect-[16/10]" style={{ backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${n.tint} 75%, ${n.tint})` } as React.CSSProperties}>
-                  <div className="sil" style={{ color: n.accent }}>{Shapes.sparkle}</div>
+              <div className="overflow-hidden bg-soft">
+                <div 
+                  className="photo aspect-[16/10] bg-cover bg-center" 
+                  style={n.image 
+                    ? { backgroundImage: `url(${n.image})` } 
+                    : { backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${n.tint} 75%, ${n.tint})` } as React.CSSProperties
+                  }
+                >
+                  {!n.image && <div className="sil" style={{ color: n.accent }}>{Shapes.sparkle}</div>}
                 </div>
               </div>
               <div className="p-5">

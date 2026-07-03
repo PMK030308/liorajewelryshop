@@ -24,6 +24,7 @@ import TrackOrderPage from './pages/TrackOrderPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
+import WordPressSettings from './pages/admin/WordPressSettings';
 
 function renderRoute(route: string): React.ReactNode {
   if (route === '/' || route === '') return <HomePage />;
@@ -45,6 +46,7 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/admin' || route === '/admin/dashboard') return <AdminDashboard />;
   if (route === '/admin/products') return <AdminProducts />;
   if (route === '/admin/orders') return <AdminOrders />;
+  if (route === '/admin/wordpress') return <WordPressSettings />;
 
   if (route === '/kiem-dinh') return (
     <SimplePage

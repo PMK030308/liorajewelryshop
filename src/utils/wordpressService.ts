@@ -1,0 +1,182 @@
+import { Product, NewsArticle, ShapeKey } from '../types';
+
+/**
+ * Interface mapping configuration for dynamic settings.
+ * Users can customize this via the Admin dashboard settings.
+ */
+export interface WordPressConfig {
+  useWordPress: boolean;
+  apiUrl: string;
+  consumerKey: string;
+  consumerSecret: string;
+}
+
+const DEFAULT_CONFIG: WordPressConfig = {
+  useWordPress: false,
+  apiUrl: import.meta.env.VITE_WP_API_URL || '',
+  consumerKey: import.meta.env.VITE_WC_CONSUMER_KEY || '',
+  consumerSecret: import.meta.env.VITE_WC_CONSUMER_SECRET || '',
+};
+
+// Key for saving config in LocalStorage
+const STORAGE_KEY = 'liora_wp_config';
+
+/** Get active WordPress config from localStorage or environment variables */
+export function getWordPressConfig(): WordPressConfig {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
+    }
+  } catch (e) {
+    console.error('Failed to parse wordpress configuration', e);
+  }
+  
+  // Fallback to environment flag VITE_USE_WORDPRESS
+  const envUseWP = import.meta.env.VITE_USE_WORDPRESS === 'true';
+  return {
+    ...DEFAULT_CONFIG,
+    useWordPress: envUseWP,
+  };
+}
+
+/** Save active WordPress config to localStorage */
+export function saveWordPressConfig(config: WordPressConfig): void {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+}
+
+/** Utility to strip HTML tags from standard WordPress responses */
+function stripHtml(html: string): string {
+  if (!html) return '';
+  return html.replace(/<\/?[^>]+(>|$)/g, '').trim();
+}
+
+/** Utility to clean up and extract first image from WP content markup if no featured media */
+function extractImageFromContent(content: string): string | undefined {
+  const match = content.match(/<img[^>]+src="([^">]+)"/);
+  return match ? match[1] : undefined;
+}
+
+/**
+ * Fetch and map news articles from a standard WordPress site.
+ * Endpoint: /wp-json/wp/v2/posts
+ */
+export async function fetchWordPressPosts(config = getWordPressConfig()): Promise<NewsArticle[]> {
+  if (!config.useWordPress || !config.apiUrl) {
+    throw new Error('WordPress integration is not enabled or API URL is missing.');
+  }
+
+  const url = `${config.apiUrl}/wp-json/wp/v2/posts?_embed&per_page=10`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const posts = await response.json();
+  
+  return posts.map((post: any) => {
+    // Attempt to extract featured media image url, fall back to first image in content, then default shapes tint
+    let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+    if (!imageUrl && post.content?.rendered) {
+      imageUrl = extractImageFromContent(post.content.rendered);
+    }
+
+    // Format date nicely (DD/MM/YYYY)
+    const rawDate = new Date(post.date);
+    const dateStr = isNaN(rawDate.getTime()) 
+      ? 'Gần đây' 
+      : `${String(rawDate.getDate()).padStart(2, '0')}/${String(rawDate.getMonth() + 1).padStart(2, '0')}/${rawDate.getFullYear()}`;
+
+    return {
+      date: dateStr,
+      title: stripHtml(post.title?.rendered || ''),
+      excerpt: stripHtml(post.excerpt?.rendered || post.content?.rendered || '').substring(0, 150) + '...',
+      // For aesthetics, we reuse theme tints dynamically or pass fallback properties
+      tint: '#eef2f7',
+      accent: '#34507a',
+      // Store raw content/featured image in optional extensions if pages need detailed view
+      content: post.content?.rendered,
+      image: imageUrl,
+    };
+  });
+}
+
+/**
+ * Fetch and map products from a WooCommerce-enabled WordPress site.
+ * Endpoint: /wp-json/wc/v3/products
+ */
+export async function fetchWooCommerceProducts(config = getWordPressConfig()): Promise<Product[]> {
+  if (!config.useWordPress || !config.apiUrl) {
+    throw new Error('WooCommerce integration is not enabled or API URL is missing.');
+  }
+
+  const base = config.apiUrl;
+  // Construct WooCommerce REST API URL with Auth query parameters
+  const url = `${base}/wp-json/wc/v3/products?consumer_key=${config.consumerKey}&consumer_secret=${config.consumerSecret}&per_page=100`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`WooCommerce API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const wcProducts = await response.json();
+
+  return wcProducts.map((wc: any): Product => {
+    // Map WooCommerce categories/tags to LIORA structure
+    const categories = wc.categories?.map((c: any) => c.slug) || [];
+    const cat = categories.includes('moissanite') ? 'moissanite' : 'best-seller';
+    const subcat = categories.length > 0 ? categories[0] : 'nhan-don';
+
+    // Pricing
+    const price = parseFloat(wc.price) || 0;
+    const originalPrice = parseFloat(wc.regular_price) > price 
+      ? parseFloat(wc.regular_price) 
+      : undefined;
+
+    // Standard properties
+    const images = wc.images?.map((img: any) => img.src) || [];
+    const image = images[0] || undefined;
+    const imageHover = images[1] || undefined;
+    const gallery = images.slice(2);
+
+    // Extract average rating
+    const rating = parseFloat(wc.average_rating) || 4.5;
+    const reviewCount = parseInt(wc.rating_count) || 8;
+
+    // Stock
+    const inStock = wc.manage_stock && wc.stock_quantity !== null
+      ? wc.stock_quantity
+      : wc.stock_status === 'instock' ? 10 : 0;
+
+    // Pick shape based on categories, tags, or fallback
+    let shape: ShapeKey = 'sparkle';
+    if (categories.includes('love') || wc.name?.toLowerCase().includes('đôi')) shape = 'heart';
+    else if (categories.includes('ring') || wc.name?.toLowerCase().includes('nhẫn')) shape = 'ring';
+    else if (categories.includes('necklace') || wc.name?.toLowerCase().includes('dây chuyền')) shape = 'gem';
+    else if (categories.includes('bracelet') || wc.name?.toLowerCase().includes('lắc')) shape = 'bracelet';
+
+    return {
+      slug: wc.slug || `wc-${wc.id}`,
+      code: wc.sku || `LR-${wc.id}`,
+      name: wc.name || 'Sản phẩm WooCommerce',
+      cat,
+      subcat,
+      price,
+      originalPrice,
+      tint: '#eef2f7',
+      tint2: '#e2e8f0',
+      accent: '#34507a',
+      hot: wc.featured,
+      sold: inStock === 0,
+      shape: shape as ShapeKey,
+      image,
+      imageHover,
+      gallery,
+      description: stripHtml(wc.short_description || wc.description || ''),
+      material: wc.attributes?.find((a: any) => a.name?.toLowerCase().includes('chất liệu'))?.options?.[0] || 'Bạc Cao Cấp',
+      rating,
+      reviewCount,
+      inStock,
+    };
+  });
+}

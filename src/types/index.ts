@@ -74,6 +74,8 @@ export interface NewsArticle {
   excerpt: string;
   tint: string;
   accent: string;
+  content?: string;
+  image?: string;
 }
 
 export type ShapeKey =

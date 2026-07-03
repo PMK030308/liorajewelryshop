@@ -5,6 +5,7 @@ import { fmt } from '../../data';
 import AdminLayout from './AdminLayout';
 import { Product, ShapeKey } from '../../types';
 import Shapes from '../../data/shapes';
+import { getWordPressConfig, fetchWooCommerceProducts } from '../../utils/wordpressService';
 
 const SUBCAT_LABELS: Record<string, string> = {
   'bong-tai':   'Bông tai / Khuyên tai',
@@ -53,6 +54,29 @@ export default function AdminProducts() {
   const [editing, setEditing] = useState<Product | null>(null);
   const [isAutoSlug, setIsAutoSlug] = useState(true);
   const [confirmDelete, setConfirmDelete] = useState<Product | null>(null);
+
+  const [isSyncing, setIsSyncing] = useState(false);
+  const wpConfig = useMemo(() => getWordPressConfig(), []);
+
+  const handleWooCommerceSync = async () => {
+    if (!wpConfig.useWordPress || !wpConfig.apiUrl) return;
+    setIsSyncing(true);
+    showToast('Đang kết nối đồng bộ sản phẩm từ WooCommerce...');
+    try {
+      const synced = await fetchWooCommerceProducts(wpConfig);
+      if (synced && synced.length > 0) {
+        dispatch({ type: 'SET_PRODUCTS', payload: synced });
+        showToast(`Đồng bộ thành công ${synced.length} sản phẩm từ WooCommerce!`);
+      } else {
+        showToast('Không tìm thấy sản phẩm nào trên WooCommerce.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      showToast(`Đồng bộ thất bại: ${err.message || 'Lỗi kết nối API'}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const filtered = useMemo(() => {
     const ql = q.toLowerCase().trim();
@@ -105,6 +129,17 @@ export default function AdminProducts() {
           <p className="text-sm text-mute">{products.length} sản phẩm đang quản lý</p>
         </div>
         <div className="flex items-center gap-2">
+          {wpConfig.useWordPress && (
+            <button
+              onClick={handleWooCommerceSync}
+              disabled={isSyncing}
+              className="text-xs font-semibold border border-brand-200 bg-brand-50 text-brand-700 hover:border-brand-500 hover:bg-brand-100 px-4 py-2.5 rounded-md inline-flex items-center gap-1.5 disabled:opacity-50"
+              title="Đồng bộ sản phẩm tải tức thì từ WooCommerce"
+            >
+              <RefreshCw size={14} className={isSyncing ? "animate-spin" : ""} strokeWidth={2} />
+              {isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ WooCommerce'}
+            </button>
+          )}
           <button
             onClick={() => {
               if (!confirm('Khôi phục danh sách về dữ liệu seed (kèm ảnh demo)? Mọi sản phẩm tự thêm sẽ bị mất.')) return;
@@ -123,6 +158,13 @@ export default function AdminProducts() {
           </button>
         </div>
       </header>
+
+      {wpConfig.useWordPress && (
+        <div className="mb-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 leading-relaxed shadow-sm">
+          ⚠️ <strong>Chế độ WooCommerce hoạt động:</strong> Trang web đang sử dụng nguồn cấp dữ liệu sản phẩm từ WordPress WooCommerce (API: {wpConfig.apiUrl}). 
+          Các thao tác thêm/sửa/xoá trên bảng này chỉ được lưu trữ tạm thời tại trình duyệt của bạn và có thể bị ghi đè khi ứng dụng tải lại hoặc khi nhấn nút <strong>Đồng bộ WooCommerce</strong>.
+        </div>
+      )}
 
       <div className="bg-white border border-rule rounded-lg overflow-hidden">
         <div className="flex flex-wrap gap-3 p-4 border-b border-rule">

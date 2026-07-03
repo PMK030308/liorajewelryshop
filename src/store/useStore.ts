@@ -60,7 +60,8 @@ export type Action =
   | { type: 'ADD_PRODUCT'; payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
   | { type: 'DELETE_PRODUCT'; payload: string }
-  | { type: 'RESET_PRODUCTS' };
+  | { type: 'RESET_PRODUCTS' }
+  | { type: 'SET_PRODUCTS'; payload: Product[] };
 
 export const parseHash = (): string =>
   window.location.hash.replace(/^#/, '') || '/';
@@ -218,6 +219,8 @@ export function reducer(state: State, action: Action): State {
       return { ...state, products: state.products.filter(p => p.slug !== action.payload) };
     case 'RESET_PRODUCTS':
       return { ...state, products: SEED_PRODUCTS };
+    case 'SET_PRODUCTS':
+      return { ...state, products: action.payload };
 
     default: return state;
   }
@@ -238,9 +241,27 @@ export function useStore(): StoreContextType {
   return ctx;
 }
 
+import { getWordPressConfig, fetchWooCommerceProducts } from '../utils/wordpressService';
+
 /** Hook that wires up all side-effects — used inside StoreProvider.tsx */
 export function useStoreSetup() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Load products from WooCommerce if WordPress is enabled
+  useEffect(() => {
+    const config = getWordPressConfig();
+    if (config.useWordPress && config.apiUrl) {
+      fetchWooCommerceProducts(config)
+        .then(products => {
+          if (products && products.length > 0) {
+            dispatch({ type: 'SET_PRODUCTS', payload: products });
+          }
+        })
+        .catch(err => {
+          console.error('Failed to sync products from WooCommerce:', err);
+        });
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('liora_cart', JSON.stringify(state.cart));
@@ -263,7 +284,12 @@ export function useStoreSetup() {
   }, [state.orders]);
 
   useEffect(() => {
-    localStorage.setItem('liora_products', JSON.stringify(state.products));
+    // Only save to local storage if WordPress is disabled.
+    // If WooCommerce is active, we don't want to overwrite WordPress sync with local cache.
+    const config = getWordPressConfig();
+    if (!config.useWordPress) {
+      localStorage.setItem('liora_products', JSON.stringify(state.products));
+    }
   }, [state.products]);
 
   useEffect(() => {
