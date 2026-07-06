@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import type { Dispatch } from 'react';
-import { CartItem, Order, OrderStatus, Product, SortOption, User } from '../types';
-import { PRODUCTS as SEED_PRODUCTS } from '../data';
+import { CartItem, Order, OrderStatus, Product, SiteContent, SortOption, User } from '../types';
+import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 
 export interface State {
   route: string;
@@ -25,6 +25,8 @@ export interface State {
   orders: Order[];
   /** Products list (seeded from data on first run, mutable by admin). */
   products: Product[];
+  /** WordPress-like editable site content. */
+  siteContent: SiteContent;
 }
 
 export type Action =
@@ -61,7 +63,10 @@ export type Action =
   | { type: 'UPDATE_PRODUCT'; payload: Product }
   | { type: 'DELETE_PRODUCT'; payload: string }
   | { type: 'RESET_PRODUCTS' }
-  | { type: 'SET_PRODUCTS'; payload: Product[] };
+  | { type: 'SET_PRODUCTS'; payload: Product[] }
+  // ---- Site CMS ----
+  | { type: 'SET_SITE_CONTENT'; payload: SiteContent }
+  | { type: 'RESET_SITE_CONTENT' };
 
 export const parseHash = (): string =>
   window.location.hash.replace(/^#/, '') || '/';
@@ -96,6 +101,18 @@ const initProducts = (): Product[] => {
   return stored && stored.length ? stored : SEED_PRODUCTS;
 };
 
+const initSiteContent = (): SiteContent => {
+  const stored = safeParse<Partial<SiteContent> | null>('liora_site_content', null);
+  return {
+    ...DEFAULT_SITE_CONTENT,
+    ...(stored || {}),
+    settings: { ...DEFAULT_SITE_CONTENT.settings, ...(stored?.settings || {}) },
+    heroSlides: stored?.heroSlides?.length ? stored.heroSlides : DEFAULT_SITE_CONTENT.heroSlides,
+    newsArticles: stored?.newsArticles?.length ? stored.newsArticles : DEFAULT_SITE_CONTENT.newsArticles,
+    pages: stored?.pages?.length ? stored.pages : DEFAULT_SITE_CONTENT.pages,
+  };
+};
+
 export const initialState: State = {
   route: parseHash(),
   cart: safeParse<CartItem[]>('liora_cart', []),
@@ -114,6 +131,7 @@ export const initialState: State = {
   users: initUsers(),
   orders: safeParse<Order[]>('liora_orders', []),
   products: initProducts(),
+  siteContent: initSiteContent(),
 };
 
 export function reducer(state: State, action: Action): State {
@@ -221,6 +239,10 @@ export function reducer(state: State, action: Action): State {
       return { ...state, products: SEED_PRODUCTS };
     case 'SET_PRODUCTS':
       return { ...state, products: action.payload };
+    case 'SET_SITE_CONTENT':
+      return { ...state, siteContent: action.payload };
+    case 'RESET_SITE_CONTENT':
+      return { ...state, siteContent: DEFAULT_SITE_CONTENT };
 
     default: return state;
   }
@@ -291,6 +313,10 @@ export function useStoreSetup() {
       localStorage.setItem('liora_products', JSON.stringify(state.products));
     }
   }, [state.products]);
+
+  useEffect(() => {
+    localStorage.setItem('liora_site_content', JSON.stringify(state.siteContent));
+  }, [state.siteContent]);
 
   useEffect(() => {
     document.body.style.overflow =

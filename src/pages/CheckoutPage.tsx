@@ -38,17 +38,33 @@ export default function CheckoutPage() {
   const discount = appliedCoupon?.amount ?? 0;
   const total = Math.max(0, subtotal + ship - discount);
 
-  const applyCoupon = () => {
-    const code = coupon.trim().toUpperCase();
+  const applyCoupon = (codeToApply?: string) => {
+    const code = (codeToApply !== undefined ? codeToApply : coupon).trim().toUpperCase();
     if (!code) return;
-    if (code === 'LIORANEW' && subtotal >= 500000) {
-      setAppliedCoupon({ code, amount: 50000 });
-      showToast('✓ Áp dụng mã LIORANEW: giảm 50.000₫');
-    } else if (code === 'LIORANEW') {
-      showToast('⚠ Mã LIORANEW áp dụng cho đơn từ 500k');
+    if (code === 'LIORA20') {
+      if (subtotal >= 300000) {
+        setAppliedCoupon({ code, amount: 20000 });
+        showToast('✓ Áp dụng mã LIORA20: giảm 20.000₫');
+      } else {
+        showToast('⚠ Mã LIORA20 áp dụng cho đơn từ 300k');
+      }
+    } else if (code === 'LIORANEW' || code === 'LIORA50') {
+      if (subtotal >= 500000) {
+        setAppliedCoupon({ code, amount: 50000 });
+        showToast(`✓ Áp dụng mã ${code}: giảm 50.000₫`);
+      } else {
+        showToast(`⚠ Mã ${code} áp dụng cho đơn từ 500k`);
+      }
+    } else if (code === 'LIORA100') {
+      if (subtotal >= 1500000) {
+        setAppliedCoupon({ code, amount: 100000 });
+        showToast('✓ Áp dụng mã LIORA100: giảm 100.000₫');
+      } else {
+        showToast('⚠ Mã LIORA100 áp dụng cho đơn từ 1.5tr');
+      }
     } else {
       setAppliedCoupon(null);
-      showToast('⚠ Mã giảm giá không hợp lệ');
+      showToast('⚠ Mã giảm giá không hợp lệ/chưa đạt điều kiện');
     }
   };
 
@@ -227,14 +243,43 @@ export default function CheckoutPage() {
                 );
               })}
             </div>
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-3">
               <input
                 placeholder="Nhập mã giảm giá"
                 value={coupon}
                 onChange={e => setCoupon(e.target.value)}
                 className="flex-1 border border-rule rounded-full px-4 py-2 text-sm focus:outline-none focus:border-brand-500"
               />
-              <button type="button" onClick={applyCoupon} className="btn-outline px-5 py-2 text-sm">Áp dụng</button>
+              <button type="button" onClick={() => applyCoupon()} className="btn-outline px-5 py-2 text-sm">Áp dụng</button>
+            </div>
+            
+            {/* Voucher gợi ý tinh tế */}
+            <div className="mb-4">
+              <div className="text-[11px] text-mute mb-2">Ưu đãi dành cho bạn (bấm để áp dụng):</div>
+              <div className="flex flex-wrap gap-1.5">
+                {[
+                  { code: 'LIORA20', label: '-20k đơn từ 300k' },
+                  { code: 'LIORA50', label: '-50k đơn từ 500k' },
+                  { code: 'LIORA100', label: '-100k đơn từ 1.5tr' },
+                ].map(v => (
+                  <button
+                    key={v.code}
+                    type="button"
+                    onClick={() => {
+                      setCoupon(v.code);
+                      applyCoupon(v.code);
+                    }}
+                    className={`text-[11px] px-2.5 py-1 rounded transition-all border ${
+                      appliedCoupon?.code === v.code
+                        ? 'bg-brand-650 border-brand-700 text-white font-semibold'
+                        : 'bg-[#faf6f7] border-[#f8d8e3] text-[#8f3f61] hover:bg-brand-50'
+                    }`}
+                  >
+                    {v.code}
+                    <span className="opacity-80 block text-[9.5px] font-normal">{v.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
             <div className="space-y-2 text-sm border-t border-rule pt-3">
               <div className="flex justify-between"><span className="text-ink2">Tạm tính</span><span>{fmt(subtotal)}</span></div>

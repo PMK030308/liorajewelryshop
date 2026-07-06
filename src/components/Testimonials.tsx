@@ -13,9 +13,9 @@ const TESTIMONIALS: Testimonial[] = [
   {
     name: 'Nguyễn Thu Hà',
     role: 'Khách hàng từ 2023',
-    content: 'Sản phẩm đẹp hơn ảnh, hộp đựng sang trọng. Mình mua nhẫn Moissanite và rất bất ngờ vì độ lấp lánh không khác kim cương thật.',
+    content: 'Sản phẩm đẹp hơn ảnh, hộp đựng sang trọng. Mình mua vòng tay Charm Hoà Hồng Ngọc và rất bất ngờ vì độ in ảnh đẹp, charm tỉ mỉ từng chi tiết!',
     initials: 'TH',
-    tint: '#dde3ef',
+    tint: '#f2c8d2',
   },
   {
     name: 'Trần Minh Anh',
@@ -27,7 +27,7 @@ const TESTIMONIALS: Testimonial[] = [
   {
     name: 'Phạm Quỳnh Anh',
     role: 'Khách hàng từ 2025',
-    content: 'Bông tai Moissanite đeo rất nhẹ, không bị tuột. Mài giũa kim cương cực sắc nét. Giá hợp lý, đáng tiền!',
+    content: 'Vòng tay Charm chârm biết chọc, đeo rất nhẹ, không bị tuột charm. Charm khắc sắc nét đẹp sắc sảo. Giá hợp lý, đáng tiền!',
     initials: 'QA',
     tint: '#e6f0e8',
   },

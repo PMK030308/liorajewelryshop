@@ -80,7 +80,7 @@ export default function InvoiceModal({ order, onClose }: Props) {
           {/* Header */}
           <div className="flex flex-wrap items-start justify-between gap-4 pb-5 border-b border-rule">
             <div className="flex items-start gap-3">
-              <img src="/logoliora.png" alt="LIORA" className="h-12 w-auto object-contain" />
+              <img src="/logoliora2.jpg" alt="LIORA" className="h-12 w-auto object-contain mix-blend-multiply" />
               <div className="text-[11px] leading-snug">
                 <div className="text-mute uppercase tracking-wider">Liorajewelry.shop</div>
                 <div className="text-ink">159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</div>

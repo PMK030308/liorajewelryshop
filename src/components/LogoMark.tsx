@@ -30,12 +30,12 @@ export default function LogoMark({
   const Inner = (
     <>
       <img
-        src="/logoliora.png"
+        src="/logoliora2.jpg"
         alt={alt}
         width={size}
         height={size}
         decoding="async"
-        className="object-contain"
+        className="object-contain mix-blend-multiply"
         style={{ height: size, width: 'auto' }}
       />
       {withText && (

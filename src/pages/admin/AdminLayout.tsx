@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { LayoutDashboard, Package, Receipt, ArrowLeft, LogOut, Menu, X, Home, Settings } from 'lucide-react';
+import { LayoutDashboard, Package, Receipt, ArrowLeft, LogOut, Menu, X, Home, Settings, PanelsTopLeft } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
-interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders' | 'wordpress'; }
+interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders' | 'content' | 'wordpress'; }
 
 export default function AdminLayout({ children, active }: Props) {
   const state = useStore().state;
@@ -42,6 +42,7 @@ export default function AdminLayout({ children, active }: Props) {
     { key: 'dashboard', label: 'Bảng điều khiển', path: '/admin/dashboard', icon: <LayoutDashboard size={18} strokeWidth={1.8} /> },
     { key: 'products',  label: 'Sản phẩm',         path: '/admin/products',  icon: <Package size={18} strokeWidth={1.8} /> },
     { key: 'orders',    label: 'Đơn hàng',         path: '/admin/orders',    icon: <Receipt size={18} strokeWidth={1.8} /> },
+    { key: 'content',   label: 'Nội dung website', path: '/admin/content',   icon: <PanelsTopLeft size={18} strokeWidth={1.8} /> },
     { key: 'wordpress', label: 'Cấu hình WP',     path: '/admin/wordpress', icon: <Settings size={18} strokeWidth={1.8} /> },
   ];
 
@@ -54,7 +55,7 @@ export default function AdminLayout({ children, active }: Props) {
         onClick={(e) => { e.preventDefault(); navigate('/'); }}
         className="flex items-center gap-2 mb-5 text-brand-700 hover:opacity-90 transition-opacity"
       >
-        <img src="/logoliora.png" alt="LIORA" className="object-contain h-10 w-auto" />
+        <img src="/logoliora2.jpg" alt="LIORA" className="object-contain h-10 w-auto mix-blend-multiply" />
         <div className="text-[10px] text-mute uppercase tracking-[0.18em] font-semibold">Admin</div>
       </a>
 
@@ -91,7 +92,7 @@ export default function AdminLayout({ children, active }: Props) {
   );
 
   return (
-    <main className="bg-[#f5f7fb] min-h-screen">
+    <main className="bg-[#fff8fa] min-h-screen">
       {/* Mobile top bar */}
       <header className="lg:hidden sticky top-0 z-30 bg-white border-b border-rule flex items-center gap-3 px-4 py-3">
         <button
@@ -102,7 +103,7 @@ export default function AdminLayout({ children, active }: Props) {
           <Menu size={20} strokeWidth={2} />
         </button>
         <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="flex-1 flex items-center gap-2 text-brand-700 hover:opacity-90 transition-opacity">
-          <img src="/logoliora.png" alt="LIORA" className="object-contain h-8 w-auto" />
+          <img src="/logoliora2.jpg" alt="LIORA" className="object-contain h-8 w-auto mix-blend-multiply" />
           <span className="text-xs text-mute">/ Admin</span>
           {activeItem && (
             <>

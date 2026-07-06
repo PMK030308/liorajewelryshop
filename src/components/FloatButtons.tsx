@@ -35,7 +35,7 @@ export default function FloatButtons() {
         href="https://m.me/liorajewelry.vn"
         target="_blank"
         rel="noopener noreferrer"
-        className="fab w-12 h-12 rounded-full bg-blue-500 text-white shadow-float flex items-center justify-center hover:bg-blue-600"
+        className="fab w-12 h-12 rounded-full bg-brand-500 text-white shadow-float flex items-center justify-center hover:bg-brand-600"
         aria-label="Messenger" title="Chat messenger"
       >
         <MessageCircle size={20} strokeWidth={1.8} />

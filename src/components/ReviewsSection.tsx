@@ -18,7 +18,7 @@ interface Review {
 // Mock pool — deterministic per product so demo feels stable.
 const POOL: Omit<Review, 'id'>[] = [
   {
-    name: 'Nguyễn Thu Hà', initials: 'TH', tint: '#dde3ef',
+    name: 'Nguyễn Thu Hà', initials: 'TH', tint: '#f2c8d2',
     rating: 5, date: '12/03/2026',
     content: 'Sản phẩm đẹp hơn ảnh, đá lấp lánh cực kỳ. Hộp đựng sang trọng, có cả thẻ kiểm định GRA. Mình rất hài lòng, sẽ giới thiệu cho bạn bè.',
     verified: true, size: '#7',
@@ -26,7 +26,7 @@ const POOL: Omit<Review, 'id'>[] = [
   {
     name: 'Trần Minh Anh', initials: 'MA', tint: '#ffe0e7',
     rating: 5, date: '08/03/2026',
-    content: 'Đeo lên người rất sang chảnh. Lúc đầu sợ Moissanite không lấp lánh bằng kim cương thật, nhưng thực tế thì khác xa, ai cũng khen.',
+    content: 'Đeo lên người rất sang chảnh. Lúc đầu sợ vòng tay mạ bạc nhanh xỉn, nhưng thực tế thì dùng mãi vẫn đẹp, ai cũng khen tinh tế!',
     verified: true,
   },
   {
@@ -48,7 +48,7 @@ const POOL: Omit<Review, 'id'>[] = [
     verified: true, size: '#5',
   },
   {
-    name: 'Vũ Bích Ngọc', initials: 'BN', tint: '#cffafe',
+    name: 'Vũ Bích Ngọc', initials: 'BN', tint: '#f9e5ea',
     rating: 4, date: '10/02/2026',
     content: 'Thiết kế tinh tế. Đeo đi tiệc được khen rất nhiều. Có chăm chăm hơi xước nhẹ sau 1 tháng nhưng shop nói mang ra để bảo trì miễn phí.',
     verified: false,

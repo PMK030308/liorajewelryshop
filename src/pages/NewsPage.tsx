@@ -6,14 +6,20 @@ import { getWordPressConfig, fetchWordPressPosts } from '../utils/wordpressServi
 import { NewsArticle } from '../types';
 
 export default function NewsPage() {
-  const { navigate } = useStore();
-  const [articles, setArticles] = useState<NewsArticle[]>(STATIC_NEWS);
+  const { state, navigate } = useStore();
+  const [articles, setArticles] = useState<NewsArticle[]>(
+    state.siteContent.newsArticles.length ? state.siteContent.newsArticles : STATIC_NEWS,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
 
   useEffect(() => {
     const config = getWordPressConfig();
+    if (!config.useWordPress) {
+      setArticles(state.siteContent.newsArticles.length ? state.siteContent.newsArticles : STATIC_NEWS);
+      return;
+    }
     if (config.useWordPress && config.apiUrl) {
       setLoading(true);
       fetchWordPressPosts(config)
@@ -29,7 +35,7 @@ export default function NewsPage() {
           setLoading(false);
         });
     }
-  }, []);
+  }, [state.siteContent.newsArticles]);
 
   if (selectedArticle) {
     return (
@@ -95,14 +101,14 @@ export default function NewsPage() {
           .entry-content h2 {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #1A3050;
+            color: #9f1239;
             margin-top: 2rem;
             margin-bottom: 1rem;
           }
           .entry-content h3 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1A3050;
+            color: #9f1239;
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
           }
@@ -121,7 +127,7 @@ export default function NewsPage() {
             margin-bottom: 0.5rem;
           }
           .entry-content blockquote {
-            border-left: 4px solid #34507a;
+            border-left: 4px solid #c96b8d;
             padding-left: 1.5rem;
             font-style: italic;
             color: #4a5568;
@@ -157,11 +163,11 @@ export default function NewsPage() {
         <div className="grid md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
             <div key={i} className="animate-pulse bg-white rounded-2xl overflow-hidden shadow-card p-5 space-y-4">
-              <div className="bg-slate-200 aspect-[16/10] rounded-xl" />
-              <div className="h-4 bg-slate-200 w-1/3 rounded" />
-              <div className="h-6 bg-slate-200 w-3/4 rounded" />
-              <div className="h-4 bg-slate-200 w-full rounded" />
-              <div className="h-4 bg-slate-200 w-5/6 rounded" />
+              <div className="bg-brand-100 aspect-[16/10] rounded-xl" />
+              <div className="h-4 bg-brand-100 w-1/3 rounded" />
+              <div className="h-6 bg-brand-100 w-3/4 rounded" />
+              <div className="h-4 bg-brand-100 w-full rounded" />
+              <div className="h-4 bg-brand-100 w-5/6 rounded" />
             </div>
           ))}
         </div>

@@ -33,7 +33,7 @@ export default function ShopPage() {
   const list = useMemo(() => {
     let l = state.filter === 'all'
       ? [...products]
-      : state.filter === 'moissanite' || state.filter === 'best-seller'
+      : state.filter === 'bst' || state.filter === 'best-seller'
         ? products.filter(p => p.cat === state.filter)
         : products.filter(p => p.subcat === state.filter);
 
@@ -65,7 +65,7 @@ export default function ShopPage() {
 
   const activeFilterCount = (state.filter !== 'all' ? 1 : 0) + priceBuckets.length;
 
-  const quickFilters = ['all','moissanite','best-seller','day-chuyen','lac-tay','nhan-don','bong-tai'];
+  const quickFilters = ['all','bst','best-seller','lac-tay','day-chuyen','nhan-don','bong-tai'];
 
   const FilterSidebar = (
     <>
@@ -169,7 +169,7 @@ export default function ShopPage() {
               <div className="flex gap-2 flex-wrap overflow-x-auto">
                 {quickFilters.map(s => {
                   const c = CATEGORIES.find(x => x.slug === s);
-                  const label = c ? c.label : s === 'moissanite' ? 'Moissanite' : s === 'best-seller' ? 'Bán chạy' : s;
+                const label = c ? c.label : s === 'bst' ? 'Bộ Sưu Tập' : s === 'best-seller' ? 'Bán chạy' : s;
                   return (
                     <button key={s} className={`chip ${state.filter === s ? 'active' : ''}`} onClick={() => setFilterNav(s)}>{label}</button>
                   );

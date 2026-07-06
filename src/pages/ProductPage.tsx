@@ -98,6 +98,46 @@ export default function ProductPage({ slug }: { slug: string }) {
   const inStock = p.inStock ?? 0;
   const isSold = !!p.sold || inStock === 0;
   const showSize = p.subcat === 'nhan-don' || p.subcat === 'cap-doi';
+  const productHighlights = p.highlights?.filter(Boolean) || [];
+  const productSpecs = p.specifications?.filter(item => item.label && item.value) || [];
+  const productCare = p.careInstructions || 'Tránh tiếp xúc nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau khi đeo. Đem đến Liorajewelry để được vệ sinh miễn phí trọn đời.';
+
+  useEffect(() => {
+    const title = p.seoTitle || `${p.name} | LIORA Jewelry`;
+    const description = p.seoDescription || p.description || `${p.name} tại LIORA Jewelry`;
+    document.title = title;
+
+    const upsertMeta = (name: string, content?: string) => {
+      let el = document.querySelector<HTMLMetaElement>(`meta[name="${name}"]`);
+      if (!content) {
+        el?.remove();
+        return;
+      }
+      if (!el) {
+        el = document.createElement('meta');
+        el.name = name;
+        document.head.appendChild(el);
+      }
+      el.content = content;
+    };
+
+    upsertMeta('description', description);
+    upsertMeta('keywords', p.seoKeywords);
+
+    let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (p.canonicalSlug) {
+      if (!canonical) {
+        canonical = document.createElement('link');
+        canonical.rel = 'canonical';
+        document.head.appendChild(canonical);
+      }
+      canonical.href = p.canonicalSlug.startsWith('http')
+        ? p.canonicalSlug
+        : `${window.location.origin}${p.canonicalSlug.startsWith('/') ? p.canonicalSlug : `/${p.canonicalSlug}`}`;
+    } else {
+      canonical?.remove();
+    }
+  }, [p]);
 
   // Gallery: combine main + gallery (deduped)
   const galleryImages = useMemo(() => {
@@ -552,7 +592,7 @@ export default function ProductPage({ slug }: { slug: string }) {
           <div className="border border-rule grid grid-cols-2 gap-x-3 gap-y-2.5 p-4 text-xs text-ink2">
             <span className="inline-flex items-center gap-2"><Truck size={14} strokeWidth={1.6} className="text-brand-500 flex-shrink-0" />Miễn phí giao từ 500K</span>
             <span className="inline-flex items-center gap-2"><RotateCcw size={14} strokeWidth={1.6} className="text-brand-500 flex-shrink-0" />Đổi trả trong 7 ngày</span>
-            <span className="inline-flex items-center gap-2"><ShieldCheck size={14} strokeWidth={1.6} className="text-brand-500 flex-shrink-0" />Kiểm định GRA chính hãng</span>
+            <span className="inline-flex items-center gap-2"><ShieldCheck size={14} strokeWidth={1.6} className="text-brand-500 flex-shrink-0" />Chất liệu kiểm định cao cấp</span>
             <span className="inline-flex items-center gap-2"><Gift size={14} strokeWidth={1.6} className="text-brand-500 flex-shrink-0" />Hộp quà sang trọng</span>
           </div>
 
@@ -563,24 +603,48 @@ export default function ProductPage({ slug }: { slug: string }) {
                 title: 'Mô tả sản phẩm', open: true, content: (
                   <div>
                     {p.description && <p className="mb-3">{p.description}</p>}
+                    {p.longDescription && (
+                      <div className="space-y-3 mb-4">
+                        {p.longDescription.split('\n').filter(Boolean).map((paragraph, idx) => (
+                          <p key={idx}>{paragraph}</p>
+                        ))}
+                      </div>
+                    )}
                     {p.material && (
                       <div className="mb-3">
                         <span className="font-semibold text-ink">Chất liệu: </span>
                         <span>{p.material}</span>
                       </div>
                     )}
-                    <ul className="space-y-1.5">
-                      <li>· Chất liệu: Bạc S925 cao cấp, xi bạch kim chống xỉn màu</li>
-                      <li>· Đính kim cương Moissanite kiểm định GRA (nếu áp dụng)</li>
-                      <li>· Tặng kèm hộp quà sang trọng + thẻ bảo hành điện tử</li>
-                      <li>· Bảo hành làm mới sản phẩm trọn đời tại cửa hàng</li>
-                    </ul>
+                    {productHighlights.length > 0 && (
+                      <ul className="space-y-1.5 mb-4">
+                        {productHighlights.map((item, idx) => <li key={idx}>· {item}</li>)}
+                      </ul>
+                    )}
+                    {productHighlights.length === 0 && (
+                      <ul className="space-y-1.5 mb-4">
+                        <li>· Chất liệu: Hợp kim mạ bạc cao cấp, chống xỉn màu bền lâu</li>
+                        <li>· Kiểm định chất lượng nguyên liệu chính hãng (nếu áp dụng)</li>
+                        <li>· Tặng kèm hộp quà sang trọng + thẻ bảo hành điện tử</li>
+                        <li>· Bảo hành làm mới sản phẩm trọn đời tại cửa hàng</li>
+                      </ul>
+                    )}
+                    {productSpecs.length > 0 && (
+                      <dl className="grid sm:grid-cols-2 gap-x-5 gap-y-2 border-t border-rule pt-4">
+                        {productSpecs.map((item, idx) => (
+                          <div key={`${item.label}-${idx}`}>
+                            <dt className="text-xs uppercase tracking-wide text-mute">{item.label}</dt>
+                            <dd className="font-medium text-ink">{item.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
                   </div>
                 ),
               },
               {
                 title: 'Bảo quản & Bảo hành', content: (
-                  <p>Tránh tiếp xúc nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau khi đeo. Đem đến Liorajewelry để được vệ sinh miễn phí trọn đời.</p>
+                  <p>{productCare}</p>
                 ),
               },
               {

@@ -2,7 +2,7 @@ export interface Product {
   slug: string;
   code: string;
   name: string;
-  cat: 'moissanite' | 'best-seller';
+  cat: 'bst' | 'best-seller';
   subcat: string;
   price: number;
   /** Original (pre-sale) price. If set and > price, UI shows a strikethrough + discount %. */
@@ -21,7 +21,23 @@ export interface Product {
   gallery?: string[];
   /** Short marketing description. */
   description?: string;
-  /** Detailed material (e.g. "Bạc S925 xi bạch kim, đính kim cương Moissanite GRA"). */
+  /** Long-form product content for SEO and product detail pages. */
+  longDescription?: string;
+  /** Search engine title. Falls back to product name. */
+  seoTitle?: string;
+  /** Search engine summary. Falls back to short description. */
+  seoDescription?: string;
+  /** Comma-separated target keywords. */
+  seoKeywords?: string;
+  /** Optional canonical slug/path for SEO tools. */
+  canonicalSlug?: string;
+  /** Bullet points shown in product detail content. */
+  highlights?: string[];
+  /** Product care instructions for the detail accordion. */
+  careInstructions?: string;
+  /** Structured specification rows for SEO-friendly detail content. */
+  specifications?: ProductSpecification[];
+  /** Detailed material (e.g. "Hợp kim xi mạ bạc cao cấp, charm resin pha lê"). */
   material?: string;
   /** Average rating 0-5 (with decimals). */
   rating?: number;
@@ -29,6 +45,11 @@ export interface Product {
   reviewCount?: number;
   /** Available stock count. */
   inStock?: number;
+}
+
+export interface ProductSpecification {
+  label: string;
+  value: string;
 }
 
 export interface CartItem {
@@ -69,6 +90,7 @@ export interface HeroSlide {
 }
 
 export interface NewsArticle {
+  id?: string;
   date: string;
   title: string;
   excerpt: string;
@@ -76,6 +98,31 @@ export interface NewsArticle {
   accent: string;
   content?: string;
   image?: string;
+}
+
+export interface SitePage {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  visible: boolean;
+}
+
+export interface SiteSettings {
+  brandName: string;
+  tagline: string;
+  address: string;
+  openHours: string;
+  hotline: string;
+  facebookUrl: string;
+  qrUrl: string;
+}
+
+export interface SiteContent {
+  heroSlides: HeroSlide[];
+  newsArticles: NewsArticle[];
+  pages: SitePage[];
+  settings: SiteSettings;
 }
 
 export type ShapeKey =

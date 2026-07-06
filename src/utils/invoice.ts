@@ -52,7 +52,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   // -------- Header --------
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(22);
-  doc.setTextColor(26, 48, 80); // brand-700
+  doc.setTextColor(143, 63, 97); // brand-700
   doc.text('LIORA', M, y + 4);
 
   doc.setFont('helvetica', 'normal');
@@ -63,7 +63,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   // Right side: HOA DON
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(20);
-  doc.setTextColor(26, 48, 80);
+  doc.setTextColor(143, 63, 97);
   doc.text(vi('HOA DON'), W - M, y + 4, { align: 'right' });
 
   doc.setFont('helvetica', 'normal');
@@ -97,7 +97,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   // -------- Customer block --------
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(26, 48, 80);
+  doc.setTextColor(143, 63, 97);
   doc.text(vi('THONG TIN KHACH HANG'), M, y);
   y += 4;
   doc.setDrawColor(230, 230, 230);
@@ -124,7 +124,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   // -------- Items header --------
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(26, 48, 80);
+  doc.setTextColor(143, 63, 97);
   doc.text(vi('CHI TIET DON HANG'), M, y);
   y += 4;
   doc.line(M, y, W - M, y);
@@ -177,7 +177,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   row('Phi van chuyen:', order.ship === 0 ? 'Mien phi' : fmt(order.ship));
   if (order.discount > 0) row(`Giam gia${order.coupon ? ' (' + order.coupon + ')' : ''}:`, '- ' + fmt(order.discount));
   y += 4;
-  doc.setDrawColor(26, 48, 80);
+  doc.setDrawColor(143, 63, 97);
   doc.setLineWidth(1);
   doc.line(labelX - 10, y - 12, totalX, y - 12);
   doc.setLineWidth(0.5);

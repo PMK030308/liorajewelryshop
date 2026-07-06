@@ -13,13 +13,13 @@ export default function AboutPage() {
       <div className="text-brand-500 font-medium mb-8">Trang Sức Bạc Cao Cấp Dành Cho Giới Trẻ</div>
 
       <div className="grid md:grid-cols-2 gap-10 mb-10">
-        <div className="rounded-2xl overflow-hidden photo aspect-[4/3]" style={{ backgroundImage:'radial-gradient(120% 80% at 50% 30%, #ffffff, #eef2f7 75%, #d8e0ec)' } as React.CSSProperties}>
-          <div className="sil" style={{ color:'#34507a' }}>{Shapes.gem}</div>
+        <div className="rounded-2xl overflow-hidden photo aspect-[4/3]" style={{ backgroundImage:'radial-gradient(120% 80% at 50% 30%, #ffffff, #f9e5ea 75%, #f2c8d2)' } as React.CSSProperties}>
+          <div className="sil" style={{ color:'#c2537a' }}>{Shapes.gem}</div>
         </div>
         <div className="space-y-4 text-ink2 leading-relaxed">
           <p>Liorajewelry được thành lập với sứ mệnh mang đến những món trang sức bạc cao cấp, đẹp – sang – độc – lạ dành cho giới trẻ Việt Nam.</p>
           <p>Tại Liorajewelry, chúng mình luôn cập nhật những xu hướng thời trang mới nhất, thiết kế những sản phẩm tinh tế giúp các bạn trẻ luôn tự tin và toả sáng.</p>
-          <p>Mỗi sản phẩm Liorajewelry đều được chế tác từ bạc S925 cao cấp, xi bạch kim chống xỉn màu, đính kim cương Moissanite kiểm định GRA chính hãng.</p>
+          <p>Mỗi sản phẩm Liorajewelry đều được chế tác từ hợp kim mạ bạc cao cấp, xi phủ chống xỉn màu bền lâu, đảm bảo độ sáng bóng và độ bền cao nhất.</p>
         </div>
       </div>
 

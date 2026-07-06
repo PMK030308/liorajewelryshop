@@ -29,8 +29,32 @@ function slugify(s: string): string {
     .slice(0, 60);
 }
 
+function splitLines(value: string): string[] | undefined {
+  const lines = value.split('\n').map(line => line.trim()).filter(Boolean);
+  return lines.length ? lines : undefined;
+}
+
+function specsToText(specs: Product['specifications']): string {
+  return (specs || []).map(item => `${item.label}: ${item.value}`).join('\n');
+}
+
+function parseSpecs(value: string): Product['specifications'] {
+  const rows = value.split('\n')
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(line => {
+      const [label, ...rest] = line.split(':');
+      return {
+        label: label.trim(),
+        value: rest.join(':').trim(),
+      };
+    })
+    .filter(row => row.label && row.value);
+  return rows.length ? rows : undefined;
+}
+
 const SHAPES: ShapeKey[] = ['bow','flower','snow','gem','star','bracelet','ring','butterfly','clover','heart','sparkle'];
-const CATS: Product['cat'][] = ['moissanite', 'best-seller'];
+const CATS: Product['cat'][] = ['bst', 'best-seller'];
 const SUBCATS = ['bong-tai','day-chuyen','lac-tay','nhan-don','cap-doi'];
 
 const emptyDraft: Product = {
@@ -40,9 +64,9 @@ const emptyDraft: Product = {
   cat: 'best-seller',
   subcat: 'day-chuyen',
   price: 0,
-  tint: '#eef2f7',
-  tint2: '#d8e0ec',
-  accent: '#34507a',
+  tint: '#fff8fa',
+  tint2: '#f8d8e3',
+  accent: '#c96b8d',
   shape: 'gem',
 };
 
@@ -103,7 +127,22 @@ export default function AdminProducts() {
       return;
     }
     const isNew = !products.find(p => p.slug === editing.slug);
-    const payload = { ...editing, slug };
+    const payload: Product = {
+      ...editing,
+      slug,
+      seoTitle: editing.seoTitle?.trim() || undefined,
+      seoDescription: editing.seoDescription?.trim() || undefined,
+      seoKeywords: editing.seoKeywords?.trim() || undefined,
+      canonicalSlug: editing.canonicalSlug?.trim() || undefined,
+      description: editing.description?.trim() || undefined,
+      longDescription: editing.longDescription?.trim() || undefined,
+      material: editing.material?.trim() || undefined,
+      careInstructions: editing.careInstructions?.trim() || undefined,
+      highlights: editing.highlights?.map(item => item.trim()).filter(Boolean),
+      specifications: editing.specifications?.filter(item => item.label.trim() && item.value.trim()),
+    };
+    if (!payload.highlights?.length) payload.highlights = undefined;
+    if (!payload.specifications?.length) payload.specifications = undefined;
     if (isNew) {
       dispatch({ type: 'ADD_PRODUCT', payload });
       showToast('Đã thêm sản phẩm');
@@ -267,7 +306,7 @@ export default function AdminProducts() {
                 desc="Tên, mã và slug sản phẩm. Slug sẽ tự sinh từ tên nếu bỏ trống."
               >
                 <Field label="Tên sản phẩm" required className="md:col-span-2"
-                  hint="VD: Bông Tai Bạc Gắn Kim Cương Moissanite 'Aurora'">
+                  hint="VD: Vòng Tay Charm “Nơ Hồng Tiểu Thư” Liôra">
                   <input value={editing.name}
                     onChange={e => {
                       const name = e.target.value;
@@ -304,7 +343,7 @@ export default function AdminProducts() {
                 <Field label="Bộ sưu tập">
                   <select value={editing.cat} onChange={e => setEditing({ ...editing, cat: e.target.value as Product['cat'] })}
                     className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
-                    <option value="moissanite">Kim cương Moissanite</option>
+                    <option value="bst">Bộ Sưu Tập (BST)</option>
                     <option value="best-seller">Bán chạy</option>
                   </select>
                 </Field>
@@ -394,27 +433,85 @@ export default function AdminProducts() {
                 </details>
               </FormSection>
 
-              {/* SECTION 5 — Mô tả */}
+              {/* SECTION 5 — Nội dung & SEO */}
               <FormSection
                 step={5}
-                title="Mô tả & chất liệu"
-                desc="Thông tin chi tiết giúp khách yên tâm mua"
+                title="Nội dung & SEO"
+                desc="Viết nội dung chi tiết cho trang sản phẩm, tối ưu từ khoá và meta SEO"
                 fullWidth
               >
                 <Field label="Mô tả sản phẩm" className="md:col-span-3"
                   hint="Mô tả ngắn 2-3 câu nhấn vào điểm nổi bật (~150 ký tự)">
                   <textarea value={editing.description ?? ''} rows={3}
                     onChange={e => setEditing({ ...editing, description: e.target.value || undefined })}
-                    placeholder="Ví dụ: Bông tai bạc S925 thiết kế nơ tinh xảo, đính kim cương Moissanite GRA — lấp lánh từng góc nhìn."
+                    placeholder="Ví dụ: Vòng tay hợp kim mạ bạc tinh xảo, charm nơ hồng dễ thương, phù hợp mọi outfit."
                     className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-none" />
                 </Field>
+                <Field label="Nội dung chi tiết / bài SEO" className="md:col-span-3"
+                  hint="Viết nhiều đoạn về cảm hứng thiết kế, chất liệu, dịp phối đồ và lý do nên mua">
+                  <textarea value={editing.longDescription ?? ''} rows={8}
+                    onChange={e => setEditing({ ...editing, longDescription: e.target.value || undefined })}
+                    placeholder={'Gợi ý:\n- Giới thiệu sản phẩm và phong cách thiết kế\n- Ai phù hợp đeo mẫu này\n- Chất liệu, độ bóng, cảm giác khi đeo\n- Gợi ý phối đồ hoặc làm quà tặng'}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm leading-relaxed focus:outline-none focus:border-brand-500 resize-y" />
+                </Field>
+                <Field label="Điểm nổi bật" className="md:col-span-3"
+                  hint="Mỗi dòng là một ý, sẽ hiển thị dạng bullet trên trang sản phẩm">
+                  <textarea value={(editing.highlights || []).join('\n')} rows={5}
+                    onChange={e => setEditing({ ...editing, highlights: splitLines(e.target.value) })}
+                    placeholder={'Thiết kế thanh mảnh, dễ phối đồ\nMàu bạc sáng, hợp nhiều tone da\nPhù hợp làm quà tặng sinh nhật, kỷ niệm'}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-y" />
+                </Field>
                 <Field label="Chất liệu" className="md:col-span-3"
-                  hint="VD: Bạc S925 xi bạch kim · Kim cương Moissanite 5 ly GRA">
+                  hint="VD: Hợp kim xi mạ bạc cao cấp · Charm resin pha lê cao cấp">
                   <input value={editing.material ?? ''}
                     onChange={e => setEditing({ ...editing, material: e.target.value || undefined })}
-                    placeholder="Bạc S925 · Moissanite · Mạ vàng 18K..."
+                    placeholder="Hợp kim mạ bạc · Charm silicone / resin / đá tổng hợp..."
                     className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
                 </Field>
+                <Field label="Thông số sản phẩm" className="md:col-span-3"
+                  hint="Mỗi dòng theo dạng: Tên thông số: Giá trị. Ví dụ: Size: Freesize">
+                  <textarea value={specsToText(editing.specifications)} rows={5}
+                    onChange={e => setEditing({ ...editing, specifications: parseSpecs(e.target.value) })}
+                    placeholder={'Chất liệu: Hợp kim mạ bạc cao cấp\nMàu sắc: Bạc sáng\nPhong cách: Thanh lịch, nữ tính\nPhù hợp: Đi hằng ngày, dự tiệc, làm quà tặng'}
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-y" />
+                </Field>
+                <Field label="Hướng dẫn bảo quản riêng" className="md:col-span-3"
+                  hint="Nếu bỏ trống, trang sẽ dùng nội dung bảo quản mặc định">
+                  <textarea value={editing.careInstructions ?? ''} rows={4}
+                    onChange={e => setEditing({ ...editing, careInstructions: e.target.value || undefined })}
+                    placeholder="Tránh tiếp xúc với nước hoa, hồ bơi, chất tẩy rửa. Lau nhẹ bằng khăn mềm sau khi sử dụng..."
+                    className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-y" />
+                </Field>
+                <div className="md:col-span-3 grid md:grid-cols-2 gap-4 border-t border-rule pt-5">
+                  <Field label="SEO title"
+                    hint={`Nên 50-60 ký tự. Hiện tại: ${(editing.seoTitle || '').length}`}>
+                    <input value={editing.seoTitle ?? ''}
+                      onChange={e => setEditing({ ...editing, seoTitle: e.target.value || undefined })}
+                      placeholder={`${editing.name || 'Tên sản phẩm'} | LIORA Jewelry`}
+                      className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                  </Field>
+                  <Field label="Canonical slug"
+                    hint="Tuỳ chọn, dùng khi muốn khai báo URL chuẩn riêng">
+                    <input value={editing.canonicalSlug ?? ''}
+                      onChange={e => setEditing({ ...editing, canonicalSlug: e.target.value || undefined })}
+                      placeholder={`/san-pham/${editing.slug || 'slug-san-pham'}`}
+                      className="w-full border border-rule rounded-md px-3 py-2.5 text-sm font-mono focus:outline-none focus:border-brand-500" />
+                  </Field>
+                  <Field label="Meta description" className="md:col-span-2"
+                    hint={`Nên 140-160 ký tự. Hiện tại: ${(editing.seoDescription || '').length}`}>
+                    <textarea value={editing.seoDescription ?? ''} rows={3}
+                      onChange={e => setEditing({ ...editing, seoDescription: e.target.value || undefined })}
+                      placeholder="Viết 1-2 câu thuyết phục chứa từ khoá chính, chất liệu và lợi ích nổi bật..."
+                      className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500 resize-none" />
+                  </Field>
+                  <Field label="Từ khoá SEO" className="md:col-span-2"
+                    hint="Phân tách bằng dấu phẩy, ví dụ: vòng tay bạc nữ, lắc tay charm">
+                    <input value={editing.seoKeywords ?? ''}
+                      onChange={e => setEditing({ ...editing, seoKeywords: e.target.value || undefined })}
+                      placeholder="vòng tay bạc nữ, lắc tay charm, trang sức LIORA"
+                      className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500" />
+                  </Field>
+                </div>
               </FormSection>
 
               {/* SECTION 6 — Trạng thái */}

@@ -51,7 +51,7 @@ export default function Header() {
         <div>
           <div className="text-xs text-mute mb-3 uppercase tracking-wider">Tìm kiếm phổ biến</div>
           <div className="flex gap-2 flex-wrap">
-            {['Moissanite','Bông tai','Dây chuyền','Lắc tay','Nhẫn đôi','Cỏ 4 lá'].map(t => (
+            {['Bộ Sưu Tập','Vòng tay Charm','Lắc tay','Dây chuyền','Nhẫn đôi','Mặt dây'].map(t => (
               <button key={t} className="chip" onClick={() => setSearchQuery(t)}>{t}</button>
             ))}
           </div>
@@ -103,7 +103,7 @@ export default function Header() {
           <LogoMark
             href="#/"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            size={scrolled ? 40 : 52}
+            size={scrolled ? 50 : 70}
             className="text-brand-700 logo-link transition-all"
           />
 
@@ -137,8 +137,8 @@ export default function Header() {
                 <ChevronDown size={12} strokeWidth={1.6} />
               </a>
               <div className="absolute top-full left-0 pt-2 z-[1000] opacity-0 invisible -translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
-                <div className="w-[240px] bg-[#FFFFFF] shadow-[0px_4px_12px_rgba(0,0,0,0.1)] border border-[#E0E0E0] rounded-md overflow-hidden">
-                  <ul className="flex flex-col text-[13.5px] text-[#555555] font-sans font-normal">
+                <div className="w-[240px] bg-white shadow-[0_12px_28px_rgba(143,63,97,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                  <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
                     {[
                       { label: 'Tất Cả Sản Phẩm', slug: '' },
                       { label: 'Cặp Đôi', slug: 'cap-doi', sub: [
@@ -155,31 +155,31 @@ export default function Header() {
                       { label: 'Lắc Chân Bạc', slug: 'lac-chan-bac' },
                       { label: 'Nhẫn Đơn Bạc', slug: 'nhan-don-bac' },
                       { label: 'Bông Tai Bạc/ Khuyên Tai Bạc', slug: 'bong-tai-bac' },
-                      { label: 'Kim Cương Mossanite', slug: 'kim-cuong-moissanite' },
+                      { label: 'Bộ Sưu Tập (BST)', slug: 'bst' },
                       { label: 'Set Quà Tặng', slug: 'set-qua-tang' },
                       { label: 'Bảo Dưỡng', slug: 'bao-duong' },
                     ].map((item, i, arr) => (
-                      <li key={item.label} className={`relative group/sub ${i !== arr.length - 1 ? 'border-b border-[#F0F0F0]' : ''}`}>
+                      <li key={item.label} className={`relative group/sub ${i !== arr.length - 1 ? 'border-b border-brand-50' : ''}`}>
                         <a 
                           href={`#/shop${item.slug ? `?cat=${item.slug}` : ''}`}
                           onClick={(e) => { e.preventDefault(); setFilterNav(item.slug || ''); }}
-                          className="flex items-center justify-between px-[18px] py-[11px] hover:bg-[#F5F5F5] hover:text-[#333] hover:font-medium cursor-pointer transition-colors"
+                          className="flex items-center justify-between px-[18px] py-[11px] hover:bg-brand-50 hover:text-brand-700 hover:font-medium cursor-pointer transition-colors"
                         >
                           {item.label}
                           {item.sub && (
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B0B0B0" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#c96b8d" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                           )}
                         </a>
                         {item.sub && (
                           <div className="absolute top-0 left-full pl-1 z-[1001] opacity-0 invisible -translate-y-2 group-hover/sub:opacity-100 group-hover/sub:visible group-hover/sub:translate-y-0 transition-all duration-200">
-                            <div className="w-[200px] bg-[#FFFFFF] shadow-[0px_4px_12px_rgba(0,0,0,0.1)] border border-[#E0E0E0] rounded-md overflow-hidden">
-                              <ul className="flex flex-col text-[13.5px] text-[#555555] font-sans font-normal">
+                            <div className="w-[200px] bg-white shadow-[0_12px_28px_rgba(143,63,97,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                              <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
                                 {item.sub.map((subItem, j, subArr) => (
-                                  <li key={subItem.label} className={j !== subArr.length - 1 ? 'border-b border-[#F0F0F0]' : ''}>
+                                  <li key={subItem.label} className={j !== subArr.length - 1 ? 'border-b border-brand-50' : ''}>
                                     <a 
                                       href={`#/shop?cat=${subItem.slug}`}
                                       onClick={(e) => { e.preventDefault(); setFilterNav(subItem.slug); }}
-                                      className="flex items-center px-[18px] py-[11px] hover:bg-[#F5F5F5] hover:text-[#333] hover:font-medium cursor-pointer transition-colors"
+                                      className="flex items-center px-[18px] py-[11px] hover:bg-brand-50 hover:text-brand-700 hover:font-medium cursor-pointer transition-colors"
                                     >
                                       {subItem.label}
                                     </a>
@@ -195,16 +195,9 @@ export default function Header() {
                 </div>
               </div>
             </div>
-            <div className="has-drop">
-              <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }} className={`nav-link px-6 py-1 hover:text-brand-500 flex items-center gap-1.5 ${isActive('/about') ? 'active' : ''}`}>
-                Giới thiệu
-                <ChevronDown size={12} strokeWidth={1.6} />
-              </a>
-              <div className="drop">
-                <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }}>Về Liorajewelry</a>
-                <a href="#/lien-he" onClick={(e) => { e.preventDefault(); navigate('/lien-he'); }}>Liên hệ</a>
-              </div>
-            </div>
+            <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive('/about') ? 'active' : ''}`}>
+              Giới thiệu
+            </a>
             {[
               { path:'/kiem-dinh', label:'Kiểm định' },
               { path:'/feedback',  label:'Feedback' },
@@ -479,7 +472,7 @@ function HeaderSearchBox() {
         .slice(0, 6)
     : [];
 
-  const popular = ['Moissanite', 'Bông tai', 'Dây chuyền', 'Lắc tay', 'Nhẫn đôi'];
+  const popular = ['Bộ Sưu Tập', 'Vòng tay Charm', 'Dây chuyền', 'Lắc tay', 'Nhẫn đôi'];
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -511,10 +504,10 @@ function HeaderSearchBox() {
         />
         <button
           type="submit"
-          className="bg-[#4682b4] hover:bg-[#3b6d96] w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors"
+          className="bg-brand-700 hover:bg-brand-800 w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors"
           aria-label="Tìm"
         >
-          <Search size={18} strokeWidth={2.2} />
+          <Search size={18} strokeWidth={2} />
         </button>
       </form>
 

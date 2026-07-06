@@ -109,7 +109,7 @@ export default function WordPressSettings() {
                   onChange={(e) => setConfig({ ...config, useWordPress: e.target.checked })}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-700"></div>
+                <div className="w-11 h-6 bg-rule peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-rule after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-700"></div>
                 <span className="ml-2 text-xs font-semibold text-ink">Bật tích hợp</span>
               </label>
             </div>
@@ -130,7 +130,7 @@ export default function WordPressSettings() {
 
               <div className="bg-[#f8fafc] rounded-xl border border-slate-100 p-4 space-y-4">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs font-bold uppercase text-slate-700 tracking-wider">WooCommerce REST API</span>
+                  <span className="text-xs font-bold uppercase text-ink2 tracking-wider">WooCommerce REST API</span>
                   <span className="cursor-help" title="Lấy chìa khóa API trong Cấu hình WooCommerce -> Nâng cao -> REST API">
                     <HelpCircle size={14} className="text-mute" />
                   </span>
@@ -189,7 +189,7 @@ export default function WordPressSettings() {
 
         <aside className="space-y-6">
           <div className="bg-white border border-rule rounded-xl p-5 shadow-sm space-y-4">
-            <h3 className="font-semibold text-slate-800 border-b border-rule pb-2 text-sm uppercase tracking-wider">Trạng thái kết nối</h3>
+            <h3 className="font-semibold text-ink border-b border-rule pb-2 text-sm uppercase tracking-wider">Trạng thái kết nối</h3>
             
             {testResult.tested ? (
               <div className="space-y-4">

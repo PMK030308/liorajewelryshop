@@ -30,7 +30,7 @@ export default function WishlistPage() {
       <header className="flex flex-wrap items-center justify-between gap-3 mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-brand-700 flex items-center gap-2.5">
-            <Heart size={28} strokeWidth={1.8} fill="#e11d48" stroke="#e11d48" />
+            <Heart size={28} strokeWidth={1.8} fill="#c96b8d" stroke="#c96b8d" />
             Sản phẩm yêu thích
           </h1>
           <p className="text-sm text-mute mt-1">

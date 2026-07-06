@@ -1,333 +1,597 @@
-/**
- * Product seed data with real photography (Unsplash CDN).
- * - `image`        : flat product shot
- * - `imageHover`   : model / lifestyle shot (shown on hover)
- * - `gallery`      : extra angles for product detail page
- *
- * NOTE: Demo data only. Replace Unsplash URLs with your own CDN
- * (e.g. /uploads/sku-123/main.webp) before going to production.
- */
 import { Product } from '../types';
 
-/** Unsplash URL builder — `u('photo-id', 800)` → optimized image URL. */
-const u = (id: string, w = 800): string =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=80`;
-
-/** Image pools per category. Reused across products for visual coherence. */
-const IMG = {
-  necklace: {
-    flat: [
-      u('photo-1599643478514-4a4204162810'),  // gold pendant
-      u('photo-1602173574767-37ac01994b2a'),  // chain pendant
-      u('photo-1535632787350-4e68ef0ac584'),  // pearl necklace
-      u('photo-1611591437281-460bfbe1220a'),  // delicate chain
-      u('photo-1599459183200-59c7687a1c20'),  // crystal necklace
-    ],
-    model: [
-      u('photo-1611652022419-a9419f74343d'),  // woman wearing necklace
-      u('photo-1622398925373-3f91b1e275f5'),  // necklace on neck
-      u('photo-1623998021446-45cd9b269c95'),  // model side profile
-      u('photo-1602173278125-15ddc94f80e3'),  // close-up neckline
-    ],
-  },
-  ring: {
-    flat: [
-      u('photo-1605100804763-247f52bbfb77'),  // silver rings on stones
-      u('photo-1583937443566-6fe1a1c6e400'),  // engagement ring box
-      u('photo-1602751584552-8ba73aad10e1'),  // diamond ring closeup
-      u('photo-1603561591411-07134e71a2a9'),  // gold ring
-      u('photo-1631158325784-c5d4f60c33e2'),  // ring on velvet
-    ],
-    model: [
-      u('photo-1572584642822-6f8de0243c93'),  // hand wearing rings
-      u('photo-1543294001-f7cd5d7fb516'),     // hand showing ring
-      u('photo-1556228720-195a672e8a03'),     // model with ring
-      u('photo-1601121141461-9d6647bca1ed'),  // close-up ring on finger
-    ],
-  },
-  earring: {
-    flat: [
-      u('photo-1535632066927-ab7c9ab60908'),  // silver earrings flat
-      u('photo-1630019852942-f89202989a59'),  // drop earrings
-      u('photo-1591214973517-fa5e8edd9023'),  // pearl earrings
-      u('photo-1611652022419-a9419f74343d'),  // earrings styled
-      u('photo-1635767582909-345c2c8e8c11'),  // earring set
-    ],
-    model: [
-      u('photo-1515562141207-7a88fb7ce338'),  // woman with earrings
-      u('photo-1573408301185-9146fe634ad0'),  // model showing earring
-      u('photo-1469371670807-013ccf25f16a'),  // profile with earring
-      u('photo-1495121605193-b116b5b9c5fe'),  // earring on woman
-    ],
-  },
-  bracelet: {
-    flat: [
-      u('photo-1611591437281-460bfbe1220a'),  // silver bracelet
-      u('photo-1606298855672-3efb63017be8'),  // chain bracelet
-      u('photo-1573408301185-9146fe634ad0'),  // styled bracelet
-      u('photo-1601121141461-9d6647bca1ed'),  // bracelet flat
-    ],
-    model: [
-      u('photo-1561591113-cbc12bb6e2d6'),     // bracelet on hand
-      u('photo-1620625515032-6ed0c1790c75'),  // wrist with bracelet
-      u('photo-1602173278125-15ddc94f80e3'),  // model wearing bracelet
-    ],
-  },
-  couple: {
-    flat: [
-      u('photo-1543294001-f7cd5d7fb516'),     // couple jewelry
-      u('photo-1612371566062-5dc9a4cdb1d7'),  // diamond pair
-    ],
-    model: [
-      u('photo-1606800052052-a08af7148866'),  // couple hands
-      u('photo-1517677208171-0bc6725a3e60'),  // wedding rings
-    ],
-  },
-};
-
-/** Helper: pick image from pool by index (cycles). */
-const pick = (pool: string[], i: number) => pool[i % pool.length];
-
-/** Default review pool (rounded to 0.1). Cycles by index. */
-const RATINGS = [4.9, 4.8, 5.0, 4.7, 4.9, 4.6, 5.0, 4.8];
-const REVIEWS = [142, 89, 256, 67, 198, 320, 45, 174];
-
-/**
- * Build a product entry — applies image pools + ratings automatically.
- *
- * @param withHover - When true, product gets `imageHover` (model wearing it) → hover swap.
- *                   When false, product is "flat only" (no hover model shot).
- */
-function mk(
-  base: Omit<Product, 'image' | 'imageHover' | 'gallery' | 'rating' | 'reviewCount' | 'material' | 'description' | 'inStock'>,
-  idx: number,
-  pool: keyof typeof IMG,
-  withHover: boolean,
-  extras: Partial<Product> = {}
-): Product {
-  const flatIdx = idx;
-  const modelIdx = idx + 1;
-  const image = pick(IMG[pool].flat, flatIdx);
-  const gallery = withHover
-    ? [
-        pick(IMG[pool].flat, flatIdx + 2),
-        pick(IMG[pool].model, modelIdx + 2),
-        pick(IMG[pool].flat, flatIdx + 4),
-      ]
-    : [
-        pick(IMG[pool].flat, flatIdx + 1),
-        pick(IMG[pool].flat, flatIdx + 2),
-        pick(IMG[pool].flat, flatIdx + 3),
-      ];
-  return {
-    ...base,
-    image,
-    ...(withHover ? { imageHover: pick(IMG[pool].model, modelIdx) } : {}),
-    gallery,
-    rating: RATINGS[idx % RATINGS.length],
-    reviewCount: REVIEWS[idx % REVIEWS.length],
-    inStock: 50 - (idx * 3),
-    ...extras,
-  };
-}
-
-/** ============================== PRODUCTS ============================== */
-/**
- * Each product belongs to one of two image groups:
- *   - withHover=true  → has `imageHover` (model wearing it) → product card swaps on hover
- *   - withHover=false → "flat product only" → product card just zooms, no swap
- *
- * Balance: 13 with hover + 13 flat-only = 26 total.
- */
 export const PRODUCTS: Product[] = [
-  // ============================ MOISSANITE ============================
-  // ---- Bông tai (4) ----
-  mk({
-    slug:'btj5-bowtie', code:'BTJ5',
-    name:'Bông Tai Bạc Gắn Kim Cương Moissanite Xi Bạch Kim "Bowtie" BTJ5',
-    cat:'moissanite', subcat:'bong-tai', price:658000, originalPrice:828000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', hot:true, shape:'bow',
-  }, 0, 'earring', true, {
-    description:'Bông tai bạc S925 thiết kế nơ tinh xảo, đính kim cương Moissanite GRA — lấp lánh từng góc nhìn, hoàn hảo cho mọi outfit.',
-    material:'Bạc S925 xi bạch kim · Kim cương Moissanite 5 ly GRA',
-  }),
-  mk({
-    slug:'btj2-petal', code:'BTJ2',
-    name:'Bông Tai Bạc Gắn Kim Cương Moissanite Xi Bạch Kim "Petal" BTJ2',
-    cat:'moissanite', subcat:'bong-tai', price:518000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'flower',
-  }, 1, 'earring', false, {
-    description:'Cánh hoa nhỏ xinh đính đá Moissanite ôm sát dái tai — thiết kế minimalist sang trọng, đeo cả ngày không nặng tai.',
-    material:'Bạc S925 xi bạch kim · Moissanite 3 ly',
-  }),
-  mk({
-    slug:'btj1-crystal', code:'BTJ1',
-    name:'Bông Tai Bạc Gắn Kim Cương Moissanite "Crystal Flower" BTJ1',
-    cat:'moissanite', subcat:'bong-tai', price:428000,
-    tint:'#f0fdfa', tint2:'#ccfbf1', accent:'#14b8a6', shape:'flower',
-  }, 2, 'earring', true),
-  mk({
-    slug:'btj3-frostflake', code:'BTJ3',
-    name:'Bông Tai Bạc Gắn Kim Cương Moissanite "Frostflake" BTJ3',
-    cat:'moissanite', subcat:'bong-tai', price:398000,
-    tint:'#f0f9ff', tint2:'#dbeafe', accent:'#3b82f6', shape:'snow',
-  }, 3, 'earring', false),
+  // ============================ BỘ SƯU TẬP (BST) ============================
+  // ---- BST Hành Trình Nở Hoa ----
+  {
+    slug: 'bst-hanh-trinh-no-hoa-cham',
+    code: 'HTNH-CHAM',
+    name: 'Vòng Tay Bạc "CHẠM" - BST Hành Trình Nở Hoa',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 380000,
+    originalPrice: 480000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    hot: true,
+    shape: 'bracelet',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - CHẠM_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _HÀNH TRÌNH NỞ HOA_ - CHẠM_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Vòng tay hợp kim mạ bạc nằm trong bộ sưu tập "Hành Trình Nở Hoa" của LIORA - thiết kế mang thông điệp của sự trưởng thành và toả sáng rực rỡ.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 5.0,
+    reviewCount: 120,
+    inStock: 50
+  },
+  {
+    slug: 'bst-hanh-trinh-no-hoa-diu',
+    code: 'HTNH-DIU',
+    name: 'Vòng Tay Bạc "DỊU" - BST Hành Trình Nở Hoa',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 380000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - DỊU_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _HÀNH TRÌNH NỞ HOA_ - DỊU_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Thiết kế thanh lịch, dịu dàng gợi nên vẻ đẹp mềm mại của những đóa hoa xuân nở rộ.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.9,
+    reviewCount: 94,
+    inStock: 45
+  },
+  {
+    slug: 'bst-hanh-trinh-no-hoa-hoa',
+    code: 'HTNH-HOA',
+    name: 'Vòng Tay Bạc "HOA" - BST Hành Trình Nở Hoa',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 380000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'flower',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - HOA_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _HÀNH TRÌNH NỞ HOA_ - HOA_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Họa tiết hoa tinh tế mang lại nét kiêu sa, lộng lẫy và tràn đầy sức sống mới.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.8,
+    reviewCount: 86,
+    inStock: 40
+  },
+  {
+    slug: 'bst-hanh-trinh-no-hoa-mam',
+    code: 'HTNH-MAM',
+    name: 'Vòng Tay Bạc "MẦM" - BST Hành Trình Nở Hoa',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 380000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - MẦM_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _HÀNH TRÌNH NỞ HOA_ - MẦM_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Đại diện cho khởi đầu mới căng tràn nhựa sống, đâm chồi nảy lộc thuần khiết.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 5.0,
+    reviewCount: 112,
+    inStock: 35
+  },
+  {
+    slug: 'bst-hanh-trinh-no-hoa-nang',
+    code: 'HTNH-NANG',
+    name: 'Vòng Tay Bạc "NẮNG" - BST Hành Trình Nở Hoa',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 380000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'sparkle',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - NẮNG_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _HÀNH TRÌNH NỞ HOA_ - NẮNG_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Lấp lánh tựa nắng mai ấm áp soi rọi mọi hành trình đầy hi vọng.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.7,
+    reviewCount: 79,
+    inStock: 30
+  },
 
-  // ---- Dây chuyền (6) ----
-  mk({
-    slug:'vcj1-julia', code:'VCJ1',
-    name:'Dây Chuyền Kim Cương Moissanite 5 Ly "Julia" VCJ1',
-    cat:'moissanite', subcat:'day-chuyen', price:978000, originalPrice:1180000,
-    tint:'#eef2f7', tint2:'#b3c0d8', accent:'#34507a', hot:true, shape:'gem',
-  }, 0, 'necklace', true, {
-    description:'Dây chuyền solitaire kinh điển với viên Moissanite 5 ly chính giữa — kiểm định GRA, độ chiết quang vượt cả kim cương thật.',
-    material:'Bạc S925 xi bạch kim · Moissanite 5 ly · Chiều dài 40-45cm điều chỉnh',
-  }),
-  mk({
-    slug:'vcj2-lilac', code:'VCJ2',
-    name:'Dây Chuyền Kim Cương Moissanite 5 Ly "Lilac Soul" VCJ2',
-    cat:'moissanite', subcat:'day-chuyen', price:1078000,
-    tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', shape:'gem',
-  }, 1, 'necklace', false),
-  mk({
-    slug:'vcj-aurea', code:'VCBG0QYDQ',
-    name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Aurea"',
-    cat:'moissanite', subcat:'day-chuyen', price:818000,
-    tint:'#fffbeb', tint2:'#fef3c7', accent:'#d97706', shape:'gem',
-  }, 2, 'necklace', true),
-  mk({
-    slug:'vcj5-aurora', code:'VCJ5',
-    name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Aurora" VCJ5',
-    cat:'moissanite', subcat:'day-chuyen', price:848000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', sold:true, shape:'bow',
-  }, 3, 'necklace', false),
-  mk({
-    slug:'vcj6-celestial', code:'VCJ6',
-    name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Celestial Spark" VCJ6',
-    cat:'moissanite', subcat:'day-chuyen', price:868000,
-    tint:'#ecfeff', tint2:'#cffafe', accent:'#06b6d4', shape:'star',
-  }, 4, 'necklace', true),
-  mk({
-    slug:'vcj4-kristal', code:'VCJ4',
-    name:'Dây Chuyền Kim Cương Moissanite 7 Ly "Kristal Ayna" VCJ4',
-    cat:'moissanite', subcat:'day-chuyen', price:818000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', shape:'gem',
-  }, 5, 'necklace', false),
+  // ---- BST Xuân Hạ Thu Đông ----
+  {
+    slug: 'bst-xuan-ha-thu-dong-lang',
+    code: 'XHTD-LANG',
+    name: 'Vòng Tay Bạc "LẶNG" - BST Xuân Hạ Thu Đông',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 420000,
+    originalPrice: 520000,
+    tint: '#e2f0fe',
+    tint2: '#d0e5fb',
+    accent: '#1e40af',
+    shape: 'bracelet',
+    image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - LẶNG_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _XUÂN HẠ THU ĐÔNG_ - LẶNG_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Vẻ tĩnh lặng, lắng sâu của trời thu và ngày đông chuyển dịch yên bình.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.8,
+    reviewCount: 145,
+    inStock: 25
+  },
+  {
+    slug: 'bst-xuan-ha-thu-dong-ruc',
+    code: 'XHTD-RUC',
+    name: 'Vòng Tay Bạc "RỰC" - BST Xuân Hạ Thu Đông',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 420000,
+    tint: '#fff3cd',
+    tint2: '#ffeeba',
+    accent: '#856404',
+    shape: 'sparkle',
+    image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - RỰC_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _XUÂN HẠ THU ĐÔNG_ - RỰC_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Rực rỡ tựa nắng hè chói chang đầy năng động và cá tính nhiệt huyết.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 5.0,
+    reviewCount: 218,
+    inStock: 20
+  },
+  {
+    slug: 'bst-xuan-ha-thu-dong-xuan',
+    code: 'XHTD-XUAN',
+    name: 'Vòng Tay Bạc "XUÂN" - BST Xuân Hạ Thu Đông',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 420000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'flower',
+    image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - XUÂN_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _XUÂN HẠ THU ĐÔNG_ - XUÂN_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Sắc xuân căng tràn, khởi sinh vạn vật đầy tươi vui, may mắn.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.9,
+    reviewCount: 196,
+    inStock: 18
+  },
+  {
+    slug: 'bst-xuan-ha-thu-dong-yen',
+    code: 'XHTD-YEN',
+    name: 'Vòng Tay Bạc "YÊN" - BST Xuân Hạ Thu Đông',
+    cat: 'bst',
+    subcat: 'lac-tay',
+    price: 420000,
+    tint: '#fdf4f6',
+    tint2: '#f9e5ea',
+    accent: '#d8728a',
+    shape: 'bracelet',
+    image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - YÊN_Vòng tay hợp kim mạ bạc.jpg',
+    gallery: [
+      '/product/BST _XUÂN HẠ THU ĐÔNG_ - YÊN_Vòng tay hợp kim mạ bạc.jpg',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'An yên, thanh đạm như một chiều đông lộng gió thầm lặng.',
+    material: 'Hợp kim cao cấp xi mạ bạc',
+    rating: 4.9,
+    reviewCount: 135,
+    inStock: 15
+  },
 
-  // ---- Lắc tay (4) ----
-  mk({
-    slug:'ltj4-frosted', code:'LTJ4',
-    name:'Lắc Tay Bạc Gắn Kim Cương Moissanite 7 Ly "Frosted Aura" LTJ4',
-    cat:'moissanite', subcat:'lac-tay', price:858000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'bracelet',
-  }, 0, 'bracelet', true, {
-    description:'Lắc tay dây thanh mảnh, đính 7 viên Moissanite đều tăm tắp — lấp lánh mỗi lần chuyển động cổ tay.',
-    material:'Bạc S925 · Moissanite 2 ly × 7 viên',
-  }),
-  mk({
-    slug:'ltj6-lace', code:'LTJ6',
-    name:'Lắc Tay Bạc Gắn Kim Cương Moissanite "Lace Bloom" LTJ6',
-    cat:'moissanite', subcat:'lac-tay', price:748000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', shape:'bracelet',
-  }, 1, 'bracelet', false),
-  mk({
-    slug:'ltj7-moonlit', code:'LTJ7',
-    name:'Lắc Tay Bạc Gắn Kim Cương Moissanite "Moonlit Grace" LTJ7',
-    cat:'moissanite', subcat:'lac-tay', price:1548000,
-    tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', sold:true, shape:'bracelet',
-  }, 2, 'bracelet', false),
-  mk({
-    slug:'ltj5-sweet', code:'LTJ5',
-    name:'Lắc Tay Bạc Kim Cương Moissanite 6 Ly "Sweet Gleam" LTJ5',
-    cat:'moissanite', subcat:'lac-tay', price:928000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'bracelet',
-  }, 3, 'bracelet', true),
+  // ============================ BÁN CHẠY (BEST SELLERS) ============================
+  // ---- Vòng tay kiềng trơn & Basic ----
+  {
+    slug: 'vong-tay-hop-kim-ma-bac-co-ban',
+    code: 'VTHK-CB',
+    name: 'Vòng Tay Hợp Kim Mạ Bạc Liora (Cơ bản)',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 250000,
+    originalPrice: 320000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc_.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc_.png',
+      '/product/Banner Vòng tay.png'
+    ],
+    description: 'Vòng xích trơn hợp kim mạ bạc cao cấp làm nền cho sự sáng tạo charm cá nhân.',
+    material: 'Hợp kim cao cấp phủ bạc nguyên chất',
+    rating: 4.8,
+    reviewCount: 157,
+    inStock: 30
+  },
+  {
+    slug: 'vong-tron-hop-kim-ma-bac-diy',
+    code: 'VTHK-TRON',
+    name: 'Vòng Kiềng Trơn Hợp Kim Mạ Bạc DIY',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 190000,
+    originalPrice: 250000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'ring',
+    image: '/product/Vòng trơn hợp kim mạ bạc.png',
+    imageHover: '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY.jpg',
+    gallery: [
+      '/product/Vòng trơn hợp kim mạ bạc.png',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY.jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(1).jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(2).jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(3).jpg'
+    ],
+    description: 'Vòng cứng dạng kiềng trơn mạ bạc dày dặn, hỗ trợ xoáy chốt để tự phối hạt charm theo sở thích.',
+    material: 'Hợp kim phủ bạc nguyên khối bóng bẩy',
+    rating: 4.8,
+    reviewCount: 125,
+    inStock: 45
+  },
 
-  // ---- Nhẫn (2) ----
-  mk({
-    slug:'nlj2-aliyah', code:'NLJ2',
-    name:'Nhẫn Bạc Gắn Kim Cương Moissanite "Aliyah" NLJ2',
-    cat:'moissanite', subcat:'nhan-don', price:728000, originalPrice:898000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', shape:'ring',
-  }, 0, 'ring', true, {
-    description:'Nhẫn solitaire cổ điển — ổ chấu vàng trắng nâng viên Moissanite 5 ly nổi bật, kiểm định GRA đi kèm.',
-    material:'Bạc S925 xi bạch kim · Moissanite 5 ly GRA',
-  }),
-  mk({
-    slug:'nljc5-balmy', code:'NLJC5',
-    name:'Nhẫn Bạc Gắn Kim Cương Moissanite "Balmy" NLJC5',
-    cat:'moissanite', subcat:'nhan-don', price:578000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'ring',
-  }, 1, 'ring', false),
+  // ---- Vòng tay gắn charm khác nhau ----
+  {
+    slug: 'vong-tay-charm-giac-mo-bac',
+    code: 'VTCM-GMB',
+    name: 'Vòng Tay Charm "Giấc Mơ Bạc" Liora',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Giấc Mơ Bạc.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Giấc Mơ Bạc.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Charm tròn chạm trổ hoa văn cổ điển kết hợp tinh hoa lấp lánh của mạ bạc.',
+    material: 'Hợp kim xi mạ bạc cao cấp phối charm',
+    rating: 5.0,
+    reviewCount: 240,
+    inStock: 25
+  },
+  {
+    slug: 'vong-tay-charm-gau-sao-bang',
+    code: 'VTCM-GSB',
+    name: 'Vòng Tay Charm "Gấu Sao Băng" Liora',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 360000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'star',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Gấu Sao Băng.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Gấu Sao Băng.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Thiết kế gấu trúc bé xinh kèm dây sao băng rơi mang tính biểu tượng ngộ nghĩnh.',
+    material: 'Hợp kim xi bạc đính cườm, đá tạo hình',
+    rating: 4.8,
+    reviewCount: 189,
+    inStock: 22
+  },
+  {
+    slug: 'vong-tay-charm-hello-kitty',
+    code: 'VTCM-HKT',
+    name: 'Vòng Tay Charm "Hello Kitty" Cute',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Hello Kitty.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Hello Kitty.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Charm chú mèo Hello Kitty thắt nơ hồng dễ thương đốn tim mọi cô gái trẻ trung và ngọt ngào.',
+    material: 'Hợp kim mạ bạc cao cấp phủ men màu',
+    rating: 4.9,
+    reviewCount: 215,
+    inStock: 19
+  },
+  {
+    slug: 'vong-tay-charm-hoa-hong-ngoc',
+    code: 'VTCM-HHN',
+    name: 'Vòng Tay Charm "Hoa Hồng Ngọc" Liora',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 360000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'flower',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Hoa Hồng Ngọc.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Hoa Hồng Ngọc.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Sự kết hợp giữa nhành hoa hồng rực rỡ đính đá ruby hồng lấp lánh kiêu sa.',
+    material: 'Hợp kim mạ bạc cao cấp, đá ruby tổng hợp',
+    rating: 5.0,
+    reviewCount: 301,
+    inStock: 15
+  },
+  {
+    slug: 'vong-tay-charm-hoa-ngoc',
+    code: 'VTCM-HN',
+    name: 'Vòng Tay Charm "Hoa Ngọc Cát Tường"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 360000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'flower',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Hoa Ngọc.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Hoa Ngọc.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Hoa ngọc cát tường lục bảo tượng trưng cho bình an và sự thịnh vượng bền vững.',
+    material: 'Hợp kim xi mạ bạc, đính đá ngọc lục bảo',
+    rating: 4.7,
+    reviewCount: 142,
+    inStock: 10
+  },
+  {
+    slug: 'vong-tay-charm-khuc-ha-paris',
+    code: 'VTCM-KHP',
+    name: 'Vòng Tay Charm "Khúc Hạ Paris"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 370000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Khúc Hạ Paris.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Khúc Hạ Paris.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Phong cách cổ điển kiểu Pháp lãng mạn với charm Tháp Eiffel xinh xắn và các chuỗi hạt sang trọng.',
+    material: 'Hợp kim mạ bạc cao cấp, ngọc trai nhân tạo',
+    rating: 5.0,
+    reviewCount: 110,
+    inStock: 12
+  },
+  {
+    slug: 'vong-tay-charm-luu-ly',
+    code: 'VTCM-LL',
+    name: 'Vòng Tay Charm "Hạt Lưu Ly" Liora',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'gem',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Lưu Ly.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Lưu Ly.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Các hạt đá lưu ly thủy tinh màu trong suốt pha sắc hồng tím mang hơi thở huyền ảo lung linh.',
+    material: 'Hợp kim mạ bạc, pha lê lưu ly màu',
+    rating: 4.8,
+    reviewCount: 144,
+    inStock: 18
+  },
+  {
+    slug: 'vong-tay-charm-may-xanh',
+    code: 'VTCM-MX',
+    name: 'Vòng Tay Charm "Mây Xanh Yên Ả"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#e0f2fe',
+    tint2: '#bae6fd',
+    accent: '#0284c7',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Mây Xanh.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Mây Xanh.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Charm hình cụm mây trôi thanh thoát vẽ men sứ xanh da trời đầy thanh tịnh và sảng khoái.',
+    material: 'Hợp kim mạ bạc cao cấp vẽ men màu',
+    rating: 4.9,
+    reviewCount: 95,
+    inStock: 25
+  },
+  {
+    slug: 'vong-tay-charm-no-hong',
+    code: 'VTCM-NH',
+    name: 'Vòng Tay Charm "Nơ Hồng Tiểu Thư"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 340000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bow',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Nơ Hồng.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Nơ Hồng.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Điểm xuyết chiếc nơ hồng ngọt ngào duyên dáng dành cho các nàng thơ xinh xắn.',
+    material: 'Hợp kim mạ bạc và charm nơ chất liệu resin cao cấp',
+    rating: 5.0,
+    reviewCount: 228,
+    inStock: 14
+  },
+  {
+    slug: 'vong-tay-charm-tinh-tu-bac',
+    code: 'VTCM-TTB',
+    name: 'Vòng Tay Charm "Tinh Tú Bạc"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 360000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'star',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Tinh Tú Bạc.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Tinh Tú Bạc.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Vầng trăng ôm trọn chòm sao đính chùm đá pha lê lấp lánh tựa tinh hà về đêm.',
+    material: 'Hợp kim mạ bạc cao cấp đính đá cz tự nhiên',
+    rating: 4.8,
+    reviewCount: 167,
+    inStock: 20
+  },
+  {
+    slug: 'vong-tay-charm-vuong-mien-do',
+    code: 'VTCM-VMD',
+    name: 'Vòng Tay Charm "Vương Miện Đỏ"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 370000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Vương Miện Đỏ.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Vương Miện Đỏ.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Chiếc vương miện nhỏ ngự trị giữa khối chuỗi đính đá đỏ ấn tượng tôn vinh nét quyến rũ bậc nhất.',
+    material: 'Hợp kim mạ bạc, zircon đỏ ruby cao cấp',
+    rating: 4.9,
+    reviewCount: 88,
+    inStock: 12
+  },
+  {
+    slug: 'vong-tay-charm-xuan-sac',
+    code: 'VTCM-XS',
+    name: 'Vòng Tay Charm "Xuân Sắc Cỏ Hoa"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#fdf4f6',
+    tint2: '#f9e5ea',
+    accent: '#d8728a',
+    shape: 'clover',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Xuân Sắc.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Xuân Sắc.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Chùm hoa mai mạ sắc vàng cùng cỏ bốn lá thạch anh xanh mát mang ngàn sinh khí Tết lộc phát.',
+    material: 'Hợp kim mạ bạc đính xà cừ đá trang sức',
+    rating: 5.0,
+    reviewCount: 174,
+    inStock: 16
+  },
+  {
+    slug: 'vong-tay-charm-anh-yeu',
+    code: 'VTCM-AY',
+    name: 'Vòng Tay Charm "Ánh Yêu Trái Tim"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 350000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'heart',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Ánh Yêu.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Charm Ánh Yêu.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Thiết kế trái tim lồng phối đá chuyển sắc dưới ánh sáng mặt trời cực kỳ bắt mắt.',
+    material: 'Hợp kim mạ bạc, đá màu chuyển sắc',
+    rating: 4.9,
+    reviewCount: 202,
+    inStock: 25
+  },
+  {
+    slug: 'vong-tay-thanh-lam',
+    code: 'VTCM-TL',
+    name: 'Vòng Tay Bạc "Thanh Lam Nguyệt Cát"',
+    cat: 'best-seller',
+    subcat: 'lac-tay',
+    price: 340000,
+    tint: '#ecfeff',
+    tint2: '#cffafe',
+    accent: '#0891b2',
+    shape: 'bracelet',
+    image: '/product/Vòng tay hợp kim mạ bạc - Thanh Lam.png',
+    gallery: [
+      '/product/Vòng tay hợp kim mạ bạc - Thanh Lam.png',
+      '/product/Vòng tay hợp kim mạ bạc_.png'
+    ],
+    description: 'Màu lam ngọc của ngọc bích hòa trong chuỗi bạc mang nét tĩnh lặng tự tại tuyệt vời.',
+    material: 'Hợp kim mạ bạc phối ngọc lam lục thạch',
+    rating: 4.7,
+    reviewCount: 69,
+    inStock: 30
+  },
 
-  // ============================ BEST SELLERS ============================
-  mk({
-    slug:'bttl1-monas', code:'BTTL1',
-    name:'Bông Tai Bạc Nữ S925 LIORA Đính Đá Cao Cấp "Monas" BTTL1',
-    cat:'best-seller', subcat:'bong-tai', price:508000, originalPrice:628000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', hot:true, shape:'butterfly',
-  }, 4, 'earring', true, {
-    description:'Phiên bản bán chạy nhất 2025 — bông tai cánh bướm đính đá CZ siêu lấp lánh, dáng nhẹ phù hợp đi làm + đi tiệc.',
-    material:'Bạc S925 · Đính đá CZ Thuỵ Sĩ',
-  }),
-  mk({
-    slug:'vctl9-dahlia', code:'VCTL9',
-    name:'Dây Chuyền Bạc Nữ 925 LIORA Hình Nơ Siêu Xinh "Dahlia" VCTL9',
-    cat:'best-seller', subcat:'day-chuyen', price:478000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'bow',
-  }, 6, 'necklace', false),
-  mk({
-    slug:'vctl2-fluffy', code:'VCTL2',
-    name:'Dây Chuyền Bạc Nữ LIORA Dây Xù Đính Đá CZ "Fluffy Flow" VCTL2',
-    cat:'best-seller', subcat:'day-chuyen', price:938000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', shape:'gem',
-  }, 7, 'necklace', true),
-  mk({
-    slug:'vctl3-ribbonnie', code:'VCTL3',
-    name:'Dây Chuyền Bạc Nữ LIORA Hot Trend "Ribbonnie" VCTL3',
-    cat:'best-seller', subcat:'day-chuyen', price:548000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'bow',
-  }, 8, 'necklace', false),
-  mk({
-    slug:'vcard7952-kismet', code:'VCARD7952',
-    name:'Dây Chuyền Bạc S925 LIORA Cỏ 4 Lá "KISMET" VCARD7952',
-    cat:'best-seller', subcat:'day-chuyen', price:558000,
-    tint:'#fff7e6', tint2:'#feeec0', accent:'#d97706', shape:'clover',
-  }, 9, 'necklace', true, {
-    description:'Biểu tượng cỏ 4 lá mang lại may mắn — món quà tặng ý nghĩa cho người thân yêu.',
-    material:'Bạc S925 · Mạ vàng 18K · Đính CZ',
-  }),
-  mk({
-    slug:'vcard7212-sana', code:'VCARD7212',
-    name:'Dây Chuyền Bạc S925 LIORA Đính Đá CZ "SANA" VCARD7212',
-    cat:'best-seller', subcat:'day-chuyen', price:498000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', hot:true, shape:'gem',
-  }, 10, 'necklace', true),
-  mk({
-    slug:'vcdj1-couple', code:'VCDJ1',
-    name:'Dây Chuyền Đôi Bạc S925 LIORA "Couple Ring" VCDJ1',
-    cat:'best-seller', subcat:'cap-doi', price:858000, originalPrice:998000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'heart',
-  }, 0, 'couple', true, {
-    description:'Set 2 dây chuyền đôi mặt khoá trái tim — quà tặng valentine cực kỳ ý nghĩa cho cặp đôi.',
-    material:'Bạc S925 × 2 chiếc · Khắc tên miễn phí',
-  }),
-  mk({
-    slug:'ltars5983-audrey', code:'LTARS5983',
-    name:'Lắc Tay Bạc Nữ LIORA Nơ Mix Đá Dây Rút "Audrey" LTARS5983',
-    cat:'best-seller', subcat:'lac-tay', price:888000,
-    tint:'#eef2f7', tint2:'#d8e0ec', accent:'#34507a', shape:'bracelet',
-  }, 4, 'bracelet', false),
-  mk({
-    slug:'lttl5-serena', code:'LTTL5',
-    name:'Lắc Tay Bạc Nữ Dây Xù LIORA "Serena" LTTL5',
-    cat:'best-seller', subcat:'lac-tay', price:378000,
-    tint:'#f0f9ff', tint2:'#e0f2fe', accent:'#0ea5e9', shape:'bracelet',
-  }, 5, 'bracelet', true),
-  mk({
-    slug:'lttl4-luena', code:'LTTL4',
-    name:'Lắc Tay Bạc Nữ LIORA Đính Đá Đổi Màu "Luena" LTTL4',
-    cat:'best-seller', subcat:'lac-tay', price:468000,
-    tint:'#f3eaff', tint2:'#e9d8fd', accent:'#a855f7', shape:'bracelet',
-  }, 6, 'bracelet', false),
+  // ---- Dây chuyền ----
+  {
+    slug: 'khung-mat-day-chuyen-dung-da-nang-luong',
+    code: 'KMDC-DDNL',
+    name: 'Khung Mặt Dây Chuyền Đựng Đá Năng Lượng',
+    cat: 'best-seller',
+    subcat: 'day-chuyen',
+    price: 290000,
+    originalPrice: 390000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'gem',
+    image: '/product/Khung mặt dây chuyền - Đựng đá năng lượng.jpg',
+    gallery: [
+      '/product/Khung mặt dây chuyền - Đựng đá năng lượng.jpg',
+      '/product/Khung mặt dây chuyền - Đựng đá năng lượng(1).jpg'
+    ],
+    description: 'Thiết kế lồng rỗng xoắn ốc tinh tế làm bằng bạc S925, dùng để đựng và khuếch tán đá năng lượng thiên nhiên.',
+    material: 'Bạc S925 xi mạ bạch kim cao cấp',
+    rating: 4.9,
+    reviewCount: 93,
+    inStock: 40
+  }
 ];

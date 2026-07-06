@@ -76,7 +76,7 @@ export default function PhotoPlaceholder({
       {sold ? (
         <div className="ribbon-out" style={{ zIndex: 2 }}>Hết hàng</div>
       ) : discount && discount > 0 ? (
-        <div className="ribbon" style={{ zIndex: 2, background: '#b91c1c' }}>−{discount}%</div>
+        <div className="ribbon" style={{ zIndex: 2, background: '#ad4f74' }}>−{discount}%</div>
       ) : hot ? (
         <div className="ribbon" style={{ zIndex: 2 }}>HOT</div>
       ) : null}

@@ -24,7 +24,41 @@ import TrackOrderPage from './pages/TrackOrderPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
+import AdminContent from './pages/admin/AdminContent';
 import WordPressSettings from './pages/admin/WordPressSettings';
+
+function EditableSimplePage({ slug, fallbackTitle, fallbackBody }: { slug: string; fallbackTitle: string; fallbackBody: React.ReactNode }) {
+  const { state } = useStore();
+  const page = state.siteContent.pages.find(p => p.slug === slug && p.visible);
+  return (
+    <SimplePage
+      title={page?.title || fallbackTitle}
+      body={page ? <div dangerouslySetInnerHTML={{ __html: page.content }} /> : fallbackBody}
+    />
+  );
+}
+
+function CmsPageOrNotFound({ route }: { route: string }) {
+  const { state } = useStore();
+  const slug = route.replace(/^\//, '');
+  const page = state.siteContent.pages.find(p => p.slug === slug && p.visible);
+
+  if (page) {
+    return (
+      <SimplePage
+        title={page.title}
+        body={<div dangerouslySetInnerHTML={{ __html: page.content }} />}
+      />
+    );
+  }
+
+  return (
+    <main className="page container-x py-20 text-center min-h-[50vh]">
+      <h1 className="text-2xl font-bold mb-3">Khong tim thay trang</h1>
+      <a className="btn-pink" href="#/" onClick={(e) => { e.preventDefault(); window.location.hash = '/'; }}>Ve trang chu</a>
+    </main>
+  );
+}
 
 function renderRoute(route: string): React.ReactNode {
   if (route === '/' || route === '') return <HomePage />;
@@ -35,60 +69,64 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/news') return <NewsPage />;
   if (route === '/lien-he') return <ContactPage />;
 
-  // ---- Auth ----
   if (route === '/login') return <LoginPage />;
   if (route === '/register') return <RegisterPage />;
   if (route === '/account') return <AccountPage />;
   if (route === '/wishlist') return <WishlistPage />;
   if (route === '/track-order') return <TrackOrderPage />;
 
-  // ---- Admin ----
   if (route === '/admin' || route === '/admin/dashboard') return <AdminDashboard />;
   if (route === '/admin/products') return <AdminProducts />;
   if (route === '/admin/orders') return <AdminOrders />;
+  if (route === '/admin/content') return <AdminContent />;
   if (route === '/admin/wordpress') return <WordPressSettings />;
 
-  if (route === '/kiem-dinh') return (
-    <SimplePage
-      title="Kiểm Định"
-      body={
-        <>
-          <p>Tất cả các sản phẩm kim cương Moissanite của Liorajewelry đều được kiểm định bởi GRA (Gemological Research Association) — đảm bảo chất lượng, độ trong và độ lấp lánh tương đương kim cương thật.</p>
-          <p>Mỗi sản phẩm đi kèm thẻ kiểm định và bảo hành để khách hàng yên tâm sử dụng.</p>
-        </>
-      }
-    />
-  );
-  if (route === '/feedback') return (
-    <SimplePage
-      title="Feedback"
-      body={
-        <>
-          <p>Cảm ơn các khách hàng đã tin tưởng và đồng hành cùng Liorajewelry. Mỗi feedback là động lực để chúng mình hoàn thiện hơn mỗi ngày 💖</p>
-          <p>Theo dõi fanpage Liorajewelry.shop để xem các đánh giá thực tế từ khách hàng.</p>
-        </>
-      }
-    />
-  );
-  if (route === '/huong-dan') return (
-    <SimplePage
-      title="Hướng Dẫn"
-      body={
-        <>
-          <p><strong>Hướng dẫn chọn size nhẫn:</strong> Dùng một sợi chỉ quấn quanh ngón tay, đo chiều dài đoạn chỉ rồi đối chiếu bảng size.</p>
-          <p><strong>Hướng dẫn bảo quản:</strong> Tránh nước hoa, hoá chất; cất trong hộp khi không sử dụng; lau bằng vải mềm.</p>
-          <p><strong>Hướng dẫn đặt hàng:</strong> Chọn sản phẩm → Thêm vào giỏ → Thanh toán → Nhận hàng và kiểm tra trước khi trả tiền (COD).</p>
-        </>
-      }
-    />
-  );
+  if (route === '/kiem-dinh') {
+    return (
+      <EditableSimplePage
+        slug="kiem-dinh"
+        fallbackTitle="Kiem Dinh"
+        fallbackBody={
+          <>
+            <p>Tat ca nguyen lieu su dung trong san pham Liorajewelry deu duoc kiem dinh chat luong nghiem ngat.</p>
+            <p>Moi san pham di kem the bao hanh va phieu kiem dinh de khach hang yen tam su dung.</p>
+          </>
+        }
+      />
+    );
+  }
 
-  return (
-    <main className="page container-x py-20 text-center min-h-[50vh]">
-      <h1 className="text-2xl font-bold mb-3">Không tìm thấy trang</h1>
-      <a className="btn-pink" href="#/" onClick={(e) => { e.preventDefault(); window.location.hash = '/'; }}>← Về trang chủ</a>
-    </main>
-  );
+  if (route === '/feedback') {
+    return (
+      <EditableSimplePage
+        slug="feedback"
+        fallbackTitle="Feedback"
+        fallbackBody={
+          <>
+            <p>Cam on cac khach hang da tin tuong va dong hanh cung Liorajewelry.</p>
+            <p>Theo doi fanpage Liorajewelry.shop de xem cac danh gia thuc te tu khach hang.</p>
+          </>
+        }
+      />
+    );
+  }
+
+  if (route === '/huong-dan') {
+    return (
+      <EditableSimplePage
+        slug="huong-dan"
+        fallbackTitle="Huong Dan"
+        fallbackBody={
+          <>
+            <p><strong>Huong dan chon size nhan:</strong> Dung mot soi chi quan quanh ngon tay, do chieu dai doan chi roi doi chieu bang size.</p>
+            <p><strong>Huong dan bao quan:</strong> Tranh nuoc hoa, hoa chat; cat trong hop khi khong su dung; lau bang vai mem.</p>
+          </>
+        }
+      />
+    );
+  }
+
+  return <CmsPageOrNotFound route={route} />;
 }
 
 function Router() {

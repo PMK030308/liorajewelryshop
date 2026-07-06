@@ -57,7 +57,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                   alt={c.title}
                   loading="lazy"
                   decoding="async"
-                  onError={(e) => { (e.target as HTMLImageElement).style.background = '#eef2f7'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.background = '#fff8fa'; }}
                   className="photo absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Vignette overlay */}
@@ -74,7 +74,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                 <div className="hover-panel">
                   <div className="hover-name">{c.title}</div>
                   <div className="hover-btn">
-                    <button className="bg-[#1f1f1f] text-white hover:bg-black transition-colors text-[11px] font-semibold px-5 py-1.5 rounded uppercase tracking-[0.18em]">
+                    <button className="bg-brand-700 text-white hover:bg-brand-800 transition-colors text-[11px] font-semibold px-5 py-1.5 rounded uppercase tracking-[0.18em]">
                       Xem Ngay
                     </button>
                   </div>
@@ -87,14 +87,14 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
         {/* Slider Arrows — small, white, overlap card edges */}
         <button
           onClick={() => scrollBy(-1)}
-          className="hidden md:flex absolute left-1 md:-left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-[#1f1f1f] hover:bg-brand-50 transition z-10 border border-[#ececec]"
+          className="hidden md:flex absolute left-1 md:-left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-brand-50 transition z-10 border border-rule"
           aria-label="Lùi"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
         <button
           onClick={() => scrollBy(1)}
-          className="hidden md:flex absolute right-1 md:-right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-[#1f1f1f] hover:bg-brand-50 transition z-10 border border-[#ececec]"
+          className="hidden md:flex absolute right-1 md:-right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-brand-50 transition z-10 border border-rule"
           aria-label="Tiếp"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -105,8 +105,10 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
 }
 
 function HeroSlideItem({ idx }: { idx: number }) {
-  const { navigate, dispatch } = useStore();
-  const s = HERO_SLIDES[idx];
+  const { state, navigate, dispatch } = useStore();
+  const slides = state.siteContent.heroSlides.length ? state.siteContent.heroSlides : HERO_SLIDES;
+  const settings = state.siteContent.settings;
+  const s = slides[idx % slides.length];
   const setFilterNav = (slug: string) => { dispatch({ type: 'SET_FILTER', payload: slug }); navigate('/shop'); };
 
   return (
@@ -118,7 +120,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
       transition={{ duration: 0.8, ease: [0.2, 0.6, 0.2, 1] }}
       className="absolute inset-0"
     >
-      <div className="absolute inset-0 flex items-center" style={{ background: `linear-gradient(110deg, ${s.tint} 0%, #f3f3f3 55%, ${s.tint} 100%)` }}>
+      <div className="absolute inset-0 flex items-center" style={{ background: `linear-gradient(110deg, ${s.tint} 0%, #fffdfd 55%, ${s.tint} 100%)` }}>
         {/* Wavy line */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none">
           <path d="M0,200 C300,100 900,300 1200,200" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
@@ -133,21 +135,21 @@ function HeroSlideItem({ idx }: { idx: number }) {
               onClick={(e) => { e.preventDefault(); navigate('/'); }}
               className="flex flex-col items-center mb-4 md:mb-6 hover:opacity-90 transition-opacity"
             >
-              <img src="/logoliora.png" alt="LIORA" className="object-contain h-16 md:h-20 w-auto" />
+              <img src="/logoliora2.jpg" alt="LIORA" className="object-contain h-16 md:h-20 w-auto mix-blend-multiply" />
             </a>
             
             {/* Title Frame */}
             <div className="inline-block relative mb-6">
-              <div className="absolute -top-3 -left-3 w-8 h-8 border-t-[1.5px] border-l-[1.5px] border-[#1A3050]/60"></div>
-              <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-[1.5px] border-r-[1.5px] border-[#1A3050]/60"></div>
-              <div className="bg-[#1A3050] text-white px-8 md:px-14 py-5 md:py-7 relative z-10 shadow-2xl">
+              <div className="absolute -top-3 -left-3 w-8 h-8 border-t-[1.5px] border-l-[1.5px] border-brand-300/70"></div>
+              <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-[1.5px] border-r-[1.5px] border-brand-300/70"></div>
+              <div className="bg-brand-700 text-white px-8 md:px-14 py-5 md:py-7 relative z-10 shadow-[0_16px_36px_rgba(143,63,97,0.22)]">
                 <div className="text-lg md:text-2xl lg:text-3xl font-light tracking-[0.12em] uppercase leading-tight whitespace-pre-line">{s.plaque}</div>
               </div>
             </div>
 
             {/* Slogan */}
             <div className="text-2xl md:text-3xl mt-2 mb-6 flex items-center justify-center gap-3">
-              <span className="font-sans font-light uppercase tracking-[0.2em] text-[#1A3050]">Lấp Lánh</span>
+              <span className="font-sans font-light uppercase tracking-[0.2em] text-brand-700">Lấp Lánh</span>
               <span className="script text-brand-500 lowercase text-4xl md:text-5xl">em xinh</span>
             </div>
 
@@ -155,34 +157,34 @@ function HeroSlideItem({ idx }: { idx: number }) {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
               {/* Address & Hours */}
               <div className="flex flex-col gap-2.5 text-left">
-                <div className="flex items-start gap-2 text-[#1A3050]">
+                <div className="flex items-start gap-2 text-brand-700">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0 opacity-70">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/>
                   </svg>
-                  <span className="text-xs md:text-sm leading-snug font-medium">159 Lý Thường Kiệt, Quang Trung,<br/>Hà Đông, Hà Nội</span>
+                  <span className="text-xs md:text-sm leading-snug font-medium">{settings.address}</span>
                 </div>
-                <div className="flex items-center gap-2 text-[#1A3050]">
+                <div className="flex items-center gap-2 text-brand-700">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 opacity-70">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
-                  <span className="text-xs md:text-sm font-medium">Mở cửa: 9:00 – 21:00 hàng ngày</span>
+                  <span className="text-xs md:text-sm font-medium">{settings.openHours}</span>
                 </div>
               </div>
               {/* Facebook QR Code */}
               <a
-                href="https://www.facebook.com/liorajewelry.vn"
+                href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-1.5 bg-white/80 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_8px_24px_rgba(26,48,80,0.1)] border border-white hover:shadow-[0_12px_32px_rgba(26,48,80,0.18)] transition-all hover:scale-105"
+                className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(201,107,141,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(201,107,141,0.20)] transition-all hover:scale-105"
               >
                 <img
-                  src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.facebook.com/liorajewelry.vn&color=1A3050&bgcolor=FFFFFF"
+                  src={settings.qrUrl}
                   alt="QR Facebook Liora"
                   width="80"
                   height="80"
                   className="rounded-lg"
                 />
-                <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-[#1A3050] tracking-wide">
+                <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
                   Follow us
                 </div>
@@ -191,7 +193,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
           </div>
 
           <div className="flex justify-center items-center relative order-first md:order-last mb-4 md:mb-0">
-            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/50 shadow-[0_12px_30px_-10px_rgba(26,48,80,0.25)] md:shadow-[0_20px_50px_-12px_rgba(26,48,80,0.2)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
+            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/70 shadow-[0_12px_30px_-10px_rgba(201,107,141,0.25)] md:shadow-[0_20px_50px_-12px_rgba(201,107,141,0.22)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
               {s.image && (
                 <img
                   src={s.image}
@@ -214,10 +216,20 @@ function HeroSlideItem({ idx }: { idx: number }) {
 
 export default function HomePage() {
   const { state, dispatch, navigate } = useStore();
+  const slideCount = state.siteContent.heroSlides.length || HERO_SLIDES.length;
   const slideRef = useRef(state.slide);
   slideRef.current = state.slide;
   const [heroPaused, setHeroPaused] = useState(false);
-  const [articles, setArticles] = useState<NewsArticle[]>(NEWS_ARTICLES);
+  const [articles, setArticles] = useState<NewsArticle[]>(
+    state.siteContent.newsArticles.length ? state.siteContent.newsArticles : NEWS_ARTICLES,
+  );
+
+  useEffect(() => {
+    const config = getWordPressConfig();
+    if (!config.useWordPress) {
+      setArticles(state.siteContent.newsArticles.length ? state.siteContent.newsArticles : NEWS_ARTICLES);
+    }
+  }, [state.siteContent.newsArticles]);
 
   useEffect(() => {
     if (heroPaused) return;
@@ -248,7 +260,7 @@ export default function HomePage() {
     'lac-tay': 'bracelet', 'day-chuyen': 'gem', 'cap-doi': 'heart', 'nhan-don': 'ring', 'bong-tai': 'bow',
   };
 
-  const moissaniteProducts = state.products.filter(p => p.cat === 'moissanite').slice(0, 12);
+  const bstProducts = state.products.filter(p => p.cat === 'bst').slice(0, 12);
   const bestSellerProducts = state.products.filter(p => p.cat === 'best-seller').slice(0, 12);
 
   const trustBadges: { icon: React.ReactNode; t: string; s: string }[] = [
@@ -292,7 +304,7 @@ export default function HomePage() {
       <section className="relative">
         <div
           className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg"
-          style={{ backgroundColor: '#f3f3f3' }}
+          style={{ backgroundColor: '#fff8fa' }}
           onMouseEnter={() => setHeroPaused(true)}
           onMouseLeave={() => setHeroPaused(false)}
         >
@@ -306,67 +318,30 @@ export default function HomePage() {
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m9 18 6-6-6-6"/></svg>
           </button>
           <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-            {[0, 1, 2].map(i => (
+            {Array.from({ length: slideCount }).map((_, i) => (
               <button key={i} onClick={() => dispatch({ type: 'SET_SLIDE', payload: i })} className={`w-2 h-2 rounded-full transition ${state.slide === i ? 'bg-white' : 'bg-white/60'}`} aria-label={`Slide ${i + 1}`} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Voucher Section */}
-      <section className="bg-[#f8f9fa] py-12 md:py-16">
-        <div className="container-x">
-          <div className="text-center mb-8 md:mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">ƯU ĐÃI</div>
-            <h2 className="font-bold text-2xl md:text-3xl text-[#1A3050]">Mã khuyến mãi</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
-            {[
-              { discount: 'Giảm 20k', min: 'Đơn tối thiểu 300k', exp: 'HSD: 30/12/2026' },
-              { discount: 'Giảm 50k', min: 'Đơn tối thiểu 800k', exp: 'HSD: 30/12/2026' },
-              { discount: 'Giảm 100k', min: 'Đơn tối thiểu 1.5tr', exp: 'HSD: 30/12/2026' },
-              { discount: 'Freeship', min: 'Đơn tối thiểu 500k', exp: 'HSD: 30/12/2026' },
-            ].map((v, i) => (
-              <div key={i} className="voucher-ticket flex h-28">
-                {/* Left — gift icon */}
-                <div className="w-[32%] flex items-center justify-center p-3 relative z-[1]">
-                  <div className="w-12 h-12 rounded-full bg-[#f26522] flex items-center justify-center text-white">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
-                  </div>
-                </div>
-                {/* Dashed divider */}
-                <div className="w-px self-stretch my-3 border-l border-dashed border-[#d8d8d8] relative z-[1]" aria-hidden="true" />
-                {/* Right — content */}
-                <div className="flex-1 px-4 py-3 flex flex-col justify-center relative z-[1]">
-                  <div className="font-bold text-[#1A3050] text-lg leading-tight">{v.discount}</div>
-                  <div className="text-[11px] text-mute mb-1.5 line-clamp-1 font-medium">{v.min}</div>
-                  <div className="flex items-center justify-between mt-auto">
-                    <span className="text-[10px] text-mute">{v.exp}</span>
-                    <button className="bg-[#1A3050] hover:bg-[#0a1828] text-white text-[10px] px-3 py-1 rounded font-semibold tracking-wide transition-colors">SAO CHÉP</button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* New Category Section */}
       <CategorySlider setFilterNav={setFilterNav} />
 
-      {/* Kim Cương Moissanite */}
+      {/* Bộ Sưu Tập Nổi Bật (BST) */}
       <section className="container-x section-y">
         <Reveal>
           <div className="text-center mb-10">
             <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BỘ SƯU TẬP NỔI BẬT</div>
-            <h2 className="sec-title">Kim Cương Moissanite</h2>
-            <p className="text-sm text-ink2 mt-2 max-w-xl mx-auto">Đính kim cương Moissanite, xi bạch kim, kiểm định GRA chính hãng</p>
+            <h2 className="sec-title">Bộ Sưu Tập Mới Nhất</h2>
+            <p className="text-sm text-ink2 mt-2 max-w-xl mx-auto">Thiết kế tinh xảo, phản chiếu nét riêng độc đáo trong từng khoảnh khắc đặc biệt</p>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <ProductGrid products={moissaniteProducts} />
+          <ProductGrid products={bstProducts} />
           <div className="text-center mt-10">
-            <a href="#/shop" onClick={(e) => { e.preventDefault(); setFilterNav('moissanite'); }} className="btn-outline">TÌM HIỂU THÊM →</a>
+            <a href="#/shop" onClick={(e) => { e.preventDefault(); setFilterNav('bst'); }} className="btn-outline">KHÁM PHÁ NGAY →</a>
           </div>
         </Reveal>
       </section>
@@ -409,7 +384,7 @@ export default function HomePage() {
                 LIORA tin rằng mỗi người phụ nữ đều xứng đáng tỏa sáng theo cách của riêng mình. Chúng tôi mang đến những món trang sức tinh tế — chất liệu cao cấp, kiểm định minh bạch, thiết kế tôn dáng — để bạn thêm <span className="script text-brand-500">tự tin</span> trong mọi khoảnh khắc.
               </p>
               <p className="text-ink2 leading-relaxed mb-7">
-                Toàn bộ sản phẩm Moissanite của LIORA đều có kiểm định GRA, bảo hành 12 tháng và đổi trả miễn phí trong 7 ngày.
+                Toàn bộ sản phẩm của LIORA đều được chế tác từ hợp kim mạ bạc cao cấp, bảo hành 12 tháng và đổi trả miễn phí trong 7 ngày.
               </p>
               <a
                 href="#/about"

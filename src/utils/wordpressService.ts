@@ -92,8 +92,8 @@ export async function fetchWordPressPosts(config = getWordPressConfig()): Promis
       title: stripHtml(post.title?.rendered || ''),
       excerpt: stripHtml(post.excerpt?.rendered || post.content?.rendered || '').substring(0, 150) + '...',
       // For aesthetics, we reuse theme tints dynamically or pass fallback properties
-      tint: '#eef2f7',
-      accent: '#34507a',
+      tint: '#fdf4f6',
+      accent: '#c96b8d',
       // Store raw content/featured image in optional extensions if pages need detailed view
       content: post.content?.rendered,
       image: imageUrl,
@@ -124,7 +124,7 @@ export async function fetchWooCommerceProducts(config = getWordPressConfig()): P
   return wcProducts.map((wc: any): Product => {
     // Map WooCommerce categories/tags to LIORA structure
     const categories = wc.categories?.map((c: any) => c.slug) || [];
-    const cat = categories.includes('moissanite') ? 'moissanite' : 'best-seller';
+    const cat = categories.includes('bst') || categories.includes('collection') ? 'bst' : 'best-seller';
     const subcat = categories.length > 0 ? categories[0] : 'nhan-don';
 
     // Pricing
@@ -163,9 +163,9 @@ export async function fetchWooCommerceProducts(config = getWordPressConfig()): P
       subcat,
       price,
       originalPrice,
-      tint: '#eef2f7',
-      tint2: '#e2e8f0',
-      accent: '#34507a',
+      tint: '#fdf4f6',
+      tint2: '#f8d8e3',
+      accent: '#c96b8d',
       hot: wc.featured,
       sold: inStock === 0,
       shape: shape as ShapeKey,
@@ -173,6 +173,10 @@ export async function fetchWooCommerceProducts(config = getWordPressConfig()): P
       imageHover,
       gallery,
       description: stripHtml(wc.short_description || wc.description || ''),
+      longDescription: stripHtml(wc.description || ''),
+      seoTitle: wc.name ? `${wc.name} | LIORA Jewelry` : undefined,
+      seoDescription: stripHtml(wc.short_description || wc.description || '').slice(0, 160) || undefined,
+      seoKeywords: wc.tags?.map((tag: any) => tag.name).filter(Boolean).join(', ') || undefined,
       material: wc.attributes?.find((a: any) => a.name?.toLowerCase().includes('chất liệu'))?.options?.[0] || 'Bạc Cao Cấp',
       rating,
       reviewCount,
