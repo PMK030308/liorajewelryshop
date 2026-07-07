@@ -8,11 +8,17 @@ import Shapes from '../../data/shapes';
 import { getWordPressConfig, fetchWooCommerceProducts } from '../../utils/wordpressService';
 
 const SUBCAT_LABELS: Record<string, string> = {
-  'bong-tai':   'Bông tai / Khuyên tai',
-  'day-chuyen': 'Dây chuyền',
-  'lac-tay':    'Lắc tay / Vòng tay',
-  'nhan-don':   'Nhẫn đơn',
-  'cap-doi':    'Cặp đôi',
+  // BST
+  'bst-hanh-trinh':       'BST Hành Trình Nở Hoa',
+  'bst-xuan-ha-thu-dong': 'BST Xuân Hạ Thu Đông',
+  // DIY
+  'charm-titan':   'Charm Titan',
+  'charm-da':      'Charm Đá Năng Lượng',
+  'day-vong':      'Dây Vòng',
+  'phu-kien-khac': 'Phụ Kiện Khác',
+  // Vòng Tay
+  'vong-tay-da':    'Vòng Tay Đá Năng Lượng',
+  'vong-tay-charm': 'Vòng Tay Charm',
 };
 
 /** Convert Vietnamese text to URL-friendly slug. */
@@ -54,20 +60,24 @@ function parseSpecs(value: string): Product['specifications'] {
 }
 
 const SHAPES: ShapeKey[] = ['bow','flower','snow','gem','star','bracelet','ring','butterfly','clover','heart','sparkle'];
-const CATS: Product['cat'][] = ['bst', 'best-seller'];
-const SUBCATS = ['bong-tai','day-chuyen','lac-tay','nhan-don','cap-doi'];
+const CATS: Product['cat'][] = ['bst', 'diy', 'vong-tay'];
+const SUBCATS = [
+  'bst-hanh-trinh', 'bst-xuan-ha-thu-dong',
+  'charm-titan', 'charm-da', 'day-vong', 'phu-kien-khac',
+  'vong-tay-da', 'vong-tay-charm',
+];
 
 const emptyDraft: Product = {
   slug: '',
   code: '',
   name: '',
-  cat: 'best-seller',
-  subcat: 'day-chuyen',
+  cat: 'vong-tay',
+  subcat: 'vong-tay-da',
   price: 0,
   tint: '#fff8fa',
   tint2: '#f8d8e3',
   accent: '#c96b8d',
-  shape: 'gem',
+  shape: 'bracelet',
 };
 
 export default function AdminProducts() {
@@ -340,14 +350,15 @@ export default function AdminProducts() {
                 title="Phân loại sản phẩm"
                 desc="Giúp khách lọc sản phẩm dễ dàng"
               >
-                <Field label="Bộ sưu tập">
+                <Field label="Nhóm sản phẩm">
                   <select value={editing.cat} onChange={e => setEditing({ ...editing, cat: e.target.value as Product['cat'] })}
                     className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
                     <option value="bst">Bộ Sưu Tập (BST)</option>
-                    <option value="best-seller">Bán chạy</option>
+                    <option value="diy">Phụ Kiện DIY</option>
+                    <option value="vong-tay">Vòng Tay</option>
                   </select>
                 </Field>
-                <Field label="Loại trang sức">
+                <Field label="Danh mục con">
                   <select value={editing.subcat} onChange={e => setEditing({ ...editing, subcat: e.target.value })}
                     className="w-full border border-rule rounded-md px-3 py-2.5 text-sm focus:outline-none focus:border-brand-500">
                     {SUBCATS.map(c => <option key={c} value={c}>{SUBCAT_LABELS[c] || c}</option>)}

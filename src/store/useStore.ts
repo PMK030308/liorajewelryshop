@@ -97,12 +97,12 @@ const initUsers = (): User[] => {
 };
 
 const initProducts = (): Product[] => {
-  const stored = safeParse<Product[] | null>('liora_products', null);
+  const stored = safeParse<Product[] | null>('liora_products_v2', null);
   return stored && stored.length ? stored : SEED_PRODUCTS;
 };
 
 const initSiteContent = (): SiteContent => {
-  const stored = safeParse<Partial<SiteContent> | null>('liora_site_content', null);
+  const stored = safeParse<Partial<SiteContent> | null>('liora_site_content_v2', null);
   return {
     ...DEFAULT_SITE_CONTENT,
     ...(stored || {}),
@@ -310,12 +310,12 @@ export function useStoreSetup() {
     // If WooCommerce is active, we don't want to overwrite WordPress sync with local cache.
     const config = getWordPressConfig();
     if (!config.useWordPress) {
-      localStorage.setItem('liora_products', JSON.stringify(state.products));
+      localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
     }
   }, [state.products]);
 
   useEffect(() => {
-    localStorage.setItem('liora_site_content', JSON.stringify(state.siteContent));
+    localStorage.setItem('liora_site_content_v2', JSON.stringify(state.siteContent));
   }, [state.siteContent]);
 
   useEffect(() => {

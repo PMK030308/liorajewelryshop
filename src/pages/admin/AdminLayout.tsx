@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LayoutDashboard, Package, Receipt, ArrowLeft, LogOut, Menu, X, Home, Settings, PanelsTopLeft } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 
-interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders' | 'content' | 'wordpress'; }
+interface Props { children: React.ReactNode; active: 'dashboard' | 'products' | 'orders' | 'content' | 'wordpress' | 'news'; }
 
 export default function AdminLayout({ children, active }: Props) {
   const state = useStore().state;
@@ -43,6 +43,7 @@ export default function AdminLayout({ children, active }: Props) {
     { key: 'products',  label: 'Sản phẩm',         path: '/admin/products',  icon: <Package size={18} strokeWidth={1.8} /> },
     { key: 'orders',    label: 'Đơn hàng',         path: '/admin/orders',    icon: <Receipt size={18} strokeWidth={1.8} /> },
     { key: 'content',   label: 'Nội dung website', path: '/admin/content',   icon: <PanelsTopLeft size={18} strokeWidth={1.8} /> },
+    { key: 'news',      label: 'Tin tức & SEO',    path: '/admin/news',      icon: <PanelsTopLeft size={18} strokeWidth={1.8} /> },
     { key: 'wordpress', label: 'Cấu hình WP',     path: '/admin/wordpress', icon: <Settings size={18} strokeWidth={1.8} /> },
   ];
 

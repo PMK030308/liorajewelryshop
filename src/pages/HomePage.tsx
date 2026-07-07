@@ -22,10 +22,10 @@ const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 );
 
 const CATEGORY_TILES = [
-  { id: 'day-chuyen', title: 'Dây Chuyền', img: 'https://images.unsplash.com/photo-1599643478514-4a4204162810?auto=format&fit=crop&q=80&w=800' },
-  { id: 'nhan-don',   title: 'Nhẫn Bạc',   img: 'https://images.unsplash.com/photo-1605100804763-247f52bbfb77?auto=format&fit=crop&q=80&w=800' },
-  { id: 'bong-tai',   title: 'Bông Tai',   img: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800' },
-  { id: 'lac-tay',    title: 'Lắc Tay',    img: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800' },
+  { id: 'bst',           title: 'Bộ Sưu Tập',            img: '/product/BST _HÀNH TRÌNH NỬ HOA_ - CHẠM_Vòng tay hợp kim mạ bạc.jpg' },
+  { id: 'vong-tay',      title: 'Vòng Tay',               img: '/product/Vòng tay hợp kim mạ bạc_.png' },
+  { id: 'charm-titan',   title: 'Charm Titan',             img: '/product/Vòng tay hợp kim mạ bạc_.png' },
+  { id: 'charm-da',      title: 'Charm Đá Năng Lượng',     img: '/product/Vòng tay hợp kim mạ bạc_.png' },
 ];
 
 function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void }) {
@@ -256,12 +256,12 @@ export default function HomePage() {
 
   const setFilterNav = (slug: string) => { dispatch({ type: 'SET_FILTER', payload: slug }); navigate('/shop'); };
 
-  const shapeLookup: Record<string, 'bracelet' | 'gem' | 'heart' | 'ring' | 'bow'> = {
-    'lac-tay': 'bracelet', 'day-chuyen': 'gem', 'cap-doi': 'heart', 'nhan-don': 'ring', 'bong-tai': 'bow',
+  const shapeLookup: Record<string, 'bracelet' | 'gem' | 'heart' | 'star' | 'bow'> = {
+    'bst': 'bracelet', 'vong-tay': 'bracelet', 'diy': 'star',
   };
 
   const bstProducts = state.products.filter(p => p.cat === 'bst').slice(0, 12);
-  const bestSellerProducts = state.products.filter(p => p.cat === 'best-seller').slice(0, 12);
+  const bestSellerProducts = state.products.filter(p => p.cat === 'vong-tay').slice(0, 12);
 
   const trustBadges: { icon: React.ReactNode; t: string; s: string }[] = [
     {
@@ -418,8 +418,8 @@ export default function HomePage() {
       <section className="container-x section-y">
         <Reveal>
           <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">HOT TREND 2026</div>
-            <h2 className="sec-title">Sản phẩm bán chạy</h2>
+            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">VÒNG TAY NỔI BẬT</div>
+            <h2 className="sec-title">Vòng Tay Nổi Bật</h2>
           </div>
         </Reveal>
         <Reveal delay={0.1}>

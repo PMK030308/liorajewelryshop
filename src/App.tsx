@@ -25,6 +25,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminContent from './pages/admin/AdminContent';
+import AdminNews from './pages/admin/AdminNews';
 import WordPressSettings from './pages/admin/WordPressSettings';
 
 function EditableSimplePage({ slug, fallbackTitle, fallbackBody }: { slug: string; fallbackTitle: string; fallbackBody: React.ReactNode }) {
@@ -79,6 +80,7 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/admin/products') return <AdminProducts />;
   if (route === '/admin/orders') return <AdminOrders />;
   if (route === '/admin/content') return <AdminContent />;
+  if (route === '/admin/news') return <AdminNews />;
   if (route === '/admin/wordpress') return <WordPressSettings />;
 
   if (route === '/kiem-dinh') {

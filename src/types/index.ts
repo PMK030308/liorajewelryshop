@@ -2,7 +2,7 @@ export interface Product {
   slug: string;
   code: string;
   name: string;
-  cat: 'bst' | 'best-seller';
+  cat: 'bst' | 'diy' | 'vong-tay';
   subcat: string;
   price: number;
   /** Original (pre-sale) price. If set and > price, UI shows a strikethrough + discount %. */

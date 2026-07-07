@@ -124,8 +124,10 @@ export async function fetchWooCommerceProducts(config = getWordPressConfig()): P
   return wcProducts.map((wc: any): Product => {
     // Map WooCommerce categories/tags to LIORA structure
     const categories = wc.categories?.map((c: any) => c.slug) || [];
-    const cat = categories.includes('bst') || categories.includes('collection') ? 'bst' : 'best-seller';
-    const subcat = categories.length > 0 ? categories[0] : 'nhan-don';
+    const cat = categories.includes('bst') || categories.includes('collection') ? 'bst'
+      : categories.includes('diy') || categories.includes('charm') ? 'diy'
+      : 'vong-tay';
+    const subcat = categories.length > 0 ? categories[0] : 'vong-tay-da';
 
     // Pricing
     const price = parseFloat(wc.price) || 0;

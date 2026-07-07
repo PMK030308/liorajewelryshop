@@ -33,7 +33,7 @@ export default function ShopPage() {
   const list = useMemo(() => {
     let l = state.filter === 'all'
       ? [...products]
-      : state.filter === 'bst' || state.filter === 'best-seller'
+      : ['bst', 'diy', 'vong-tay'].includes(state.filter)
         ? products.filter(p => p.cat === state.filter)
         : products.filter(p => p.subcat === state.filter);
 
@@ -65,7 +65,7 @@ export default function ShopPage() {
 
   const activeFilterCount = (state.filter !== 'all' ? 1 : 0) + priceBuckets.length;
 
-  const quickFilters = ['all','bst','best-seller','lac-tay','day-chuyen','nhan-don','bong-tai'];
+  const quickFilters = ['all','bst','diy','vong-tay'];
 
   const FilterSidebar = (
     <>
@@ -169,7 +169,7 @@ export default function ShopPage() {
               <div className="flex gap-2 flex-wrap overflow-x-auto">
                 {quickFilters.map(s => {
                   const c = CATEGORIES.find(x => x.slug === s);
-                const label = c ? c.label : s === 'bst' ? 'Bộ Sưu Tập' : s === 'best-seller' ? 'Bán chạy' : s;
+                const label = c ? c.label : s;
                   return (
                     <button key={s} className={`chip ${state.filter === s ? 'active' : ''}`} onClick={() => setFilterNav(s)}>{label}</button>
                   );
@@ -193,7 +193,7 @@ export default function ShopPage() {
             <div className="lg:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 -mx-4 px-4 mb-3">
               {quickFilters.map(s => {
                 const c = CATEGORIES.find(x => x.slug === s);
-                const label = c ? c.label : s === 'moissanite' ? 'Moissanite' : s === 'best-seller' ? 'Bán chạy' : s;
+                const label = c ? c.label : s;
                 return (
                   <button key={s} className={`chip flex-shrink-0 ${state.filter === s ? 'active' : ''}`} onClick={() => setFilterNav(s)}>{label}</button>
                 );

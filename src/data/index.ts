@@ -5,29 +5,33 @@ export { PRODUCTS } from './products';
 import { PRODUCTS } from './products';
 
 export const CATEGORIES: Category[] = [
-  { slug:'all',            label:'Tất Cả Sản Phẩm',     icon:'sparkle' },
-  { slug:'bst',            label:'Bộ Sưu Tập (BST)',    icon:'sparkle' },
-  { slug:'cap-doi',        label:'Cặp Đôi',             icon:'heart',
-    sub:[ { slug:'nhan-doi', label:'Nhẫn Đôi Bạc' }, { slug:'lac-doi', label:'Lắc Tay Đôi Bạc' }, { slug:'vc-doi', label:'Dây Chuyền Đôi' } ]
+  { slug:'all',       label:'Tất Cả Sản Phẩm',  icon:'sparkle' },
+  { slug:'bst',       label:'Bộ Sưu Tập (BST)', icon:'flower',
+    sub: [
+      { slug:'bst-hanh-trinh', label:'Hành Trình Nở Hoa' },
+      { slug:'bst-xuan-ha-thu-dong', label:'Xuân Hạ Thu Đông' },
+    ]
   },
-  { slug:'khac-ten',       label:'Khắc Tên',            icon:'pen',
-    sub:[ { slug:'lac-khac-ten', label:'Lắc Tay Khắc Tên' }, { slug:'nhan-khac-ten', label:'Nhẫn Khắc Tên' } ]
+  { slug:'diy',       label:'Phụ Kiện DIY',     icon:'star',
+    sub: [
+      { slug:'charm-titan', label:'Charm Titan' },
+      { slug:'charm-da',    label:'Charm Đá Năng Lượng' },
+      { slug:'day-vong',    label:'Dây Vòng' },
+      { slug:'phu-kien-khac', label:'Phụ Kiện Khác' },
+    ]
   },
-  { slug:'day-chuyen',     label:'Dây Chuyền Bạc',      icon:'necklace' },
-  { slug:'lac-tay',        label:'Lắc Tay Bạc',         icon:'bracelet' },
-  { slug:'lac-chan',        label:'Lắc Chân Bạc',        icon:'anklet' },
-  { slug:'nhan-don',       label:'Nhẫn Đơn Bạc',        icon:'ring' },
-  { slug:'bong-tai',       label:'Bông Tai / Khuyên Tai', icon:'earring' },
-  { slug:'set-qua',        label:'Set Quà Tặng',        icon:'gift' },
-  { slug:'bao-duong',      label:'Bảo Dưỡng',           icon:'spray' },
+  { slug:'vong-tay',  label:'Vòng Tay',          icon:'bracelet',
+    sub: [
+      { slug:'vong-tay-da',    label:'Vòng Tay Đá Năng Lượng' },
+      { slug:'vong-tay-charm', label:'Vòng Tay Charm' },
+    ]
+  },
 ];
 
 export const HERO_CATS: HeroCat[] = [
-  { slug:'lac-tay',    label:'Lắc Tay / Vòng Tay', tint:'#fff8fa', accent:'#c96b8d' },
-  { slug:'day-chuyen', label:'Dây Chuyền',         tint:'#fdeef3', accent:'#ad4f74' },
-  { slug:'cap-doi',    label:'Nhẫn Đôi',           tint:'#fff1f6', accent:'#8f3f61' },
-  { slug:'nhan-don',   label:'Nhẫn Đơn',           tint:'#fff8fa', accent:'#c96b8d' },
-  { slug:'bong-tai',   label:'Bông Tai',           tint:'#fdeef3', accent:'#df8fa9' },
+  { slug:'bst',      label:'Bộ Sưu Tập',       tint:'#fff8fa', accent:'#c96b8d' },
+  { slug:'vong-tay', label:'Vòng Tay',          tint:'#fdeef3', accent:'#ad4f74' },
+  { slug:'diy',      label:'Phụ Kiện DIY',      tint:'#fff1f6', accent:'#8f3f61' },
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
@@ -62,12 +66,7 @@ export const BRAND_IMAGES = {
 };
 
 export const NEWS_ARTICLES: NewsArticle[] = [
-  { date:'16/02/2026', title:'✨ CHÚC MỪNG NĂM MỚI 2026 – LIORA ✨', excerpt:'Cảm ơn bạn đã luôn đồng hành cùng Liorajewelry trong suốt năm qua 💙 Bước sang năm mới, chúc bạn An Khang – Hạnh Phúc…', tint:'#fff1f2', accent:'#c96b8d' },
-  { date:'14/02/2026', title:'Happy Valentine!', excerpt:'Tình yêu luôn được tạo nên từ những điều tinh tế và chân thành ✨ là những khoảnh khắc nhỏ nhưng đủ làm trái tim rung động…', tint:'#fff8fa', accent:'#c96b8d' },
-  { date:'09/02/2026', title:'Món quà bạn tặng nói lên điều gì?', excerpt:'Món quà bạn tặng đang "nói" gì với cô ấy? 💌 Ưu đãi nhỏ, yêu thương to: 🌷 Đơn từ 500K → Tặng kèm thiệp xinh…', tint:'#fff1f6', accent:'#8f3f61' },
-  { date:'02/02/2026', title:'Cách bảo quản trang sức bạc bền đẹp', excerpt:'Mẹo nhỏ giúp món trang sức yêu thích của bạn luôn sáng bóng như mới...', tint:'#fff8fa', accent:'#c96b8d' },
-  { date:'28/01/2026', title:'Hướng dẫn chọn size nhẫn chuẩn', excerpt:'Bí quyết đo size ngón tay tại nhà cực đơn giản với dây và thước...', tint:'#fff8fa', accent:'#df8fa9' },
-  { date:'20/01/2026', title:'Kim cương Moissanite là gì?', excerpt:'Tìm hiểu về loại đá quý lấp lánh không kém kim cương thật với giá hợp lý...', tint:'#fff1f2', accent:'#c96b8d' },
+  { date:'06/07/2026', title:'BST Hành Trình Nở Hoa: Khởi Đầu Mới Cùng Liora', excerpt:'Bộ sưu tập Hành Trình Nở Hoa mang đến nguồn cảm hứng bất tận, đại diện cho những khởi đầu tươi sáng và sức sống mãnh liệt. Khám phá ngay những thiết kế độc quyền chỉ có tại Liora Jewelry.', tint:'#fff1f2', accent:'#c96b8d' },
 ];
 
 export const fmt = (n: number): string => n.toLocaleString('vi-VN') + '₫';
