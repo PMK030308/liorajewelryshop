@@ -80,7 +80,7 @@ export default function RegisterPage() {
             <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="0987654321"
               className="w-full border border-rule rounded-md px-4 py-2.5 text-sm focus:outline-none focus:border-brand-500 transition-colors" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold text-ink2 mb-1.5">Mật khẩu</label>
               <input required type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Tối thiểu 6 ký tự"

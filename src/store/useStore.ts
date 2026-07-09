@@ -104,16 +104,49 @@ const initProducts = (): Product[] => {
   return stored && stored.length ? stored : SEED_PRODUCTS;
 };
 
+// Bump khi thay đổi nội dung seed (bài viết SEO, hero, pages...).
+// Khi version khác cache, các trường seed sẽ được làm mới từ default
+// (giữ nguyên tuỳ chỉnh admin ở các trường khác).
+const CONTENT_SEED_VERSION = 2;
+const SEED_VERSION_KEY = 'liora_content_seed_v';
+// Key lưu trữ nội dung site (bump khi cần ép làm mới toàn bộ cache).
+const SITE_CONTENT_KEY = 'liora_site_content_v3';
+
 const initSiteContent = (): SiteContent => {
-  const stored = safeParse<Partial<SiteContent> | null>('liora_site_content_v2', null);
-  return {
+  // Ưu tiên cache v3; nếu chưa có thì migrate các tuỳ chỉnh từ v2 cũ.
+  let stored = safeParse<Partial<SiteContent> | null>(SITE_CONTENT_KEY, null);
+  if (!stored) {
+    const legacy = safeParse<Partial<SiteContent> | null>('liora_site_content_v2', null);
+    if (legacy) stored = legacy;
+  }
+
+  const storedVersion = (() => {
+    try {
+      return Number(localStorage.getItem(SEED_VERSION_KEY)) || 0;
+    } catch { return 0; }
+  })();
+  const seedChanged = storedVersion !== CONTENT_SEED_VERSION;
+
+  // Khi seed thay đổi (hoặc chưa có bài nào), làm mới newsArticles từ default
+  // nhưng vẫn giữ các tuỳ chỉnh khác (settings, hero, pages) của admin.
+  const newsArticles =
+    seedChanged || !stored?.newsArticles?.length
+      ? DEFAULT_SITE_CONTENT.newsArticles
+      : stored.newsArticles;
+
+  const result: SiteContent = {
     ...DEFAULT_SITE_CONTENT,
     ...(stored || {}),
     settings: { ...DEFAULT_SITE_CONTENT.settings, ...(stored?.settings || {}) },
     heroSlides: stored?.heroSlides?.length ? stored.heroSlides : DEFAULT_SITE_CONTENT.heroSlides,
-    newsArticles: stored?.newsArticles?.length ? stored.newsArticles : DEFAULT_SITE_CONTENT.newsArticles,
+    newsArticles,
     pages: stored?.pages?.length ? stored.pages : DEFAULT_SITE_CONTENT.pages,
   };
+
+  if (seedChanged) {
+    try { localStorage.setItem(SEED_VERSION_KEY, String(CONTENT_SEED_VERSION)); } catch { /* noop */ }
+  }
+  return result;
 };
 
 export const initialState: State = {
@@ -343,7 +376,7 @@ export function useStoreSetup() {
   }, [state.products, state.user]);
 
   useEffect(() => {
-    localStorage.setItem('liora_site_content_v2', JSON.stringify(state.siteContent));
+    localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(state.siteContent));
     if (hasSupabase && state.user?.role === 'admin') {
       syncSiteContent(state.siteContent);
     }

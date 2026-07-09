@@ -13,7 +13,7 @@ export default function ContactPage() {
       <div className="text-xs text-mute mb-4">
         <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="hover:text-brand-500">Trang chủ</a> / Liên Hệ
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">Liên hệ với Liorajewelry</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Liên hệ với Liorajewelry</h1>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h3 className="font-bold text-lg mb-4">Thông tin cửa hàng</h3>

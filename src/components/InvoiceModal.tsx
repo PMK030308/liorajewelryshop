@@ -77,7 +77,7 @@ export default function InvoiceModal({ order, onClose }: Props) {
         </header>
 
         {/* Printable area */}
-        <article className="invoice-print-area px-6 md:px-10 py-8 md:py-10 text-[13px] leading-snug text-ink">
+        <article className="invoice-print-area px-4 md:px-10 py-6 md:py-10 text-[13px] leading-snug text-ink">
           {/* Header */}
           <div className="flex flex-wrap items-start justify-between gap-4 pb-5 border-b border-rule">
             <div className="flex items-start gap-3">
@@ -119,7 +119,8 @@ export default function InvoiceModal({ order, onClose }: Props) {
           {/* Items table */}
           <section className="mb-5">
             <div className="text-[11px] uppercase tracking-wider font-bold text-brand-700 mb-2">Chi tiết đơn hàng</div>
-            <table className="w-full border-collapse text-[12px]">
+            <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-[12px] min-w-[480px]">
               <thead>
                 <tr className="bg-brand-50">
                   <th className="border border-rule px-2 py-2 text-left w-10">STT</th>
@@ -181,6 +182,7 @@ export default function InvoiceModal({ order, onClose }: Props) {
                 </tr>
               </tfoot>
             </table>
+            </div>
 
             {/* Amount in words */}
             <div className="text-[12px] mt-3 italic">

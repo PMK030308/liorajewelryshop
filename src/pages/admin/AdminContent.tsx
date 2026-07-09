@@ -1,18 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Edit3, FileText, Image, Plus, RefreshCw, Save, Settings2, Trash2 } from 'lucide-react';
+import { Edit3, FileText, Image, Info, Plus, RefreshCw, Save, Settings2, Trash2 } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { useStore } from '../../store/useStore';
-import { DEFAULT_SITE_CONTENT } from '../../data';
-import { HeroSlide, NewsArticle, SiteContent, SitePage } from '../../types';
+import { DEFAULT_SITE_CONTENT, DEFAULT_ABOUT } from '../../data';
+import { AboutContent, AboutStat, AboutStoryBlock, AboutValue, HeroSlide, NewsArticle, ShapeKey, SiteContent, SitePage } from '../../types';
 import ImageInput from '../../components/admin/ImageInput';
+import AboutEditor from './AboutEditor';
 import { PageHeader, ConfirmDialog, inputCls, labelCls } from '../../components/admin/ui';
 
-type TabKey = 'hero' | 'posts' | 'pages' | 'settings';
+type TabKey = 'hero' | 'posts' | 'pages' | 'about' | 'settings';
 
 const tabs: { key: TabKey; label: string; icon: React.ReactNode }[] = [
   { key: 'hero', label: 'Hero / Banner', icon: <Image size={16} /> },
   { key: 'posts', label: 'Bài viết', icon: <Edit3 size={16} /> },
   { key: 'pages', label: 'Trang tĩnh', icon: <FileText size={16} /> },
+  { key: 'about', label: 'Giới thiệu', icon: <Info size={16} /> },
   { key: 'settings', label: 'Cài đặt', icon: <Settings2 size={16} /> },
 ];
 
@@ -79,6 +81,10 @@ export default function AdminContent() {
       ...current,
       pages: current.pages.map(page => (page.id === id ? { ...page, ...patch } : page)),
     }));
+  };
+
+  const updateAbout = (patch: Partial<AboutContent>) => {
+    setDraft(current => ({ ...current, about: { ...(current.about ?? DEFAULT_ABOUT), ...patch } }));
   };
 
   const addPost = () => {
@@ -328,6 +334,10 @@ export default function AdminContent() {
                 </div>
               )}
             </div>
+          )}
+
+          {activeTab === 'about' && (
+            <AboutEditor draft={draft} updateAbout={updateAbout} />
           )}
 
           {activeTab === 'settings' && (

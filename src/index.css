@@ -9,6 +9,14 @@
     color: #2a2025;
     background: #fff7f9;
   }
+  /* Chống tràn ngang trên mọi cỡ màn điện thoại — clip không làm hỏng sticky header */
+  body {
+    overflow-x: clip;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
   }
@@ -178,8 +186,9 @@
     position: fixed; bottom: 32px; left: 50%;
     transform: translateX(-50%) translateY(120%);
     background: #2a2025; color: #fff;
-    padding: 12px 24px; font-size: 13px; border-radius: 999px;
-    z-index: 80; transition: transform 0.35s cubic-bezier(.4,0,.2,1); white-space: nowrap;
+    padding: 12px 20px; font-size: 13px; border-radius: 999px;
+    z-index: 80; transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    max-width: calc(100vw - 32px); text-align: center; line-height: 1.4;
     letter-spacing: 0.01em;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }

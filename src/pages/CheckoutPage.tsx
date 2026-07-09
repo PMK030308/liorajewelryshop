@@ -193,7 +193,7 @@ export default function CheckoutPage() {
           )}
 
           <h2 className="text-xl font-bold mb-2">Thông tin giao hàng</h2>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input required value={name} onChange={e => setName(e.target.value)} placeholder="Họ và tên *" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" />
             <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Số điện thoại *" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />

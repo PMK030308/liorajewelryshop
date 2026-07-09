@@ -151,7 +151,7 @@ export default function NewsPage() {
       <div className="text-xs text-mute mb-4">
         <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="hover:text-brand-500">Trang chủ</a> / Tin Tức
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold mb-8">Tin tức & Blog</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Tin tức & Blog</h1>
 
       {error && (
         <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center justify-between">

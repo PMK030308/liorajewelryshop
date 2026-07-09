@@ -108,6 +108,50 @@ export interface SitePage {
   visible: boolean;
 }
 
+/** Một khối "câu chuyện thương hiệu" trên trang Giới thiệu (ảnh + tiêu đề + mô tả). */
+export interface AboutStoryBlock {
+  id: string;
+  image?: string;
+  title?: string;
+  text: string;
+}
+
+/** Một "giá trị cốt lõi" hiển thị dạng thẻ trên trang Giới thiệu. */
+export interface AboutValue {
+  id: string;
+  /** Khóa shape dùng làm icon (xem data/shapes): gem, sparkle, flower, heart... */
+  icon: ShapeKey;
+  title: string;
+  text: string;
+}
+
+/** Một con số thống kê (vd: "5+", "Năm kinh nghiệm"). */
+export interface AboutStat {
+  value: string;
+  label: string;
+}
+
+/** Nội dung trang Giới thiệu — chỉnh sửa được qua Admin → Quản trị nội dung. */
+export interface AboutContent {
+  title: string;
+  tagline: string;
+  /** Ảnh chính đầu trang (nên dùng tỉ lệ 4:3 hoặc 4:5, nền sáng). */
+  heroImage?: string;
+  /** Đoạn mở đầu, hỗ trợ HTML. */
+  intro: string;
+  /** Các khối câu chuyện thương hiệu (ảnh + chữ, so le trái/phải). */
+  story: AboutStoryBlock[];
+  /** Tuyên ngôn / sứ mệnh, hỗ trợ HTML. */
+  mission: string;
+  /** Dải con số thống kê. */
+  stats: AboutStat[];
+  /** Các giá trị cốt lõi. */
+  values: AboutValue[];
+  /** Tiêu đề + lời kêu gọi hành động cuối trang. */
+  ctaTitle: string;
+  ctaText: string;
+}
+
 export interface SiteSettings {
   brandName: string;
   tagline: string;
@@ -148,6 +192,8 @@ export interface SiteContent {
   categoryTiles?: CategoryTile[];
   /** Quick filter chips on shop page */
   shopQuickFilters?: string[];
+  /** Nội dung trang Giới thiệu (chỉnh sửa qua Admin). */
+  about?: AboutContent;
 }
 
 export type ShapeKey =
