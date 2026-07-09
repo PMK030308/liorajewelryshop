@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Gift, Sparkles } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
 export default function VoucherPopup() {
@@ -32,7 +33,7 @@ export default function VoucherPopup() {
       
       {/* Hộp thoại Popup Voucher */}
       <div
-        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] bg-white rounded-3xl shadow-[0_20px_50px_rgba(201,107,141,0.22)] overflow-hidden transition-all duration-500 ease-out border border-brand-200 ${
+        className={`fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] bg-white rounded-3xl shadow-[0_20px_50px_rgba(244,114,160,0.22)] overflow-hidden transition-all duration-500 ease-out border border-brand-200 ${
           state.voucherOpen
             ? 'opacity-100 scale-100 translate-y-[-50%]'
             : 'opacity-0 scale-90 translate-y-[-40%] pointer-events-none'
@@ -53,13 +54,13 @@ export default function VoucherPopup() {
         {/* Tiêu đề với dải màu Gradient Rose Gold lấp lánh */}
         <div className="relative bg-gradient-to-br from-brand-700 via-brand-600 to-brand-400 p-8 text-white text-center select-none overflow-hidden">
           {/* Hiệu ứng hạt sáng lấp lánh */}
-          <div className="absolute top-3 left-4 text-white/25 text-xl animate-pulse">✨</div>
-          <div className="absolute bottom-4 right-6 text-white/30 text-2xl animate-bounce">✨</div>
-          <div className="absolute top-10 right-10 text-white/15 text-lg">✦</div>
-          <div className="absolute bottom-10 left-8 text-white/20 text-xl">✦</div>
-          
+          <div className="absolute top-3 left-4 text-white/25 animate-pulse"><Sparkles size={20} strokeWidth={1.5} /></div>
+          <div className="absolute bottom-4 right-6 text-white/30 animate-bounce"><Sparkles size={26} strokeWidth={1.5} /></div>
+          <div className="absolute top-10 right-10 text-white/15"><Sparkles size={16} strokeWidth={1.5} /></div>
+          <div className="absolute bottom-10 left-8 text-white/20"><Sparkles size={20} strokeWidth={1.5} /></div>
+
           <div className="relative z-10">
-            <span className="text-5xl block mb-2 drop-shadow-md select-none">💝</span>
+            <span className="block mb-2 drop-shadow-md select-none flex justify-center"><Gift size={52} strokeWidth={1.5} /></span>
             <h3 className="font-sans font-bold text-2xl tracking-wider uppercase drop-shadow">Ưu Đãi Độc Quyền</h3>
             <p className="text-xs text-white/95 font-light mt-1.5 uppercase tracking-widest">Dành riêng cho khách hàng Liora</p>
           </div>

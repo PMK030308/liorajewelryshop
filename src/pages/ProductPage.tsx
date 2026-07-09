@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Pencil, Star } from 'lucide-react';
+import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Pencil, Star, Mail, Sparkles, AlertTriangle, Check } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
@@ -30,12 +30,12 @@ interface GiftItem {
   id: string;
   title: string;
   desc: string;
-  emoji: string; // visual placeholder; image url could be added later
+  icon: React.ReactNode;
 }
 const FREE_GIFTS: GiftItem[] = [
-  { id: 'card', title: 'Thiệp lời chúc khắc tên', desc: 'Tặng kèm thiệp giấy mỹ thuật dày 250gsm, khắc tên người nhận miễn phí.', emoji: '✉' },
-  { id: 'cloth', title: 'Khăn lau bạc cao cấp', desc: 'Khăn microfiber mềm chuyên dụng — giúp giữ bạc luôn sáng đẹp như mới.', emoji: '✦' },
-  { id: 'voucher', title: 'Voucher 50K cho đơn tiếp theo', desc: 'Gửi qua email sau khi đơn hàng giao thành công.', emoji: '★' },
+  { id: 'card', title: 'Thiệp lời chúc khắc tên', desc: 'Tặng kèm thiệp giấy mỹ thuật dày 250gsm, khắc tên người nhận miễn phí.', icon: <Mail size={18} strokeWidth={1.8} /> },
+  { id: 'cloth', title: 'Khăn lau bạc cao cấp', desc: 'Khăn microfiber mềm chuyên dụng — giúp giữ bạc luôn sáng đẹp như mới.', icon: <Sparkles size={18} strokeWidth={1.8} /> },
+  { id: 'voucher', title: 'Voucher 50K cho đơn tiếp theo', desc: 'Gửi qua email sau khi đơn hàng giao thành công.', icon: <Star size={18} strokeWidth={1.8} /> },
 ];
 
 export default function ProductPage({ slug }: { slug: string }) {
@@ -445,7 +445,7 @@ export default function ProductPage({ slug }: { slug: string }) {
                 <span className="text-xs text-mute">Còn lại <span className="font-semibold text-ink">{inStock}</span> sản phẩm</span>
               )}
               {isSold && (
-                <span className="text-xs text-red-600 font-semibold">⚠ Sản phẩm tạm hết hàng</span>
+                <span className="text-xs text-red-600 font-semibold inline-flex items-center gap-1"><AlertTriangle size={13} strokeWidth={2} /> Sản phẩm tạm hết hàng</span>
               )}
             </div>
           </div>
@@ -462,7 +462,7 @@ export default function ProductPage({ slug }: { slug: string }) {
                 <span className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                   engraveOn ? 'bg-brand-700 border-brand-700' : 'border-rule'
                 }`}>
-                  {engraveOn && <span className="text-white text-[10px] font-bold">✓</span>}
+                  {engraveOn && <Check size={12} strokeWidth={3} className="text-white" />}
                 </span>
                 <Pencil size={16} strokeWidth={1.8} className="text-brand-700" />
                 <span className="font-semibold text-sm">Khắc tên cá nhân hoá</span>
@@ -511,7 +511,7 @@ export default function ProductPage({ slug }: { slug: string }) {
                     </div>
                   </div>
                 )}
-                <p className="text-[11px] text-mute italic">⚠ Sản phẩm khắc tên sẽ không áp dụng đổi trả</p>
+                <p className="text-[11px] text-mute italic inline-flex items-center gap-1"><AlertTriangle size={12} strokeWidth={1.8} /> Sản phẩm khắc tên sẽ không áp dụng đổi trả</p>
               </div>
             )}
           </div>
@@ -574,7 +574,7 @@ export default function ProductPage({ slug }: { slug: string }) {
                           className="mt-1 accent-brand-700 w-4 h-4 flex-shrink-0"
                         />
                         <div className="w-10 h-10 flex-shrink-0 bg-white border border-rule flex items-center justify-center text-base text-brand-500 group-hover:border-brand-400 transition-colors">
-                          {g.emoji}
+                          {g.icon}
                         </div>
                         <div className="min-w-0 flex-1">
                           <div className={`text-sm font-semibold ${isSelected ? 'text-brand-700' : 'text-ink'} break-words`}>{g.title}</div>

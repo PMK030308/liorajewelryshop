@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FileText } from 'lucide-react';
+import { FileText, Package } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import { Order, OrderStatus } from '../types';
 import InvoiceModal from '../components/InvoiceModal';
+import { hasSupabase } from '../lib/supabase';
+import { updateProfile, signOut } from '../lib/auth';
 
 export const STATUS_META: Record<OrderStatus, { label: string; cls: string }> = {
   pending:    { label: 'Chờ xác nhận', cls: 'bg-yellow-100 text-yellow-700 border-yellow-200' },
@@ -37,13 +39,19 @@ export default function AccountPage() {
 
   const myOrders = state.orders.filter(o => o.userId === user.id);
 
-  const saveProfile = (e: React.FormEvent) => {
+  const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch({ type: 'UPDATE_USER', payload: { id: user.id, name: name.trim(), phone: phone.trim() || undefined } });
+    const patch = { name: name.trim(), phone: phone.trim() || undefined };
+    if (hasSupabase) {
+      try { await updateProfile(user.id, patch); }
+      catch (err) { showToast('⚠ Không lưu được: ' + (err as Error).message); return; }
+    }
+    dispatch({ type: 'UPDATE_USER', payload: { id: user.id, ...patch } });
     showToast('✓ Đã cập nhật hồ sơ');
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (hasSupabase) { try { await signOut(); } catch { /* ignore */ } }
     dispatch({ type: 'LOGOUT' });
     showToast('👋 Đã đăng xuất');
     setTimeout(() => navigate('/'), 200);
@@ -101,7 +109,7 @@ export default function AccountPage() {
           <h2 className="text-xl font-bold mb-4 text-brand-700">Đơn hàng của bạn ({myOrders.length})</h2>
           {myOrders.length === 0 ? (
             <div className="bg-soft border border-rule rounded-lg p-10 text-center">
-              <div className="text-5xl mb-3">📦</div>
+              <Package size={48} strokeWidth={1.2} className="mb-3 mx-auto text-mute" />
               <p className="text-ink2 mb-4">Bạn chưa có đơn hàng nào</p>
               <a href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }} className="btn-pink">Mua sắm ngay →</a>
             </div>

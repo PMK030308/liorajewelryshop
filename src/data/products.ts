@@ -34,7 +34,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 120,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Vòng Tay CHẠM – BST Hành Trình Nở Hoa | LIORA Jewelry',
+    seoDescription: 'Vòng tay hợp kim mạ bạc CHẠM thuộc BST Hành Trình Nở Hoa, đá Clear Quartz mệnh Kim thu hút may mắn và sự tự tin. Món quà ý nghĩa cho giới trẻ.',
+    seoKeywords: 'vòng tay bst, hành trình nở hoa, clear quartz, vòng tay bạc nữ, trang sức LIORA, mệnh kim',
+    canonicalSlug: '/san-pham/bst-hanh-trinh-no-hoa-cham'
   },
   {
     slug: 'bst-hanh-trinh-no-hoa-mam',
@@ -62,7 +66,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 112,
-    inStock: 35
+    inStock: 35,
+    seoTitle: 'Vòng Tay MẦM – BST Hành Trình Nở Hoa | LIORA Jewelry',
+    seoDescription: 'Vòng tay MẦM đá Amazonite mệnh Mộc thuộc BST Hành Trình Nở Hoa, tượng trưng cho hy vọng và sự phát triển. Hợp làm quà khởi đầu mới.',
+    seoKeywords: 'vòng tay bst, amazonite, mệnh mộc, vòng tay bạc nữ, hành trình nở hoa, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-hanh-trinh-no-hoa-mam'
   },
   {
     slug: 'bst-hanh-trinh-no-hoa-diu',
@@ -90,7 +98,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 94,
-    inStock: 45
+    inStock: 45,
+    seoTitle: 'Vòng Tay DỊU – BST Hành Trình Nở Hoa | LIORA Jewelry',
+    seoDescription: 'Vòng tay DỊU đá Aquamarine mệnh Thủy mang năng lượng bình an và chữa lành cảm xúc. Thiết kế thanh lịch thuộc BST Hành Trình Nở Hoa.',
+    seoKeywords: 'vòng tay bst, aquamarine, mệnh thủy, vòng tay bạc nữ, chữa lành, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-hanh-trinh-no-hoa-diu'
   },
   {
     slug: 'bst-hanh-trinh-no-hoa-nang',
@@ -118,7 +130,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.7,
     reviewCount: 79,
-    inStock: 30
+    inStock: 30,
+    seoTitle: 'Vòng Tay NẮNG – BST Hành Trình Nở Hoa | LIORA Jewelry',
+    seoDescription: 'Vòng tay NẮNG đá Sunstone mệnh Hỏa mang sự lạc quan và năng lượng tích cực. Thuộc BST Hành Trình Nở Hoa, hợp giới trẻ năng động.',
+    seoKeywords: 'vòng tay bst, sunstone, đá mặt trời, mệnh hỏa, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-hanh-trinh-no-hoa-nang'
   },
   {
     slug: 'bst-hanh-trinh-no-hoa-hoa',
@@ -146,7 +162,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 86,
-    inStock: 40
+    inStock: 40,
+    seoTitle: 'Vòng Tay HOA – BST Hành Trình Nở Hoa | LIORA Jewelry',
+    seoDescription: 'Vòng tay HOA đá Morganite mệnh Thổ tượng trưng cho tình yêu thương và thành quả nỗ lực. Thiết kế nữ tính thuộc BST Hành Trình Nở Hoa.',
+    seoKeywords: 'vòng tay bst, morganite, mệnh thổ, vòng tay bạc nữ, trang sức LIORA, hành trình nở hoa',
+    canonicalSlug: '/san-pham/bst-hanh-trinh-no-hoa-hoa'
   },
 
   // ---- BST "Xuân Hạ Thu Đông" ----
@@ -176,7 +196,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 196,
-    inStock: 18
+    inStock: 18,
+    seoTitle: 'Vòng Tay NỞ – BST Xuân Hạ Thu Đông | LIORA Jewelry',
+    seoDescription: 'Vòng tay NỞ mùa Xuân kết hợp Aquamarine và Rose Quartz mang bình an, hy vọng và tình yêu thương. Thuộc BST Xuân Hạ Thu Đông.',
+    seoKeywords: 'vòng tay bst, xuân hạ thu đông, aquamarine, rose quartz, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-xuan-ha-thu-dong-no'
   },
   {
     slug: 'bst-xuan-ha-thu-dong-ruc',
@@ -204,7 +228,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 218,
-    inStock: 20
+    inStock: 20,
+    seoTitle: 'Vòng Tay RỰC – BST Xuân Hạ Thu Đông | LIORA Jewelry',
+    seoDescription: 'Vòng tay RỰC mùa Hạ kết hợp Blue Topaz và Carnelian tiếp thêm đam mê, dám sống hết mình. Sắc ấm nổi bật thuộc BST Xuân Hạ Thu Đông.',
+    seoKeywords: 'vòng tay bst, xuân hạ thu đông, blue topaz, carnelian, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-xuan-ha-thu-dong-ruc'
   },
   {
     slug: 'bst-xuan-ha-thu-dong-lang',
@@ -232,7 +260,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 145,
-    inStock: 25
+    inStock: 25,
+    seoTitle: 'Vòng Tay LẶNG – BST Xuân Hạ Thu Đông | LIORA Jewelry',
+    seoDescription: 'Vòng tay LẶNG mùa Thu kết hợp Citrine và Morganite giúp lắng lại, trưởng thành và cân bằng cảm xúc. Thiết kế tinh tế thuộc BST Xuân Hạ Thu Đông.',
+    seoKeywords: 'vòng tay bst, xuân hạ thu đông, citrine, morganite, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-xuan-ha-thu-dong-lang'
   },
   {
     slug: 'bst-xuan-ha-thu-dong-yen',
@@ -260,7 +292,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 135,
-    inStock: 15
+    inStock: 15,
+    seoTitle: 'Vòng Tay YÊN – BST Xuân Hạ Thu Đông | LIORA Jewelry',
+    seoDescription: 'Vòng tay YÊN mùa Đông kết hợp Blue Quartz và Clear Quartz giúp chữa lành, tái tạo năng lượng và an nhiên. Thuộc BST Xuân Hạ Thu Đông.',
+    seoKeywords: 'vòng tay bst, xuân hạ thu đông, blue quartz, clear quartz, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/bst-xuan-ha-thu-dong-yen'
   },
 
   // ============================================================
@@ -284,7 +320,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 4.8,
     reviewCount: 45,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu Yellow – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu vàng sáng bóng, nhẹ và bền, không oxy hóa. Phụ kiện DIY lắp vào vòng tay charm, dễ mix nhiều màu theo sở thích.',
+    seoKeywords: 'charm titan, charm diy, charm vàng, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-yellow'
   },
   {
     slug: 'charm-titan-blue',
@@ -302,7 +342,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 4.9,
     reviewCount: 38,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu Blue – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu xanh dương sáng bóng, nhẹ và bền màu. Điểm nhấn tinh xảo cho vòng tay charm DIY, dễ phối cùng đá năng lượng.',
+    seoKeywords: 'charm titan, charm diy, charm xanh dương, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-blue'
   },
   {
     slug: 'charm-titan-red',
@@ -320,7 +364,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 4.7,
     reviewCount: 30,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu Red – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu đỏ nổi bật, sáng bóng và bền màu. Phụ kiện DIY tạo điểm nhấn cho vòng tay charm, mix dễ dàng cùng nhiều màu khác.',
+    seoKeywords: 'charm titan, charm diy, charm đỏ, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-red'
   },
   {
     slug: 'charm-titan-green',
@@ -338,7 +386,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 4.8,
     reviewCount: 27,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu Green – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu xanh lá sáng bóng, nhẹ và bền, không oxy hóa. Phụ kiện DIY điểm nhấn cho vòng tay charm năng động, tươi mát.',
+    seoKeywords: 'charm titan, charm diy, charm xanh lá, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-green'
   },
   {
     slug: 'charm-titan-pink',
@@ -356,7 +408,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 5.0,
     reviewCount: 52,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu Pink – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu hồng sáng bóng, nhẹ và bền màu. Phụ kiện DIY nữ tính cho vòng tay charm, dễ mix cùng đá Rose Quartz.',
+    seoKeywords: 'charm titan, charm diy, charm hồng, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-pink'
   },
   {
     slug: 'charm-titan-white',
@@ -374,7 +430,11 @@ export const PRODUCTS: Product[] = [
     material: 'Titan cao cấp · Kích cỡ: 2–3cm',
     rating: 4.9,
     reviewCount: 41,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Charm Titan Màu White – Phụ Kiện Vòng Tay DIY | LIORA',
+    seoDescription: 'Charm titan màu trắng sáng bóng, nhẹ và bền, không oxy hóa. Phụ kiện DIY tinh tế, dễ phối mọi màu vòng tay charm.',
+    seoKeywords: 'charm titan, charm diy, charm trắng, phụ kiện vòng tay, charm titan LIORA',
+    canonicalSlug: '/san-pham/charm-titan-white'
   },
 
   // ---- Charm Đá Năng Lượng ----
@@ -394,7 +454,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 5.0,
     reviewCount: 67,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Clear Quartz – Thạch Anh Trắng DIY | LIORA',
+    seoDescription: 'Charm đá Clear Quartz tự nhiên thanh lọc năng lượng, mang sự minh mẫn và cân bằng. Phụ kiện DIY lắp vòng tay charm phong thuỷ.',
+    seoKeywords: 'charm đá, clear quartz, thạch anh trắng, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-clear-quartz'
   },
   {
     slug: 'charm-da-aventurine-xanh',
@@ -412,7 +476,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.8,
     reviewCount: 39,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Aventurine Xanh – Đá May Mắn DIY | LIORA',
+    seoDescription: 'Charm đá Aventurine xanh tự nhiên mang may mắn, sự phát triển và hy vọng. Phụ kiện DIY lắp vòng tay charm phong thuỷ mệnh Mộc.',
+    seoKeywords: 'charm đá, aventurine, charm diy, đá năng lượng, đá may mắn, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-aventurine-xanh'
   },
   {
     slug: 'charm-da-aquamarine',
@@ -430,7 +498,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.9,
     reviewCount: 53,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Aquamarine – Hải Lam Ngọc DIY | LIORA',
+    seoDescription: 'Charm đá Aquamarine tự nhiên mang bình an, xoa dịu căng thẳng và tốt cho giao tiếp. Phụ kiện DIY vòng tay charm mệnh Thủy.',
+    seoKeywords: 'charm đá, aquamarine, hải lam ngọc, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-aquamarine'
   },
   {
     slug: 'charm-da-blue-quartz',
@@ -448,7 +520,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.8,
     reviewCount: 31,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Blue Quartz – Thạch Anh Xanh Dương DIY | LIORA',
+    seoDescription: 'Charm đá Blue Quartz cân bằng cảm xúc, thư giãn và mang bình yên. Phụ kiện DIY lắp vòng tay charm phong thuỷ cho giới trẻ.',
+    seoKeywords: 'charm đá, blue quartz, thạch anh xanh, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-blue-quartz'
   },
   {
     slug: 'charm-da-blue-topaz',
@@ -466,7 +542,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.9,
     reviewCount: 44,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Blue Topaz – Đá Tự Tin DIY | LIORA',
+    seoDescription: 'Charm đá Blue Topaz tăng tự tin, tập trung và khơi nguồn sáng tạo. Phụ kiện DIY cho vòng tay charm theo đuổi mục tiêu.',
+    seoKeywords: 'charm đá, blue topaz, charm diy, đá năng lượng, charm tự tin, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-blue-topaz'
   },
   {
     slug: 'charm-da-rose-quartz',
@@ -484,7 +564,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 5.0,
     reviewCount: 78,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Rose Quartz – Thạch Anh Hồng DIY | LIORA',
+    seoDescription: 'Charm đá Rose Quartz tự nhiên mang tình yêu thương, dịu dàng và chữa lành cảm xúc. Phụ kiện DIY vòng tay charm phong thuỷ tình duyên.',
+    seoKeywords: 'charm đá, rose quartz, thạch anh hồng, charm diy, đá năng lượng, charm tình duyên LIORA',
+    canonicalSlug: '/san-pham/charm-da-rose-quartz'
   },
   {
     slug: 'charm-da-morganite',
@@ -502,7 +586,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.8,
     reviewCount: 29,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Morganite – Đá Bình An DIY | LIORA',
+    seoDescription: 'Charm đá Morganite mang bình an, thấu hiểu và cân bằng cảm xúc. Phụ kiện DIY cho vòng tay charm phong thuỷ yêu thương bản thân.',
+    seoKeywords: 'charm đá, morganite, charm diy, đá năng lượng, charm bình an, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-morganite'
   },
   {
     slug: 'charm-da-citrine',
@@ -520,7 +608,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.9,
     reviewCount: 35,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Citrine – Thạch Anh Vàng DIY | LIORA',
+    seoDescription: 'Charm đá Citrine tự nhiên mang năng lượng tích cực, lạc quan và duy trì động lực. Phụ kiện DIY cho vòng tay charm phong thuỷ mệnh Thổ.',
+    seoKeywords: 'charm đá, citrine, thạch anh vàng, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-citrine'
   },
   {
     slug: 'charm-da-carnelian',
@@ -538,7 +630,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 4.7,
     reviewCount: 24,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Carnelian – Mã Não Cam DIY | LIORA',
+    seoDescription: 'Charm đá Carnelian khơi dậy tự tin, đam mê và nhiệt huyết. Phụ kiện DIY cho vòng tay charm phong thuỷ tăng động lực hành động.',
+    seoKeywords: 'charm đá, carnelian, mã não cam, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-carnelian'
   },
   {
     slug: 'charm-da-sunstone',
@@ -556,7 +652,11 @@ export const PRODUCTS: Product[] = [
     material: 'Đá tự nhiên · Kích cỡ: 10mm',
     rating: 5.0,
     reviewCount: 42,
-    inStock: 50
+    inStock: 50,
+    seoTitle: 'Charm Đá Sunstone – Đá Mặt Trời DIY | LIORA',
+    seoDescription: 'Charm đá Sunstone mang năng lượng mặt trời, lạc quan và tỏa sáng. Phụ kiện DIY cho vòng tay charm phong thuỷ mệnh Hỏa.',
+    seoKeywords: 'charm đá, sunstone, đá mặt trời, charm diy, đá năng lượng, charm phong thuỷ LIORA',
+    canonicalSlug: '/san-pham/charm-da-sunstone'
   },
 
   // ---- Dây & Phụ kiện ----
@@ -585,7 +685,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 57,
-    inStock: 80
+    inStock: 80,
+    seoTitle: 'Dây Vòng Hợp Kim Mạ Bạc – Vòng DIY Rút Điều Chỉnh | LIORA',
+    seoDescription: 'Dây vòng hợp kim mạ bạc kiểu rút điều chỉnh, chu vi 13–26cm phù hợp mọi cổ tay. Làm nền cho vòng charm, vòng năng lượng và DIY.',
+    seoKeywords: 'dây vòng, vòng diy, dây rút, hợp kim mạ bạc, vòng charm, phụ kiện LIORA',
+    canonicalSlug: '/san-pham/day-hop-kim-ma-bac'
   },
   {
     slug: 'day-hop-kim-ma-bac-rut',
@@ -603,12 +707,16 @@ export const PRODUCTS: Product[] = [
     material: 'Hợp kim mạ bạc · Dây rút: Ø5–9cm (chu vi 13–26cm)',
     rating: 4.7,
     reviewCount: 43,
-    inStock: 80
+    inStock: 80,
+    seoTitle: 'Dây Vòng Hợp Kim Mạ Bạc Rút – Vòng DIY | LIORA',
+    seoDescription: 'Dây vòng hợp kim mạ bạc kiểu rút dễ điều chỉnh, làm nền cho vòng charm và vòng năng lượng DIY. Phù hợp mọi kích thước cổ tay.',
+    seoKeywords: 'dây vòng, vòng diy, dây rút, hợp kim mạ bạc, vòng charm, phụ kiện LIORA',
+    canonicalSlug: '/san-pham/day-hop-kim-ma-bac-rut'
   },
   {
     slug: 'khung-dung-da-titan',
     code: 'KHG-TTN',
-    name: 'Khung Đựng Đá Năng Lượng (Titan)',
+    name: 'Khung Mặt Dây Chuyền Đựng Đá Năng Lượng (Titan)',
     cat: 'diy',
     subcat: 'phu-kien-khac',
     price: 30000,
@@ -616,8 +724,12 @@ export const PRODUCTS: Product[] = [
     tint2: '#e2e8f0',
     accent: '#64748b',
     shape: 'gem',
-    image: '/product/Vòng tay hợp kim mạ bạc_.png',
-    description: 'Phụ kiện chụp đá năng lượng với thiết kế hoa văn rỗng tinh xảo, giúp cố định và tôn lên vẻ đẹp tự nhiên của viên đá. Thiết kế lồng đá thông thoáng giúp ánh sáng xuyên qua.',
+    image: '/product/Khung mặt dây chuyền - Đựng đá năng lượng.jpg',
+    gallery: [
+      '/product/Khung mặt dây chuyền - Đựng đá năng lượng.jpg',
+      '/product/Khung mặt dây chuyền - Đựng đá năng lượng(1).jpg'
+    ],
+    description: 'Khung mặt dây chuyền titan đựng đá năng lượng với thiết kế hoa văn rỗng tinh xảo, giúp cố định và tôn lên vẻ đẹp tự nhiên của viên đá. Thiết kế lồng đá thông thoáng giúp ánh sáng xuyên qua.',
     material: 'Titan · Ø khay đá: 11mm · Chiều dài tổng thể: 20mm',
     highlights: [
       'Chất liệu: Titan',
@@ -627,7 +739,44 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 36,
-    inStock: 100
+    inStock: 100,
+    seoTitle: 'Khung Mặt Dây Chuyền Đựng Đá Năng Lượng Titan | LIORA',
+    seoDescription: 'Khung mặt dây chuyền titan đựng đá năng lượng, hoa văn rỗng tinh xảo cố định đá 11mm. Làm mặt dây chuyền hoặc điểm nhấn vòng DIY.',
+    seoKeywords: 'khung đựng đá, mặt dây chuyền, titan, phụ kiện DIY, khung đá năng lượng, LIORA',
+    canonicalSlug: '/san-pham/khung-dung-da-titan'
+  },
+  {
+    slug: 'vong-tron-hop-kim-ma-bac-diy',
+    code: 'VT-DIYTRON',
+    name: 'Vòng Trơn Hợp Kim Mạ Bạc DIY',
+    cat: 'diy',
+    subcat: 'day-vong',
+    price: 120000,
+    tint: '#f8fafc',
+    tint2: '#e2e8f0',
+    accent: '#64748b',
+    shape: 'bracelet',
+    image: '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY.jpg',
+    gallery: [
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY.jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(1).jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(2).jpg',
+      '/product/Vòng trơn hợp kim mạ bạc - Vòng trơn DIY(3).jpg'
+    ],
+    description: 'Vòng trơn hợp kim mạ bạc nền để tự mix charm và đá năng lượng theo ý thích. Thiết kế tối giản, dễ phối, làm nền hoàn hảo cho BST DIY của bạn.',
+    material: 'Hợp kim mạ bạc · Vòng trơn · Phù hợp charm Titan 11mm',
+    highlights: [
+      'Vòng trơn nền cho DIY',
+      'Mix cùng charm Titan & đá năng lượng',
+      'Mạ bạc sáng, bền màu'
+    ],
+    rating: 4.8,
+    reviewCount: 64,
+    inStock: 60,
+    seoTitle: 'Vòng Trơn Hợp Kim Mạ Bạc DIY – Vòng Nền Mix Charm | LIORA',
+    seoDescription: 'Vòng trơn hợp kim mạ bạc làm nền tự mix charm Titan và đá năng lượng. Thiết kế tối giản, sáng bóng, bền màu — nền hoàn hảo cho DIY.',
+    seoKeywords: 'vòng trơn, vòng diy, hợp kim mạ bạc, vòng charm, vòng năng lượng, phụ kiện LIORA',
+    canonicalSlug: '/san-pham/vong-tron-hop-kim-ma-bac-diy'
   },
 
   // ============================================================
@@ -645,8 +794,8 @@ export const PRODUCTS: Product[] = [
     accent: '#64748b',
     hot: true,
     shape: 'bracelet',
-    image: '/product/Vòng tay hợp kim mạ bạc_.png',
-    gallery: ['/product/Vòng tay hợp kim mạ bạc_.png'],
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Giấc Mơ Bạc.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Giấc Mơ Bạc.png', '/product/Vòng tay hợp kim mạ bạc_.png'],
     description: 'Đá năng lượng Clear Quartz – Thạch Anh Trắng giúp thanh lọc năng lượng tiêu cực, mang lại sự minh mẫn, cân bằng và những khởi đầu tích cực.',
     material: 'Hợp kim mạ bạc · Charm Titan · Clear Quartz 8–10mm · Vòng: 16–18cm',
     highlights: [
@@ -656,7 +805,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 88,
-    inStock: 30
+    inStock: 30,
+    seoTitle: 'Vòng Tay Tinh Khôi – Clear Quartz 300k | LIORA Jewelry',
+    seoDescription: 'Vòng tay Tinh Khôi đá Clear Quartz thanh lọc năng lượng, mang sự minh mẫn và khởi đầu tích cực. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, clear quartz, thạch anh trắng, vòng tay đá năng lượng, charm titan, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-tinh-khoi'
   },
   {
     slug: 'vong-tay-thanh-lam',
@@ -680,7 +833,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 69,
-    inStock: 30
+    inStock: 30,
+    seoTitle: 'Vòng Tay Thanh Lam – Aquamarine 300k | LIORA Jewelry',
+    seoDescription: 'Vòng tay Thanh Lam đá Aquamarine mang bình an, giảm căng thẳng và tăng tự tin giao tiếp. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, aquamarine, vòng tay đá năng lượng, charm titan, mệnh thủy, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-thanh-lam'
   },
   {
     slug: 'vong-tay-may-xanh',
@@ -704,7 +861,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 95,
-    inStock: 25
+    inStock: 25,
+    seoTitle: 'Vòng Tay Mây Xanh – Blue Topaz 300k | LIORA Jewelry',
+    seoDescription: 'Vòng tay Mây Xanh đá Blue Topaz tăng tập trung, khơi sáng tạo và tự tin thể hiện. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, blue topaz, vòng tay đá năng lượng, charm titan, mệnh thủy, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-may-xanh'
   },
   {
     slug: 'vong-tay-nang-hong',
@@ -729,7 +890,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 215,
-    inStock: 22
+    inStock: 22,
+    seoTitle: 'Vòng Tay Nắng Hồng – Rose Quartz 300k | LIORA Jewelry',
+    seoDescription: 'Vòng tay Nắng Hồng đá Rose Quartz thu hút yêu thương và chữa lành cảm xúc. Hợp kim mạ bạc, charm Titan, vòng 16–18cm, hot bán chạy.',
+    seoKeywords: 'vòng tay bạc nữ, rose quartz, thạch anh hồng, vòng tay đá năng lượng, charm titan, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-nang-hong'
   },
   {
     slug: 'vong-tay-dao-nhien',
@@ -742,7 +907,8 @@ export const PRODUCTS: Product[] = [
     tint2: '#fce7f3',
     accent: '#db2777',
     shape: 'flower',
-    image: '/product/Vòng tay hợp kim mạ bạc_.png',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Ánh Yêu.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Ánh Yêu.png'],
     description: 'Đá năng lượng Morganite mang lại sự bình an, cân bằng cảm xúc và khuyến khích yêu thương bản thân nhiều hơn.',
     material: 'Hợp kim mạ bạc · Charm Titan · Morganite 8–10mm · Vòng: 16–18cm',
     highlights: [
@@ -752,7 +918,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 57,
-    inStock: 28
+    inStock: 28,
+    seoTitle: 'Vòng Tay Đào Nhiên – Morganite 300k | LIORA Jewelry',
+    seoDescription: 'Vòng tay Đào Nhiên đá Morganite mang bình an, cân bằng cảm xúc và yêu thương bản thân. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, morganite, vòng tay đá năng lượng, charm titan, trang sức LIORA, mệnh thổ',
+    canonicalSlug: '/san-pham/vong-tay-dao-nhien'
   },
   {
     slug: 'vong-tay-hoa-hong-ngoc',
@@ -776,7 +946,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 301,
-    inStock: 15
+    inStock: 15,
+    seoTitle: 'Vòng Tay Hoa Hồng Ngọc – Rose Quartz + Morganite | LIORA',
+    seoDescription: 'Vòng tay Hoa Hồng Ngọc kết hợp Rose Quartz và Morganite mang tình yêu thương, đồng cảm và chữa lành. Hợp kim mạ bạc, charm Titan.',
+    seoKeywords: 'vòng tay bạc nữ, rose quartz, morganite, vòng tay đá năng lượng, charm titan, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-hoa-hong-ngoc'
   },
   {
     slug: 'vong-tay-kitty-mong-mo',
@@ -800,7 +974,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 189,
-    inStock: 19
+    inStock: 19,
+    seoTitle: 'Vòng Tay Kitty Mộng Mơ – Charm Hello Kitty | LIORA',
+    seoDescription: 'Vòng tay Kitty Mộng Mơ charm Hello Kitty kết hợp Rose Quartz mang niềm vui và lạc quan. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, hello kitty, rose quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-kitty-mong-mo'
   },
   {
     slug: 'vong-tay-no-hong',
@@ -824,7 +1002,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 5.0,
     reviewCount: 228,
-    inStock: 14
+    inStock: 14,
+    seoTitle: 'Vòng Tay Nơ Hồng – Charm Nơ Rose Quartz | LIORA Jewelry',
+    seoDescription: 'Vòng tay Nơ Hồng charm nơ đáng yêu kết hợp Rose Quartz tăng năng lượng yêu thương. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm nơ, rose quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-no-hong'
   },
   {
     slug: 'vong-tay-anh-duong-do',
@@ -848,7 +1030,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.9,
     reviewCount: 88,
-    inStock: 12
+    inStock: 12,
+    seoTitle: 'Vòng Tay Ánh Dương Đỏ – Carnelian + Sunstone | LIORA',
+    seoDescription: 'Vòng tay Ánh Dương Đỏ charm vương miện kết hợp Carnelian và Sunstone khơi dậy tự tin, đam mê. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, carnelian, sunstone, vòng tay đá năng lượng, charm titan, mệnh hỏa, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-anh-duong-do'
   },
   {
     slug: 'vong-tay-tinh-tu-bac',
@@ -872,7 +1058,11 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 167,
-    inStock: 20
+    inStock: 20,
+    seoTitle: 'Vòng Tay Tinh Tú Bạc – Charm Sao Clear Quartz | LIORA',
+    seoDescription: 'Vòng tay Tinh Tú Bạc charm sao kết hợp Clear Quartz thanh lọc năng lượng và thu hút may mắn. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm sao, clear quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-tinh-tu-bac'
   },
   {
     slug: 'vong-tay-gau-sao-bang',
@@ -896,6 +1086,124 @@ export const PRODUCTS: Product[] = [
     ],
     rating: 4.8,
     reviewCount: 189,
-    inStock: 22
+    inStock: 22,
+    seoTitle: 'Vòng Tay Gấu Sao Băng – Charm Gấu Blue Quartz | LIORA',
+    seoDescription: 'Vòng tay Gấu Sao Băng charm gấu kết hợp Blue Quartz và Clear Quartz cân bằng cảm xúc. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm gấu, blue quartz, clear quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-gau-sao-bang'
   },
+
+  // ---- Vòng tay charm mới (ảnh vừa thêm vào folder) ----
+  {
+    slug: 'vong-tay-hoa-ngoc',
+    code: 'VT-HNGOC',
+    name: 'Vòng Tay Hoa Ngọc',
+    cat: 'vong-tay',
+    subcat: 'vong-tay-charm',
+    price: 300000,
+    tint: '#fdf4f6',
+    tint2: '#f2c8d2',
+    accent: '#c2537a',
+    shape: 'flower',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Hoa Ngọc.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Hoa Ngọc.png'],
+    description: 'Charm hoa ngọc pha lê với cánh hoa tinh xảo, mang vẻ đẹp quý phái và nữ tính. Đá Rose Quartz tăng năng lượng yêu thương và sự dịu dàng.',
+    material: 'Hợp kim mạ bạc · Charm Titan · Rose Quartz 8–10mm · Vòng: 16–18cm',
+    highlights: [
+      'Charm: Hoa Ngọc pha lê',
+      'Kích thước vòng: 16–18cm | Đá: 8–10mm',
+      'Ý nghĩa: Quý phái, nữ tính, yêu thương'
+    ],
+    rating: 5.0,
+    reviewCount: 142,
+    inStock: 18,
+    seoTitle: 'Vòng Tay Hoa Ngọc – Charm Hoa Ngọc Rose Quartz | LIORA',
+    seoDescription: 'Vòng tay Hoa Ngọc charm hoa ngọc pha lê tinh xảo kết hợp Rose Quartz mang vẻ đẹp quý phái và năng lượng yêu thương. Hợp kim mạ bạc, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm hoa ngọc, rose quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-hoa-ngoc'
+  },
+  {
+    slug: 'vong-tay-khuc-ha-paris',
+    code: 'VT-KHPARIS',
+    name: 'Vòng Tay Khúc Hạ Paris',
+    cat: 'vong-tay',
+    subcat: 'vong-tay-charm',
+    price: 300000,
+    tint: '#fff7ed',
+    tint2: '#fed7aa',
+    accent: '#ea580c',
+    shape: 'star',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Khúc Hạ Paris.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Khúc Hạ Paris.png'],
+    description: 'Lấy cảm hứng từ hoàng hôn Paris lãng mạn, charm Eiffel tinh xảo kết hợp đá Clear Quartz thanh lọc năng lượng, mang lại sự minh mẫn và phong thái thanh lịch.',
+    material: 'Hợp kim mạ bạc · Charm Titan Eiffel · Clear Quartz 8–10mm · Vòng: 16–18cm',
+    highlights: [
+      'Charm: Eiffel "Khúc Hạ Paris"',
+      'Kích thước vòng: 16–18cm | Đá: 8–10mm',
+      'Ý nghĩa: Lãng mạn, thanh lịch, minh mẫn'
+    ],
+    rating: 4.9,
+    reviewCount: 118,
+    inStock: 16,
+    seoTitle: 'Vòng Tay Khúc Hạ Paris – Charm Eiffel Clear Quartz | LIORA',
+    seoDescription: 'Vòng tay Khúc Hạ Paris charm Eiffel lãng mạn kết hợp Clear Quartz thanh lọc năng lượng và tăng minh mẫn. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm eiffel, khúc hạ paris, clear quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-khuc-ha-paris'
+  },
+  {
+    slug: 'vong-tay-luu-ly',
+    code: 'VT-LUULY',
+    name: 'Vòng Tay Lưu Ly',
+    cat: 'vong-tay',
+    subcat: 'vong-tay-da',
+    price: 300000,
+    tint: '#eff6ff',
+    tint2: '#bfdbfe',
+    accent: '#3b82f6',
+    shape: 'gem',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Lưu Ly.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Lưu Ly.png'],
+    description: 'Đá Lưu Ly (Blue Quartz) mang năng lượng bình an, cân bằng cảm xúc và sự tự tin trong giao tiếp. Sắc xanh dương thanh tao phù hợp mọi outfit.',
+    material: 'Hợp kim mạ bạc · Charm Titan · Blue Quartz (Lưu Ly) 8–10mm · Vòng: 16–18cm',
+    highlights: [
+      'Đá: Lưu Ly (Blue Quartz)',
+      'Kích thước vòng: 16–18cm | Đá: 8–10mm',
+      'Ý nghĩa: Bình an, cân bằng, tự tin'
+    ],
+    rating: 4.8,
+    reviewCount: 76,
+    inStock: 24,
+    seoTitle: 'Vòng Tay Lưu Ly – Blue Quartz Bình An | LIORA Jewelry',
+    seoDescription: 'Vòng tay Lưu Ly đá Blue Quartz mang bình an, cân bằng cảm xúc và tự tin giao tiếp. Sắc xanh thanh tao, hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay bạc nữ, lưu ly, blue quartz, vòng tay đá năng lượng, charm titan, mệnh thủy, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-luu-ly'
+  },
+  {
+    slug: 'vong-tay-xuan-sac',
+    code: 'VT-XUANSAC',
+    name: 'Vòng Tay Xuân Sắc',
+    cat: 'vong-tay',
+    subcat: 'vong-tay-charm',
+    price: 300000,
+    tint: '#fdf4f6',
+    tint2: '#fce7f3',
+    accent: '#db2777',
+    shape: 'flower',
+    image: '/product/Vòng tay hợp kim mạ bạc - Charm Xuân Sắc.png',
+    gallery: ['/product/Vòng tay hợp kim mạ bạc - Charm Xuân Sắc.png'],
+    description: 'Charm hoa xuân tươi tắn kết hợp Rose Quartz – mang lại niềm vui, sự tươi mới và năng lượng yêu thương cho những khởi đầu mới.',
+    material: 'Hợp kim mạ bạc · Charm Titan · Rose Quartz 8–10mm · Vòng: 16–18cm',
+    highlights: [
+      'Charm: Hoa "Xuân Sắc"',
+      'Kích thước vòng: 16–18cm | Đá: 8–10mm',
+      'Ý nghĩa: Tươi tắn, vui vẻ, khởi đầu mới'
+    ],
+    rating: 4.9,
+    reviewCount: 104,
+    inStock: 21,
+    seoTitle: 'Vòng Tay Xuân Sắc – Charm Hoa Xuân Rose Quartz | LIORA',
+    seoDescription: 'Vòng tay Xuân Sắc charm hoa xuân tươi tắn kết hợp Rose Quartz mang niềm vui và năng lượng yêu thương. Hợp kim mạ bạc, charm Titan, vòng 16–18cm.',
+    seoKeywords: 'vòng tay charm, charm hoa xuân, rose quartz, lắc tay charm, vòng tay bạc nữ, trang sức LIORA',
+    canonicalSlug: '/san-pham/vong-tay-xuan-sac'
+  }
 ];

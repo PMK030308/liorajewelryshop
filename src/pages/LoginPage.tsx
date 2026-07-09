@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
+import { hasSupabase } from '../lib/supabase';
+import { signIn } from '../lib/auth';
 
 export default function LoginPage() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -15,19 +17,28 @@ export default function LoginPage() {
     }
   }, [state.user]);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr('');
     const trimmed = email.trim().toLowerCase();
+
+    // Backend thật (Supabase Auth)
+    if (hasSupabase) {
+      try {
+        const user = await signIn(trimmed, password);
+        dispatch({ type: 'LOGIN', payload: user });
+        showToast(`👋 Xin chào ${user.name}!`);
+        setTimeout(() => navigate(user.role === 'admin' ? '/admin/dashboard' : '/account'), 200);
+      } catch (err) {
+        setErr((err as Error).message || 'Đăng nhập thất bại.');
+      }
+      return;
+    }
+
+    // Fallback offline (demo localStorage)
     const found = state.users.find(u => u.email.toLowerCase() === trimmed);
-    if (!found) {
-      setErr('Email không tồn tại trong hệ thống.');
-      return;
-    }
-    if (found.password !== password) {
-      setErr('Mật khẩu không đúng.');
-      return;
-    }
+    if (!found) { setErr('Email không tồn tại trong hệ thống.'); return; }
+    if (found.password !== password) { setErr('Mật khẩu không đúng.'); return; }
     dispatch({ type: 'LOGIN', payload: found });
     showToast(`👋 Xin chào ${found.name}!`);
     setTimeout(() => navigate(found.role === 'admin' ? '/admin/dashboard' : '/account'), 200);

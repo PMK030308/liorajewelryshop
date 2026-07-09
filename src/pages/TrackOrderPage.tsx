@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Package, Check, Clock, Truck, Phone, FileText } from 'lucide-react';
+import { Package, Check, Clock, Truck, Phone, FileText, Frown, CheckCircle2, PartyPopper, XCircle, Hourglass } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import { Order, OrderStatus } from '../types';
@@ -112,7 +112,7 @@ export default function TrackOrderPage() {
       {/* Result: not found */}
       {searched && !foundOrder && (
         <div className="bg-white border border-rule rounded-lg shadow-card p-8 text-center">
-          <div className="text-5xl mb-3">😕</div>
+          <Frown size={52} strokeWidth={1.3} className="mb-3 mx-auto text-mute" />
           <h2 className="font-bold text-lg mb-2">Không tìm thấy đơn hàng</h2>
           <p className="text-sm text-ink2 mb-5">
             Kiểm tra lại mã đơn và số điện thoại. Nếu vẫn không thấy, liên hệ hotline để được hỗ trợ.
@@ -178,15 +178,15 @@ export default function TrackOrderPage() {
                 </div>
               </div>
               <div className="mt-5 pt-5 border-t border-rule text-xs text-ink2">
-                {foundOrder.status === 'pending' && '⏳ Đơn hàng của bạn đang chờ xác nhận. Chúng tôi sẽ gọi xác nhận trong vòng 15 phút.'}
-                {foundOrder.status === 'confirmed' && '✅ Đơn đã được xác nhận và đang chuẩn bị giao.'}
-                {foundOrder.status === 'shipping' && '🚚 Đơn đang trên đường giao tới bạn. Vui lòng giữ điện thoại để shipper liên hệ.'}
-                {foundOrder.status === 'done' && '🎉 Đơn đã giao thành công. Cảm ơn bạn đã mua sắm tại LIORA!'}
+                {foundOrder.status === 'pending' && (<span className="inline-flex items-center gap-1.5"><Hourglass size={14} strokeWidth={2} /> Đơn hàng của bạn đang chờ xác nhận. Chúng tôi sẽ gọi xác nhận trong vòng 15 phút.</span>)}
+                {foundOrder.status === 'confirmed' && (<span className="inline-flex items-center gap-1.5 text-green-700"><CheckCircle2 size={14} strokeWidth={2} /> Đơn đã được xác nhận và đang chuẩn bị giao.</span>)}
+                {foundOrder.status === 'shipping' && (<span className="inline-flex items-center gap-1.5"><Truck size={14} strokeWidth={2} /> Đơn đang trên đường giao tới bạn. Vui lòng giữ điện thoại để shipper liên hệ.</span>)}
+                {foundOrder.status === 'done' && (<span className="inline-flex items-center gap-1.5 text-green-700"><PartyPopper size={14} strokeWidth={2} /> Đơn đã giao thành công. Cảm ơn bạn đã mua sắm tại LIORA!</span>)}
               </div>
             </div>
           ) : (
             <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
-              <div className="text-3xl mb-2">🚫</div>
+              <XCircle size={36} strokeWidth={1.5} className="mb-2 mx-auto text-red-500" />
               <h3 className="font-bold text-red-700 mb-1">Đơn hàng đã hủy</h3>
               <p className="text-sm text-ink2">Vui lòng liên hệ hotline nếu cần hỗ trợ.</p>
             </div>

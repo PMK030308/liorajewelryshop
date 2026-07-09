@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Calendar, AlertTriangle } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { NEWS_ARTICLES as STATIC_NEWS } from '../data';
 import Shapes from '../data/shapes';
@@ -66,7 +67,7 @@ export default function NewsPage() {
 
         <header className="mb-8">
           <div className="text-xs text-mute mb-2 flex items-center gap-2">
-            <span>📅 {selectedArticle.date}</span>
+            <span className="inline-flex items-center gap-1"><Calendar size={13} strokeWidth={1.8} /> {selectedArticle.date}</span>
             <span>•</span>
             <span>Bởi Liorajewelry</span>
           </div>
@@ -127,7 +128,7 @@ export default function NewsPage() {
             margin-bottom: 0.5rem;
           }
           .entry-content blockquote {
-            border-left: 4px solid #c96b8d;
+            border-left: 4px solid #f472a0;
             padding-left: 1.5rem;
             font-style: italic;
             color: #4a5568;
@@ -154,7 +155,7 @@ export default function NewsPage() {
 
       {error && (
         <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm flex items-center justify-between">
-          <span>⚠️ {error}</span>
+          <span className="inline-flex items-center gap-1.5"><AlertTriangle size={15} strokeWidth={1.8} /> {error}</span>
           <button onClick={() => setError(null)} className="font-semibold hover:opacity-85">Đóng</button>
         </div>
       )}
@@ -194,7 +195,7 @@ export default function NewsPage() {
                 {!n.image && <div className="sil" style={{ color: n.accent }}>{Shapes.sparkle}</div>}
               </div>
               <div className="p-5">
-                <div className="text-xs text-mute mb-2">📅 {n.date}</div>
+                <div className="text-xs text-mute mb-2 inline-flex items-center gap-1"><Calendar size={12} strokeWidth={1.8} /> {n.date}</div>
                 <h3 className="font-semibold text-lg mb-2 group-hover:text-brand-500 line-clamp-2">{n.title}</h3>
                 <p className="text-sm text-ink2 line-clamp-3 mb-3">{n.excerpt}</p>
                 <span className="text-brand-500 text-sm font-medium">Đọc tiếp →</span>

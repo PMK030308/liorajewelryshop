@@ -93,7 +93,7 @@ export async function fetchWordPressPosts(config = getWordPressConfig()): Promis
       excerpt: stripHtml(post.excerpt?.rendered || post.content?.rendered || '').substring(0, 150) + '...',
       // For aesthetics, we reuse theme tints dynamically or pass fallback properties
       tint: '#fdf4f6',
-      accent: '#c96b8d',
+      accent: '#f472a0',
       // Store raw content/featured image in optional extensions if pages need detailed view
       content: post.content?.rendered,
       image: imageUrl,
@@ -166,8 +166,8 @@ export async function fetchWooCommerceProducts(config = getWordPressConfig()): P
       price,
       originalPrice,
       tint: '#fdf4f6',
-      tint2: '#f8d8e3',
-      accent: '#c96b8d',
+      tint2: '#ffcfdd',
+      accent: '#f472a0',
       hot: wc.featured,
       sold: inStock === 0,
       shape: shape as ShapeKey,

@@ -20,15 +20,8 @@ const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
     {children}
   </motion.div>
 );
-
-const CATEGORY_TILES = [
-  { id: 'bst',           title: 'Bộ Sưu Tập',            img: '/product/BST _HÀNH TRÌNH NỬ HOA_ - CHẠM_Vòng tay hợp kim mạ bạc.jpg' },
-  { id: 'vong-tay',      title: 'Vòng Tay',               img: '/product/Vòng tay hợp kim mạ bạc_.png' },
-  { id: 'charm-titan',   title: 'Charm Titan',             img: '/product/Vòng tay hợp kim mạ bạc_.png' },
-  { id: 'charm-da',      title: 'Charm Đá Năng Lượng',     img: '/product/Vòng tay hợp kim mạ bạc_.png' },
-];
-
 function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void }) {
+  const { state } = useStore();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const scrollBy = (dir: 1 | -1) => {
     const el = scrollerRef.current;
@@ -38,6 +31,13 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
     el.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
 
+  const tiles = state.siteContent.categoryTiles || [
+    { id: 'bst',       title: 'Bộ Sưu Tập',          slug: 'bst',      img: '/product/BST _HÀNH TRÌNH NỞ HOA_ - CHẠM_Vòng tay hợp kim mạ bạc.jpg' },
+    { id: 'vong-tay',  title: 'Vòng Tay Đơn',         slug: 'vong-tay', img: '/product/Vòng tay hợp kim mạ bạc - Charm Nơ Hồng.png' },
+    { id: 'diy',       title: 'Phụ Kiện DIY',        slug: 'diy',      img: '/product/Vòng trơn hợp kim mạ bạc.png' },
+    { id: 'bst-xuan-ha-thu-dong', title: 'BST Xuân Hạ Thu Đông', slug: 'bst-xuan-ha-thu-dong', img: '/product/BST _XUÂN HẠ THU ĐÔNG_ - RỰC_Vòng tay hợp kim mạ bạc.jpg' },
+  ];
+
   return (
     <section className="bg-white py-16 md:py-24 relative">
       <div className="container-x relative">
@@ -45,11 +45,11 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
           ref={scrollerRef}
           className="flex overflow-x-auto snap-x snap-mandatory gap-4 md:gap-6 no-scrollbar pb-8"
         >
-          {CATEGORY_TILES.map((c) => (
+          {tiles.map((c) => (
             <div key={c.id} className="snap-start flex-none w-[85%] md:w-[45%] lg:w-[32%] relative" data-card>
               <a
-                href={`#/shop?cat=${c.id}`}
-                onClick={(e) => { e.preventDefault(); setFilterNav(c.id); }}
+                href={`#/shop?cat=${c.slug ?? c.id}`}
+                onClick={(e) => { e.preventDefault(); setFilterNav(c.slug ?? c.id); }}
                 className="block cat-card-new group h-[400px] md:h-[480px]"
               >
                 <img
@@ -57,7 +57,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                   alt={c.title}
                   loading="lazy"
                   decoding="async"
-                  onError={(e) => { (e.target as HTMLImageElement).style.background = '#fff8fa'; }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.background = '#fff7f9'; }}
                   className="photo absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Vignette overlay */}
@@ -83,7 +83,6 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
             </div>
           ))}
         </div>
-
         {/* Slider Arrows — small, white, overlap card edges */}
         <button
           onClick={() => scrollBy(-1)}
@@ -142,7 +141,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
             <div className="inline-block relative mb-6">
               <div className="absolute -top-3 -left-3 w-8 h-8 border-t-[1.5px] border-l-[1.5px] border-brand-300/70"></div>
               <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-[1.5px] border-r-[1.5px] border-brand-300/70"></div>
-              <div className="bg-brand-700 text-white px-8 md:px-14 py-5 md:py-7 relative z-10 shadow-[0_16px_36px_rgba(143,63,97,0.22)]">
+              <div className="bg-brand-700 text-white px-8 md:px-14 py-5 md:py-7 relative z-10 shadow-[0_16px_36px_rgba(178,58,104,0.22)]">
                 <div className="text-lg md:text-2xl lg:text-3xl font-light tracking-[0.12em] uppercase leading-tight whitespace-pre-line">{s.plaque}</div>
               </div>
             </div>
@@ -175,7 +174,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
                 href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(201,107,141,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(201,107,141,0.20)] transition-all hover:scale-105"
+                className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
               >
                 <img
                   src={settings.qrUrl}
@@ -193,7 +192,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
           </div>
 
           <div className="flex justify-center items-center relative order-first md:order-last mb-4 md:mb-0">
-            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/70 shadow-[0_12px_30px_-10px_rgba(201,107,141,0.25)] md:shadow-[0_20px_50px_-12px_rgba(201,107,141,0.22)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
+            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/70 shadow-[0_12px_30px_-10px_rgba(244,114,160,0.25)] md:shadow-[0_20px_50px_-12px_rgba(244,114,160,0.22)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
               {s.image && (
                 <img
                   src={s.image}
@@ -304,7 +303,7 @@ export default function HomePage() {
       <section className="relative">
         <div
           className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg"
-          style={{ backgroundColor: '#fff8fa' }}
+          style={{ backgroundColor: '#fff7f9' }}
           onMouseEnter={() => setHeroPaused(true)}
           onMouseLeave={() => setHeroPaused(false)}
         >

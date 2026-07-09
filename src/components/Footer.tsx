@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, ChevronDown } from 'lucide-react';
+import { MapPin, Phone, Mail, ChevronDown, Banknote, CreditCard } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import LogoMark from './LogoMark';
+import MoMoIcon from './icons/MoMoIcon';
 
 interface FooterLinkSectionProps {
   title: string;
@@ -140,9 +141,13 @@ export default function Footer() {
         <div>Copyright © 2026 Liorajewelry.shop — All rights reserved</div>
         <div className="flex items-center gap-2">
           <span className="mr-1">Thanh toán:</span>
-          {['VISA','Mastercard','MoMo','COD'].map(m => (
-            <span key={m} className="bg-white/10 px-2.5 py-1 rounded text-[11px] font-medium">{m}</span>
-          ))}
+          <span className="bg-white/10 px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1" title="Thẻ ngân hàng (Visa/Mastercard/JCB)">
+            <CreditCard size={14} strokeWidth={1.8} /> Visa/Master
+          </span>
+          <span className="bg-white/10 p-1 rounded" title="Ví MoMo"><MoMoIcon size={18} /></span>
+          <span className="bg-white/10 px-2 py-1 rounded text-[11px] font-medium flex items-center gap-1" title="Thanh toán khi nhận hàng (COD)">
+            <Banknote size={14} strokeWidth={1.8} /> COD
+          </span>
         </div>
       </div>
     </footer>

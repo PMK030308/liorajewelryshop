@@ -118,11 +118,36 @@ export interface SiteSettings {
   qrUrl: string;
 }
 
+export interface CategoryTile {
+  id: string;
+  title: string;
+  img: string;
+  slug: string;
+}
+
+export interface NavSubItem {
+  label: string;
+  slug: string;
+}
+
+export interface NavCategory {
+  id: string;
+  label: string;
+  slug: string;
+  sub?: NavSubItem[];
+}
+
 export interface SiteContent {
   heroSlides: HeroSlide[];
   newsArticles: NewsArticle[];
   pages: SitePage[];
   settings: SiteSettings;
+  /** Editable nav dropdown categories */
+  navCategories?: NavCategory[];
+  /** Editable category tiles on homepage */
+  categoryTiles?: CategoryTile[];
+  /** Quick filter chips on shop page */
+  shopQuickFilters?: string[];
 }
 
 export type ShapeKey =
@@ -156,8 +181,8 @@ export type UserRole = 'admin' | 'customer';
 export interface User {
   id: string;
   email: string;
-  /** Demo only — hashed/encrypted in real backend */
-  password: string;
+  /** Demo only — hashed/encrypted in real backend. Optional khi dùng Supabase Auth. */
+  password?: string;
   name: string;
   phone?: string;
   role: UserRole;
@@ -181,7 +206,7 @@ export interface Order {
   userId: string | null;
   items: CartItem[];
   shipping: ShippingInfo;
-  payment: 'cod' | 'bank' | 'momo';
+  payment: 'cod' | 'bank' | 'momo' | 'card';
   subtotal: number;
   ship: number;
   discount: number;

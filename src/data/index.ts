@@ -29,16 +29,16 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const HERO_CATS: HeroCat[] = [
-  { slug:'bst',      label:'Bộ Sưu Tập',       tint:'#fff8fa', accent:'#c96b8d' },
+  { slug:'bst',      label:'Bộ Sưu Tập',       tint:'#fff7f9', accent:'#f472a0' },
   { slug:'vong-tay', label:'Vòng Tay',          tint:'#fdeef3', accent:'#ad4f74' },
-  { slug:'diy',      label:'Phụ Kiện DIY',      tint:'#fff1f6', accent:'#8f3f61' },
+  { slug:'diy',      label:'Phụ Kiện DIY',      tint:'#fff1f6', accent:'#b23a68' },
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
     plaque: 'Bộ Sưu Tập Mới\nHÀNH TRÌNH NỞ HOA',
     script: 'Mỗi khoảnh khắc đều rạng ngời',
-    tint:   '#fff8fa',
+    tint:   '#fff7f9',
     image:  '/product/BST _HÀNH TRÌNH NỞ HOA_ - NẮNG_Vòng tay hợp kim mạ bạc.jpg',
     imageAlt: 'Bộ sưu tập Hành Trình Nở Hoa Liora',
   },
@@ -66,7 +66,7 @@ export const BRAND_IMAGES = {
 };
 
 export const NEWS_ARTICLES: NewsArticle[] = [
-  { date:'06/07/2026', title:'BST Hành Trình Nở Hoa: Khởi Đầu Mới Cùng Liora', excerpt:'Bộ sưu tập Hành Trình Nở Hoa mang đến nguồn cảm hứng bất tận, đại diện cho những khởi đầu tươi sáng và sức sống mãnh liệt. Khám phá ngay những thiết kế độc quyền chỉ có tại Liora Jewelry.', tint:'#fff1f2', accent:'#c96b8d' },
+  { date:'06/07/2026', title:'BST Hành Trình Nở Hoa: Khởi Đầu Mới Cùng Liora', excerpt:'Bộ sưu tập Hành Trình Nở Hoa mang đến nguồn cảm hứng bất tận, đại diện cho những khởi đầu tươi sáng và sức sống mãnh liệt. Khám phá ngay những thiết kế độc quyền chỉ có tại Liora Jewelry.', tint:'#fff1f2', accent:'#f472a0' },
 ];
 
 export const fmt = (n: number): string => n.toLocaleString('vi-VN') + '₫';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Search, ShoppingBag, User as UserIcon, Menu, ChevronDown, X, LogIn, UserPlus, LogOut, LayoutDashboard, Home } from 'lucide-react';
+import { Search, ShoppingBag, User as UserIcon, Menu, ChevronDown, X, LogIn, UserPlus, LogOut, LayoutDashboard, Home, Hand } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { CATEGORIES, fmt } from '../data';
 import Shapes from '../data/shapes';
@@ -51,7 +51,7 @@ export default function Header() {
         <div>
           <div className="text-xs text-mute mb-3 uppercase tracking-wider">Tìm kiếm phổ biến</div>
           <div className="flex gap-2 flex-wrap">
-            {['Bộ Sưu Tập','Vòng tay Charm','Lắc tay','Dây chuyền','Nhẫn đôi','Mặt dây'].map(t => (
+            {['Bộ Sưu Tập','Vòng Charm','Vòng Đá Năng Lượng','Charm Titan','Dây Vòng'].map(t => (
               <button key={t} className="chip" onClick={() => setSearchQuery(t)}>{t}</button>
             ))}
           </div>
@@ -137,42 +137,39 @@ export default function Header() {
                 <ChevronDown size={12} strokeWidth={1.6} />
               </a>
               <div className="absolute top-full left-0 pt-2 z-[1000] opacity-0 invisible -translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
-                <div className="w-[240px] bg-white shadow-[0_12px_28px_rgba(143,63,97,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                <div className="w-[240px] bg-white shadow-[0_12px_28px_rgba(178,58,104,0.12)] border border-brand-100 rounded-md overflow-hidden">
                   <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
-                    {[
-                      { label: 'Tất Cả Sản Phẩm', slug: '' },
-                      { label: 'Cặp Đôi', slug: 'cap-doi', sub: [
-                        { label: 'Nhẫn Đôi', slug: 'nhan-doi' },
-                        { label: 'Dây Chuyền Đôi', slug: 'day-chuyen-doi' },
-                        { label: 'Lắc Tay Đôi', slug: 'lac-tay-doi' }
+                    {(state.siteContent.navCategories || [
+                      { id: 'all-p', label: 'Tất Cả Sản Phẩm', slug: 'all' },
+                      { id: 'bst-p', label: 'Bộ Sưu Tập (BST)', slug: 'bst', sub: [
+                        { label: 'Hành Trình Nở Hoa', slug: 'bst-hanh-trinh' },
+                        { label: 'Xuân Hạ Thu Đông', slug: 'bst-xuan-ha-thu-dong' },
                       ]},
-                      { label: 'Khắc Tên', slug: 'khac-ten', sub: [
-                        { label: 'Nhẫn Khắc Tên', slug: 'nhan-khac-ten' },
-                        { label: 'Dây Chuyền Khắc Tên', slug: 'day-chuyen-khac-ten' }
+                      { id: 'diy-p', label: 'Phụ Kiện DIY', slug: 'diy', sub: [
+                        { label: 'Charm Titan', slug: 'charm-titan' },
+                        { label: 'Charm Đá Năng Lượng', slug: 'charm-da' },
+                        { label: 'Dây Vòng', slug: 'day-vong' },
+                        { label: 'Phụ Kiện Khác', slug: 'phu-kien-khac' },
                       ]},
-                      { label: 'Dây Chuyền Bạc', slug: 'day-chuyen-bac' },
-                      { label: 'Lắc Tay Bạc', slug: 'lac-tay-bac' },
-                      { label: 'Lắc Chân Bạc', slug: 'lac-chan-bac' },
-                      { label: 'Nhẫn Đơn Bạc', slug: 'nhan-don-bac' },
-                      { label: 'Bông Tai Bạc/ Khuyên Tai Bạc', slug: 'bong-tai-bac' },
-                      { label: 'Bộ Sưu Tập (BST)', slug: 'bst' },
-                      { label: 'Set Quà Tặng', slug: 'set-qua-tang' },
-                      { label: 'Bảo Dưỡng', slug: 'bao-duong' },
-                    ].map((item, i, arr) => (
+                      { id: 'vt-p', label: 'Vòng Tay Đơn', slug: 'vong-tay', sub: [
+                        { label: 'Vòng Tay Đá Năng Lượng', slug: 'vong-tay-da' },
+                        { label: 'Vòng Tay Charm', slug: 'vong-tay-charm' },
+                      ]},
+                    ]).map((item, i, arr) => (
                       <li key={item.label} className={`relative group/sub ${i !== arr.length - 1 ? 'border-b border-brand-50' : ''}`}>
                         <a 
-                          href={`#/shop${item.slug ? `?cat=${item.slug}` : ''}`}
-                          onClick={(e) => { e.preventDefault(); setFilterNav(item.slug || ''); }}
+                          href={`#/shop?cat=${item.slug}`}
+                          onClick={(e) => { e.preventDefault(); setFilterNav(item.slug || 'all'); }}
                           className="flex items-center justify-between px-[18px] py-[11px] hover:bg-brand-50 hover:text-brand-700 hover:font-medium cursor-pointer transition-colors"
                         >
                           {item.label}
                           {item.sub && (
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#c96b8d" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f472a0" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                           )}
                         </a>
                         {item.sub && (
                           <div className="absolute top-0 left-full pl-1 z-[1001] opacity-0 invisible -translate-y-2 group-hover/sub:opacity-100 group-hover/sub:visible group-hover/sub:translate-y-0 transition-all duration-200">
-                            <div className="w-[200px] bg-white shadow-[0_12px_28px_rgba(143,63,97,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                            <div className="w-[200px] bg-white shadow-[0_12px_28px_rgba(178,58,104,0.12)] border border-brand-100 rounded-md overflow-hidden">
                               <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
                                 {item.sub.map((subItem, j, subArr) => (
                                   <li key={subItem.label} className={j !== subArr.length - 1 ? 'border-b border-brand-50' : ''}>
@@ -245,7 +242,7 @@ export default function Header() {
               </div>
             ) : (
               <div>
-                <div className="font-semibold mb-3">Chào mừng đến LIORA 👋</div>
+                <div className="font-semibold mb-3 flex items-center gap-1.5">Chào mừng đến LIORA <Hand size={16} strokeWidth={1.8} className="text-brand-500" /></div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setMobileOpen(false); navigate('/login'); }}
@@ -472,7 +469,7 @@ function HeaderSearchBox() {
         .slice(0, 6)
     : [];
 
-  const popular = ['Bộ Sưu Tập', 'Vòng tay Charm', 'Dây chuyền', 'Lắc tay', 'Nhẫn đôi'];
+  const popular = ['Bộ Sưu Tập', 'Vòng Charm', 'Vòng Đá Năng Lượng', 'Charm Titan', 'Dây Vòng'];
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Check, FileText } from 'lucide-react';
+import { Check, FileText, Banknote, Landmark, CreditCard, ShoppingCart, Lightbulb } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import Shapes from '../data/shapes';
 import { Order } from '../types';
 import InvoiceModal from '../components/InvoiceModal';
+import MoMoIcon from '../components/icons/MoMoIcon';
+
+const PAYMENT_LABELS: Record<Order['payment'], string> = {
+  cod: 'Thanh toán khi nhận hàng (COD)',
+  momo: 'Ví MoMo',
+  bank: 'Chuyển khoản ngân hàng',
+  card: 'Thẻ ngân hàng (Visa/Mastercard/JCB)',
+};
 
 export default function CheckoutPage() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -18,7 +26,7 @@ export default function CheckoutPage() {
   const [city, setCity] = useState('Hà Nội');
   const [district, setDistrict] = useState('');
   const [note, setNote] = useState('');
-  const [payment, setPayment] = useState<'cod' | 'bank' | 'momo'>('cod');
+  const [payment, setPayment] = useState<'cod' | 'bank' | 'momo' | 'card'>('cod');
   const [coupon, setCoupon] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; amount: number } | null>(null);
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
@@ -119,7 +127,7 @@ export default function CheckoutPage() {
           <div className="bg-soft rounded-md p-4 mb-6 text-sm text-left max-w-md mx-auto">
             <div className="flex justify-between mb-1"><span className="text-ink2">Người nhận</span><span className="font-medium">{placedOrder.shipping.name}</span></div>
             <div className="flex justify-between mb-1"><span className="text-ink2">SĐT</span><span className="font-medium">{placedOrder.shipping.phone}</span></div>
-            <div className="flex justify-between mb-1"><span className="text-ink2">Phương thức</span><span className="font-medium uppercase">{placedOrder.payment}</span></div>
+            <div className="flex justify-between mb-1"><span className="text-ink2">Phương thức</span><span className="font-medium">{PAYMENT_LABELS[placedOrder.payment]}</span></div>
             <div className="flex justify-between mt-2 pt-2 border-t border-rule text-base font-bold text-brand-700"><span>Tổng tiền</span><span>{fmt(placedOrder.total)}</span></div>
           </div>
 
@@ -160,7 +168,7 @@ export default function CheckoutPage() {
   if (cart.length === 0) {
     return (
       <main className="page container-x py-20 text-center min-h-[50vh]">
-        <div className="text-6xl mb-4">🛒</div>
+        <ShoppingCart size={56} strokeWidth={1.2} className="mx-auto mb-4 text-mute" />
         <h1 className="text-2xl font-bold mb-3">Giỏ hàng trống</h1>
         <p className="text-ink2 mb-6">Hãy thêm sản phẩm vào giỏ trước khi thanh toán</p>
         <a className="btn-pink" href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }}>Khám phá sản phẩm →</a>
@@ -179,8 +187,8 @@ export default function CheckoutPage() {
       <section className="container-x grid lg:grid-cols-5 gap-8 pb-12">
         <form className="lg:col-span-3 space-y-5" onSubmit={placeOrder}>
           {!user && (
-            <div className="bg-brand-50 border border-brand-200 rounded-md px-4 py-3 text-sm text-brand-700 flex items-center justify-between">
-              <span>💡 Bạn đã có tài khoản? <a href="#/login" onClick={(e) => { e.preventDefault(); navigate('/login'); }} className="underline font-semibold">Đăng nhập</a> để theo dõi đơn hàng dễ hơn.</span>
+            <div className="bg-brand-50 border border-brand-200 rounded-md px-4 py-3 text-sm text-brand-700 flex items-center gap-2 justify-between">
+              <span className="flex items-center gap-2"><Lightbulb size={16} strokeWidth={1.8} className="flex-shrink-0" /> Bạn đã có tài khoản? <a href="#/login" onClick={(e) => { e.preventDefault(); navigate('/login'); }} className="underline font-semibold">Đăng nhập</a> để theo dõi đơn hàng dễ hơn.</span>
             </div>
           )}
 
@@ -200,13 +208,14 @@ export default function CheckoutPage() {
           <h2 className="text-xl font-bold mt-8 mb-2">Phương thức thanh toán</h2>
           <div className="space-y-2">
             {[
-              { v:'cod',  label:'Thanh toán khi nhận hàng (COD)', icon:'💵' },
-              { v:'bank', label:'Chuyển khoản ngân hàng',         icon:'🏦' },
-              { v:'momo', label:'Ví điện tử MoMo',                icon:'📱' },
+              { v:'cod',  label:'Thanh toán khi nhận hàng (COD)', icon:<Banknote size={22} strokeWidth={1.8} className="text-brand-700" /> },
+              { v:'momo', label:'Ví MoMo',                         icon:<MoMoIcon size={22} /> },
+              { v:'bank', label:'Chuyển khoản ngân hàng',           icon:<Landmark size={22} strokeWidth={1.8} className="text-brand-700" /> },
+              { v:'card', label:'Thẻ ngân hàng (Visa/Mastercard/JCB)', icon:<CreditCard size={22} strokeWidth={1.8} className="text-brand-700" /> },
             ].map((pm) => (
               <label key={pm.v} className="flex items-center gap-3 border border-rule rounded-md p-3 cursor-pointer hover:border-brand-500 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
                 <input type="radio" name="pm" value={pm.v} checked={payment === pm.v} onChange={() => setPayment(pm.v as typeof payment)} className="accent-brand-700" />
-                <span className="text-2xl">{pm.icon}</span>
+                <span className="flex-shrink-0 flex items-center justify-center w-6 h-6">{pm.icon}</span>
                 <span className="font-medium text-sm">{pm.label}</span>
               </label>
             ))}
@@ -272,7 +281,7 @@ export default function CheckoutPage() {
                     className={`text-[11px] px-2.5 py-1 rounded transition-all border ${
                       appliedCoupon?.code === v.code
                         ? 'bg-brand-650 border-brand-700 text-white font-semibold'
-                        : 'bg-[#faf6f7] border-[#f8d8e3] text-[#8f3f61] hover:bg-brand-50'
+                        : 'bg-[#faf6f7] border-[#ffcfdd] text-[#b23a68] hover:bg-brand-50'
                     }`}
                   >
                     {v.code}

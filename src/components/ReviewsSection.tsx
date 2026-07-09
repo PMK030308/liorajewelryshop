@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Star, ChevronDown } from 'lucide-react';
+import { Star, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { Product } from '../types';
 
 interface Review {
@@ -153,7 +153,7 @@ export default function ReviewsSection({ product }: { product: Product }) {
                       <div className="flex flex-wrap items-baseline gap-2">
                         <span className="font-semibold text-ink text-sm">{r.name}</span>
                         {r.verified && (
-                          <span className="text-[10px] text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded font-semibold">✓ Đã mua hàng</span>
+                          <span className="text-[10px] text-green-700 bg-green-50 border border-green-200 px-1.5 py-0.5 rounded font-semibold inline-flex items-center gap-1"><CheckCircle2 size={11} strokeWidth={2} /> Đã mua hàng</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-0.5">

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
+import { hasSupabase } from '../lib/supabase';
+import { signUp } from '../lib/auth';
 
 export default function RegisterPage() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -14,17 +16,31 @@ export default function RegisterPage() {
     if (state.user) navigate(state.user.role === 'admin' ? '/admin/dashboard' : '/account');
   }, [state.user]);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr('');
     const trimmed = email.trim().toLowerCase();
+    if (password.length < 6) { setErr('Mật khẩu cần tối thiểu 6 ký tự.'); return; }
+    if (password !== confirm) { setErr('Mật khẩu xác nhận không khớp.'); return; }
+
+    // Backend thật (Supabase Auth)
+    if (hasSupabase) {
+      try {
+        const user = await signUp(name.trim(), trimmed, password, phone.trim() || undefined);
+        dispatch({ type: 'LOGIN', payload: user });
+        showToast('🎉 Đăng ký thành công!');
+        setTimeout(() => navigate('/account'), 200);
+      } catch (err) {
+        setErr((err as Error).message || 'Đăng ký thất bại.');
+      }
+      return;
+    }
+
+    // Fallback offline (demo localStorage)
     if (state.users.find(u => u.email.toLowerCase() === trimmed)) {
       setErr('Email này đã được đăng ký.');
       return;
     }
-    if (password.length < 6) { setErr('Mật khẩu cần tối thiểu 6 ký tự.'); return; }
-    if (password !== confirm) { setErr('Mật khẩu xác nhận không khớp.'); return; }
-
     const user = {
       id: 'u-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
       email: trimmed,
@@ -34,7 +50,6 @@ export default function RegisterPage() {
       role: 'customer' as const,
       createdAt: Date.now(),
     };
-
     dispatch({ type: 'REGISTER', payload: user });
     showToast('🎉 Đăng ký thành công!');
     setTimeout(() => navigate('/account'), 200);

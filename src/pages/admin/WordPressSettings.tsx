@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import AdminLayout from './AdminLayout';
 import { getWordPressConfig, saveWordPressConfig, fetchWordPressPosts, fetchWooCommerceProducts, WordPressConfig } from '../../utils/wordpressService';
-import { CheckCircle2, XCircle, RefreshCw, Save, HelpCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, RefreshCw, Save, HelpCircle, Lightbulb } from 'lucide-react';
 
 export default function WordPressSettings() {
   const { showToast, navigate } = useStore();
@@ -231,7 +231,7 @@ export default function WordPressSettings() {
           </div>
 
           <div className="bg-brand-50 border border-brand-200 rounded-xl p-5 space-y-2.5">
-            <h4 className="font-bold text-xs uppercase text-brand-700 tracking-wider">💡 Hướng dẫn nhanh</h4>
+            <h4 className="font-bold text-xs uppercase text-brand-700 tracking-wider inline-flex items-center gap-1.5"><Lightbulb size={13} strokeWidth={2} /> Hướng dẫn nhanh</h4>
             <ol className="list-decimal pl-4 text-[11px] text-ink2 space-y-1.5 leading-relaxed">
               <li>Cài đặt WordPress và plugin <strong>WooCommerce</strong>.</li>
               <li>Đi tới <strong>WooCommerce &gt; Cấu hình &gt; Nâng cao &gt; REST API</strong> bấm Tạo Key.</li>

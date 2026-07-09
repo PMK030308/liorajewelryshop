@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShoppingCart, Check, X } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import Shapes from '../data/shapes';
 import { fmt } from '../data';
@@ -48,7 +49,7 @@ export default function CartDrawer() {
                     Mua thêm <b className="text-brand-700">{fmt(remaining)}</b> để được <b className="text-brand-700">miễn phí vận chuyển</b>
                   </div>
                 ) : (
-                  <div className="text-green-700 mb-1.5 font-semibold">✓ Đơn hàng của bạn được miễn phí vận chuyển!</div>
+                  <div className="text-green-700 mb-1.5 font-semibold flex items-center gap-1"><Check size={14} strokeWidth={2.4} /> Đơn hàng của bạn được miễn phí vận chuyển!</div>
                 )}
                 <div className="h-1.5 bg-rule rounded-full overflow-hidden">
                   <div
@@ -64,7 +65,7 @@ export default function CartDrawer() {
         <div className="flex-1 overflow-y-auto no-scrollbar">
           {cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center text-center px-6 py-16 h-full">
-              <div className="text-6xl mb-5">🛒</div>
+              <ShoppingCart size={56} strokeWidth={1.2} className="mb-5 text-mute" />
               <h3 className="font-bold text-lg mb-2">Giỏ hàng trống</h3>
               <p className="text-ink2 mb-6 text-sm">Hãy chọn sản phẩm yêu thích nhé!</p>
               <button className="btn-pink" onClick={() => { close(); navigate('/shop'); }}>Khám phá →</button>
@@ -97,7 +98,7 @@ export default function CartDrawer() {
                         </div>
                         <div className="font-bold text-brand-500">{fmt(it.price * it.qty)}</div>
                       </div>
-                      <button className="text-xs text-mute hover:text-brand-500 mt-2" onClick={() => removeItem(it.cartId)}>✕ Xoá</button>
+                      <button className="text-xs text-mute hover:text-brand-500 mt-2 inline-flex items-center gap-1" onClick={() => removeItem(it.cartId)}><X size={12} strokeWidth={2} /> Xoá</button>
                     </div>
                   </div>
                 );

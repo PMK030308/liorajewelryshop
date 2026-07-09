@@ -3,6 +3,8 @@ import { Edit3, Plus, Save, Trash2 } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { useStore } from '../../store/useStore';
 import { NewsArticle } from '../../types';
+import ImageInput from '../../components/admin/ImageInput';
+import { PageHeader, ConfirmDialog, inputCls, labelCls } from '../../components/admin/ui';
 
 function uid(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -12,13 +14,13 @@ function htmlExcerpt(html: string) {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180);
 }
 
-const inputCls = 'w-full text-sm px-3 py-2 border border-rule rounded-lg focus:outline-none focus:border-brand-500 bg-white';
-const labelCls = 'block text-xs font-bold uppercase text-mute mb-1.5';
-
 export default function AdminNews() {
   const { state, dispatch, showToast } = useStore();
   const [draft, setDraft] = useState(state.siteContent.newsArticles);
   const [selectedId, setSelectedId] = useState<string>(draft[0]?.id || '');
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
+  const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(state.siteContent.newsArticles), [draft, state.siteContent.newsArticles]);
 
   const selectedPost = useMemo(
     () => draft.find(post => post.id === selectedId) || draft[0],
@@ -37,8 +39,8 @@ export default function AdminNews() {
       title: 'Bài Viết Mới',
       excerpt: 'Tóm tắt bài viết...',
       content: '<p>Nội dung chuẩn SEO...</p>',
-      tint: '#fff8fa',
-      accent: '#c96b8d',
+      tint: '#fff7f9',
+      accent: '#f472a0',
     };
     setDraft(current => [post, ...current]);
     setSelectedId(id);
@@ -60,17 +62,25 @@ export default function AdminNews() {
     showToast('Đã lưu bài viết (SEO)');
   };
 
+  const confirmDelete = () => {
+    if (!pendingDelete) return;
+    deletePost(pendingDelete);
+    showToast('Đã xóa bài viết');
+    setPendingDelete(null);
+  };
+
   return (
-    <AdminLayout active="news">
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-brand-700">Trang Viết SEO (Tin Tức)</h1>
-          <p className="text-sm text-mute">Quản lý các bài viết Tin tức & Blog, hỗ trợ SEO dễ dàng hơn.</p>
-        </div>
-        <button onClick={save} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-700 text-white text-sm font-semibold hover:bg-brand-850">
-          <Save size={16} /> Lưu thay đổi
-        </button>
-      </header>
+    <AdminLayout active="news" dirty={dirty}>
+      <PageHeader
+        title="Trang Viết SEO (Tin Tức)"
+        subtitle="Quản lý các bài viết Tin tức & Blog, hỗ trợ SEO dễ dàng hơn."
+        dirty={dirty}
+        actions={
+          <button onClick={save} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-700 text-white text-sm font-semibold hover:bg-brand-800">
+            <Save size={16} /> Lưu thay đổi
+          </button>
+        }
+      />
 
       <div className="bg-white border border-rule rounded-lg p-5">
         <div className="grid xl:grid-cols-[280px_1fr] gap-6">
@@ -105,7 +115,7 @@ export default function AdminNews() {
                   <Edit3 size={18} className="text-brand-500" />
                   Chỉnh sửa bài viết
                 </h3>
-                <button onClick={() => selectedPost.id && deletePost(selectedPost.id)} className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-700">
+                <button onClick={() => selectedPost.id && setPendingDelete(selectedPost.id)} className="inline-flex items-center gap-1.5 text-sm font-semibold text-red-500 hover:text-red-700">
                   <Trash2 size={16} /> Xóa bài này
                 </button>
               </div>
@@ -129,12 +139,11 @@ export default function AdminNews() {
                   />
                 </div>
                 <div>
-                  <label className={labelCls}>URL Ảnh Đại Diện (Thumbnail)</label>
-                  <input
-                    value={selectedPost.image || ''}
-                    onChange={e => updatePost(selectedPost.id || '', { image: e.target.value })}
-                    className={inputCls}
-                    placeholder="https://..."
+                  <ImageInput
+                    label="Ảnh đại diện (thumbnail)"
+                    value={selectedPost.image}
+                    onChange={v => updatePost(selectedPost.id || '', { image: v })}
+                    hint="Tải lên từ máy hoặc dán link ảnh"
                   />
                 </div>
                 <div className="md:col-span-2">
@@ -171,6 +180,16 @@ export default function AdminNews() {
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={!!pendingDelete}
+        title="Xóa bài viết?"
+        tone="red"
+        message="Xóa bài viết này? Hành động này không thể hoàn tác (nhấn Lưu thay đổi để áp dụng)."
+        confirmLabel="Xóa"
+        onConfirm={confirmDelete}
+        onClose={() => setPendingDelete(null)}
+      />
     </AdminLayout>
   );
 }

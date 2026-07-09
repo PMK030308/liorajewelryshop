@@ -30,7 +30,7 @@ export default function WishlistPage() {
       <header className="flex flex-wrap items-center justify-between gap-3 mb-6 md:mb-8">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-brand-700 flex items-center gap-2.5">
-            <Heart size={28} strokeWidth={1.8} fill="#c96b8d" stroke="#c96b8d" />
+            <Heart size={28} strokeWidth={1.8} fill="#f472a0" stroke="#f472a0" />
             Sản phẩm yêu thích
           </h1>
           <p className="text-sm text-mute mt-1">
@@ -64,7 +64,7 @@ export default function WishlistPage() {
           <Heart size={48} strokeWidth={1.4} className="mx-auto text-brand-200 mb-4" />
           <h2 className="text-lg font-semibold mb-2 text-brand-700">Chưa có sản phẩm yêu thích</h2>
           <p className="text-sm text-ink2 mb-6 max-w-md mx-auto">
-            Bấm vào biểu tượng trái tim ❤️ trên mỗi sản phẩm để lưu vào đây. Bạn có thể chia sẻ link wishlist cho người thân để được tặng đúng món bạn thích.
+            Bấm vào biểu tượng trái tim <Heart size={13} strokeWidth={2} className="inline text-brand-500 align-middle" /> trên mỗi sản phẩm để lưu vào đây. Bạn có thể chia sẻ link wishlist cho người thân để được tặng đúng món bạn thích.
           </p>
           <button
             onClick={() => navigate('/shop')}

@@ -51,8 +51,36 @@ export default function ShopPage() {
     return l;
   }, [products, state.filter, state.sort, priceBuckets]);
 
-  const activeCat = CATEGORIES.find(c => c.slug === state.filter);
-  const title = activeCat ? activeCat.label : 'Tất Cả Sản Phẩm';
+  const navCategories = state.siteContent.navCategories || [
+    { id: 'all-p', label: 'Tất Cả Sản Phẩm', slug: 'all' },
+    { id: 'bst-p', label: 'Bộ Sưu Tập (BST)', slug: 'bst', sub: [
+      { label: 'Hành Trình Nở Hoa', slug: 'bst-hanh-trinh' },
+      { label: 'Xuân Hạ Thu Đông', slug: 'bst-xuan-ha-thu-dong' },
+    ]},
+    { id: 'diy-p', label: 'Phụ Kiện DIY', slug: 'diy', sub: [
+      { label: 'Charm Titan', slug: 'charm-titan' },
+      { label: 'Charm Đá Năng Lượng', slug: 'charm-da' },
+      { label: 'Dây Vòng', slug: 'day-vong' },
+      { label: 'Phụ Kiện Khác', slug: 'phu-kien-khac' },
+    ]},
+    { id: 'vt-p', label: 'Vòng Tay Đơn', slug: 'vong-tay', sub: [
+      { label: 'Vòng Tay Đá Năng Lượng', slug: 'vong-tay-da' },
+      { label: 'Vòng Tay Charm', slug: 'vong-tay-charm' },
+    ]},
+  ];
+
+  const labelOf = (slug: string): string => {
+    if (slug === 'all') return 'Tất Cả Sản Phẩm';
+    for (const c of navCategories) {
+      if (c.slug === slug) return c.label;
+      for (const s of c.sub ?? []) {
+        if (s.slug === slug) return s.label;
+      }
+    }
+    return slug;
+  };
+
+  const title = labelOf(state.filter);
 
   const setFilterNav = (slug: string) => {
     dispatch({ type: 'SET_FILTER', payload: slug });
@@ -65,23 +93,48 @@ export default function ShopPage() {
 
   const activeFilterCount = (state.filter !== 'all' ? 1 : 0) + priceBuckets.length;
 
-  const quickFilters = ['all','bst','diy','vong-tay'];
+  const quickFilters = state.siteContent.shopQuickFilters || ['all', 'bst', 'diy', 'vong-tay'];
 
   const FilterSidebar = (
     <>
       <div className="bg-soft rounded-2xl p-5">
         <h3 className="font-bold mb-3 text-sm uppercase tracking-wider">Danh mục</h3>
-        <ul className="space-y-1.5">
-          {CATEGORIES.map(c => (
-            <li key={c.slug}>
-              <button
-                className={`text-left text-sm w-full py-1.5 hover:text-brand-500 ${state.filter === c.slug ? 'text-brand-500 font-semibold' : 'text-ink2'}`}
-                onClick={() => { setFilterNav(c.slug); setFiltersOpen(false); }}
-              >
-                {state.filter === c.slug ? '▸ ' : ''}{c.label}
-              </button>
-            </li>
-          ))}
+        <ul className="space-y-2">
+          {navCategories.map(c => {
+            const hasSub = c.sub && c.sub.length > 0;
+            const isParentActive = state.filter === c.slug;
+            return (
+              <li key={c.id || c.slug} className="space-y-1">
+                <button
+                  className={`text-left text-sm w-full py-1 hover:text-brand-500 flex items-center justify-between ${
+                    isParentActive ? 'text-brand-500 font-semibold' : 'text-ink2 font-medium'
+                  }`}
+                  onClick={() => { setFilterNav(c.slug); setFiltersOpen(false); }}
+                >
+                  <span>{isParentActive ? '▸ ' : ''}{c.label}</span>
+                </button>
+                {hasSub && (
+                  <ul className="pl-4 border-l border-brand-100 space-y-1 mt-1">
+                    {c.sub!.map(s => {
+                      const isSubActive = state.filter === s.slug;
+                      return (
+                        <li key={s.slug}>
+                          <button
+                            className={`text-left text-xs w-full py-1 hover:text-brand-500 ${
+                              isSubActive ? 'text-brand-500 font-semibold' : 'text-mute'
+                            }`}
+                            onClick={() => { setFilterNav(s.slug); setFiltersOpen(false); }}
+                          >
+                            {s.label}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </div>
 
@@ -168,8 +221,7 @@ export default function ShopPage() {
             <div className="hidden lg:flex bg-soft rounded-xl p-3 md:p-4 mb-5 sm:items-center justify-between gap-3">
               <div className="flex gap-2 flex-wrap overflow-x-auto">
                 {quickFilters.map(s => {
-                  const c = CATEGORIES.find(x => x.slug === s);
-                const label = c ? c.label : s;
+                  const label = labelOf(s);
                   return (
                     <button key={s} className={`chip ${state.filter === s ? 'active' : ''}`} onClick={() => setFilterNav(s)}>{label}</button>
                   );
@@ -192,8 +244,7 @@ export default function ShopPage() {
             {/* Mobile quick chips */}
             <div className="lg:hidden flex gap-2 overflow-x-auto no-scrollbar pb-3 -mx-4 px-4 mb-3">
               {quickFilters.map(s => {
-                const c = CATEGORIES.find(x => x.slug === s);
-                const label = c ? c.label : s;
+                const label = labelOf(s);
                 return (
                   <button key={s} className={`chip flex-shrink-0 ${state.filter === s ? 'active' : ''}`} onClick={() => setFilterNav(s)}>{label}</button>
                 );

@@ -20,7 +20,8 @@ const STATUS_LABEL = {
 const PAYMENT_LABEL = {
   cod: 'Thanh toán khi nhận hàng (COD)',
   bank: 'Chuyển khoản ngân hàng',
-  momo: 'Ví điện tử MoMo',
+  momo: 'Ví MoMo',
+  card: 'Thẻ ngân hàng (Visa/Mastercard/JCB)',
 } as const;
 
 const formatDate = (ts: number) =>

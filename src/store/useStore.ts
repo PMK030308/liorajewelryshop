@@ -2,6 +2,9 @@ import { createContext, useContext, useReducer, useEffect, useCallback } from 'r
 import type { Dispatch } from 'react';
 import { CartItem, Order, OrderStatus, Product, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
+import { hasSupabase } from '../lib/supabase';
+import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent } from '../lib/repo';
+import { getCurrentUser, onAuthChange } from '../lib/auth';
 
 export interface State {
   route: string;
@@ -285,6 +288,28 @@ export function useStoreSetup() {
     }
   }, []);
 
+  // ---- Bootstrap từ Supabase (sản phẩm + nội dung site) ----
+  useEffect(() => {
+    if (!hasSupabase) return; // chưa cấu hình → giữ seed/offline
+    fetchProducts()
+      .then(list => { if (list.length) dispatch({ type: 'SET_PRODUCTS', payload: list }); })
+      .catch(err => console.error('[Liora] load products từ Supabase thất bại, giữ seed:', err));
+    fetchSiteContent()
+      .then(sc => dispatch({ type: 'SET_SITE_CONTENT', payload: sc }))
+      .catch(err => console.error('[Liora] load site_content từ Supabase thất bại, giữ mặc định:', err));
+  }, []);
+
+  // ---- Auth: khôi phục session + lắng nghe thay đổi ----
+  useEffect(() => {
+    if (!hasSupabase) return;
+    getCurrentUser().then(u => { if (u) dispatch({ type: 'LOGIN', payload: u }); });
+    const unsub = onAuthChange(u => {
+      if (u) dispatch({ type: 'LOGIN', payload: u });
+      else dispatch({ type: 'LOGOUT' });
+    });
+    return unsub;
+  }, []);
+
   useEffect(() => {
     localStorage.setItem('liora_cart', JSON.stringify(state.cart));
   }, [state.cart]);
@@ -306,17 +331,23 @@ export function useStoreSetup() {
   }, [state.orders]);
 
   useEffect(() => {
-    // Only save to local storage if WordPress is disabled.
-    // If WooCommerce is active, we don't want to overwrite WordPress sync with local cache.
+    // Cache offline (luôn giữ để app chạy được khi Supabase chưa xong)
     const config = getWordPressConfig();
     if (!config.useWordPress) {
       localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
     }
-  }, [state.products]);
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS)
+    if (hasSupabase && state.user?.role === 'admin') {
+      syncProducts(state.products);
+    }
+  }, [state.products, state.user]);
 
   useEffect(() => {
     localStorage.setItem('liora_site_content_v2', JSON.stringify(state.siteContent));
-  }, [state.siteContent]);
+    if (hasSupabase && state.user?.role === 'admin') {
+      syncSiteContent(state.siteContent);
+    }
+  }, [state.siteContent, state.user]);
 
   useEffect(() => {
     document.body.style.overflow =
