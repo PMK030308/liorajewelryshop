@@ -324,7 +324,7 @@ export default function Header() {
           )}
 
           <div className="border-t border-rule px-5 py-3 text-[11px] text-mute">
-            <div className="font-semibold text-brand-700 mb-1">Hotline 0982 463 691</div>
+            <div className="font-semibold text-brand-700 mb-1">Hotline 0985 048 952</div>
             <div>9:00 – 21:00 hàng ngày</div>
           </div>
         </aside>

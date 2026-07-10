@@ -58,7 +58,7 @@ export default function TrackOrderPage() {
     : -1;
 
   return (
-    <main className="page container-x py-10 md:py-14 max-w-3xl min-h-[60vh]">
+    <main className="page container-x py-10 md:py-14 min-h-[60vh]">
       <header className="text-center mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-brand-700 mb-2 flex items-center justify-center gap-2">
           <Package size={28} strokeWidth={1.8} />
@@ -104,7 +104,7 @@ export default function TrackOrderPage() {
             Tra cứu đơn hàng
           </button>
           <p className="text-xs text-mute text-center pt-2">
-            Không tìm thấy đơn? Liên hệ hotline <a href="tel:0982463691" className="text-brand-500 font-semibold">0982 463 691</a>
+            Không tìm thấy đơn? Liên hệ hotline <a href="tel:0985048952" className="text-brand-500 font-semibold">0985 048 952</a>
           </p>
         </form>
       )}
@@ -122,7 +122,7 @@ export default function TrackOrderPage() {
               Tra cứu lại
             </button>
             <a
-              href="tel:0982463691"
+              href="tel:0985048952"
               className="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-md inline-flex items-center gap-2"
             >
               <Phone size={14} strokeWidth={2} />
@@ -150,11 +150,11 @@ export default function TrackOrderPage() {
             <div className="bg-white border border-rule rounded-lg shadow-card p-6">
               <h3 className="font-bold mb-5 text-brand-700">Trạng thái</h3>
               <div className="relative">
-                {/* Progress line */}
-                <div className="absolute left-4 right-4 top-5 h-0.5 bg-rule" />
+                {/* Progress line — căn giữa đúng tâm các vòng tròn (4 cột → 12.5% .. 87.5%) */}
+                <div className="absolute left-[12.5%] right-[12.5%] top-5 h-0.5 bg-rule" />
                 <div
-                  className="absolute left-4 top-5 h-0.5 bg-brand-700 transition-all duration-500"
-                  style={{ width: `calc(${currentStepIdx >= 0 ? (currentStepIdx / (STEPS.length - 1)) * 100 : 0}% - 0px)` }}
+                  className="absolute left-[12.5%] top-5 h-0.5 bg-brand-700 transition-all duration-500"
+                  style={{ width: `calc(${currentStepIdx >= 0 ? (currentStepIdx / (STEPS.length - 1)) * 75 : 0}%)` }}
                 />
                 <div className="relative grid grid-cols-4 gap-2">
                   {STEPS.map((step, i) => {
@@ -228,7 +228,7 @@ export default function TrackOrderPage() {
                 Xem & in hóa đơn
               </button>
               <a
-                href="tel:0982463691"
+                href="tel:0985048952"
                 className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded inline-flex items-center gap-1.5 transition-colors"
               >
                 <Phone size={12} strokeWidth={2} />

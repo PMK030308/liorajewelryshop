@@ -66,7 +66,7 @@ export const BRAND_IMAGES = {
 };
 
 export const NEWS_ARTICLES: NewsArticle[] = [
-  { date:'06/07/2026', title:'BST Hành Trình Nở Hoa: Khởi Đầu Mới Cùng Liora', excerpt:'Bộ sưu tập Hành Trình Nở Hoa mang đến nguồn cảm hứng bất tận, đại diện cho những khởi đầu tươi sáng và sức sống mãnh liệt. Khám phá ngay những thiết kế độc quyền chỉ có tại Liora Jewelry.', tint:'#fff1f2', accent:'#f472a0' },
+  { date:'06/07/2026', title:'BST Hành Trình Nở Hoa: Khởi Đầu Mới Cùng Liora', excerpt:'Bộ sưu tập Hành Trình Nở Hoa mang đến nguồn cảm hứng bất tận, đại diện cho những khởi đầu tươi sáng và sức sống mãnh liệt. Khám phá ngay những thiết kế độc quyền chỉ có tại Liora Jewelry.', tint:'#fff1f2', accent:'#f472a0', image: BRAND_IMAGES.aboutLifestyle },
 
   // ============================================================
   // 5 BÀI VIẾT SEO SẢN PHẨM
@@ -388,9 +388,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   settings: {
     brandName: 'LIORAJEWELRY',
     tagline: 'Lap Lanh em xinh',
-    address: '159 Ly Thuong Kiet, Quang Trung, Ha Dong, Ha Noi',
+    address: 'Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai',
     openHours: 'Mo cua: 9:00 - 21:00 hang ngay',
-    hotline: '0982 463 691',
+    hotline: '0985048952',
+    email: 'liorajewelry10@gmail.com',
     facebookUrl: 'https://www.facebook.com/liorajewelry.vn',
     qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.facebook.com/liorajewelry.vn&color=8e3051&bgcolor=FDF4F6',
   },

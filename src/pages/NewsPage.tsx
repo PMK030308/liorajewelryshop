@@ -187,8 +187,8 @@ export default function NewsPage() {
             >
               <div 
                 className="photo aspect-[16/10] bg-cover bg-center" 
-                style={n.image 
-                  ? { backgroundImage: `url(${n.image})` } 
+                style={n.image
+                  ? { backgroundImage: `url("${n.image.replace(/"/g, '\\"')}")` }
                   : { backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${n.tint} 75%, ${n.tint})` } as React.CSSProperties
                 }
               >

@@ -84,9 +84,9 @@ export default function InvoiceModal({ order, onClose }: Props) {
               <img src="/logoliora2.jpg" alt="LIORA" className="h-12 w-auto object-contain mix-blend-multiply" />
               <div className="text-[11px] leading-snug">
                 <div className="text-mute uppercase tracking-wider">Liorajewelry.shop</div>
-                <div className="text-ink">159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</div>
-                <div className="text-ink">Hotline: 0982 463 691</div>
-                <div className="text-ink">Email: hello@liorajewelry.shop</div>
+                <div className="text-ink">Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai</div>
+                <div className="text-ink">Hotline: 0985 048 952</div>
+                <div className="text-ink">Email: liorajewelry10@gmail.com</div>
                 <div className="text-mute mt-1">MST: 8662980683-001</div>
               </div>
             </div>

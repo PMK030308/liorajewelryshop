@@ -18,9 +18,9 @@ export default function ContactPage() {
         <div>
           <h3 className="font-bold text-lg mb-4">Thông tin cửa hàng</h3>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><MapPin size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Địa chỉ</div><div className="text-ink2">159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</div></div></li>
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Phone size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Hotline</div><a href="tel:0982463691" className="text-brand-500 hover:underline">0982463691</a></div></li>
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Mail size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Email</div><a href="mailto:hello@liorajewelry.shop" className="text-brand-500 hover:underline">hello@liorajewelry.shop</a></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><MapPin size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Địa chỉ</div><div className="text-ink2">Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai</div></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Phone size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Hotline</div><a href="tel:0985048952" className="text-brand-500 hover:underline">0985 048 952</a></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Mail size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Email</div><a href="mailto:liorajewelry10@gmail.com" className="text-brand-500 hover:underline">liorajewelry10@gmail.com</a></div></li>
             <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Clock size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Giờ làm việc</div><div className="text-ink2">Thứ 2 – CN: 9:00 – 22:00</div></div></li>
           </ul>
         </div>

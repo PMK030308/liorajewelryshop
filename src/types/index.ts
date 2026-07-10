@@ -158,6 +158,7 @@ export interface SiteSettings {
   address: string;
   openHours: string;
   hotline: string;
+  email: string;
   facebookUrl: string;
   qrUrl: string;
 }

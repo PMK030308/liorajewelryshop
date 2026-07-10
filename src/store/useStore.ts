@@ -107,7 +107,7 @@ const initProducts = (): Product[] => {
 // Bump khi thay đổi nội dung seed (bài viết SEO, hero, pages...).
 // Khi version khác cache, các trường seed sẽ được làm mới từ default
 // (giữ nguyên tuỳ chỉnh admin ở các trường khác).
-const CONTENT_SEED_VERSION = 2;
+const CONTENT_SEED_VERSION = 3;
 const SEED_VERSION_KEY = 'liora_content_seed_v';
 // Key lưu trữ nội dung site (bump khi cần ép làm mới toàn bộ cache).
 const SITE_CONTENT_KEY = 'liora_site_content_v3';

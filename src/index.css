@@ -23,7 +23,9 @@
 }
 
 @layer components {
-  .container-x { @apply max-w-[1200px] mx-auto px-4 md:px-6; }
+  /* Full-width edge-to-edge: nội dung trải lấp đầy chiều ngang mọi màn hình,
+     padding co theo cỡ màn để chữ/nút không dính mép. */
+  .container-x { @apply w-full px-4 sm:px-6 lg:px-10 xl:px-16; }
   .section-y   { @apply py-16 md:py-20; }
 
   /* Photo placeholder */

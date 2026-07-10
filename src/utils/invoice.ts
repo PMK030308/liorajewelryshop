@@ -193,7 +193,7 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   y += 12;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.text(vi('159 Ly Thuong Kiet, Quang Trung, Ha Dong, Ha Noi · Hotline 0982 463 691 · hello@liorajewelry.shop'), W / 2, y, { align: 'center' });
+  doc.text(vi('To 19, KP Mieu, Phuong Phuoc Tan, TP. Bien Hoa, Dong Nai · Hotline 0985 048 952 · liorajewelry10@gmail.com'), W / 2, y, { align: 'center' });
 
   if (opts.autoPrint) {
     // Open in a new tab and trigger print

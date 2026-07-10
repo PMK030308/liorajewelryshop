@@ -56,25 +56,25 @@ export default function Footer() {
       <div className="container-x grid md:grid-cols-12 gap-10">
         {/* Col 1 — Brand + contact */}
         <div className="md:col-span-4">
-          <LogoMark
-            href="#/"
+          <img 
+            src="/logotrang.jpg" 
+            alt="LIORA Jewelry" 
+            className="h-14 w-auto object-contain mb-4 hover:opacity-90 transition-opacity cursor-pointer"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            size={56}
-            className="mb-4 text-white hover:opacity-90 transition-opacity"
           />
           <p className="text-sm leading-relaxed mb-5 text-white/75">Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.</p>
           <ul className="space-y-2.5 text-sm text-white/85">
             <li className="flex items-start gap-2.5">
               <MapPin size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
-              <span>159 Lý Thường Kiệt, Quang Trung, Hà Đông, Hà Nội</span>
+              <span>Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai</span>
             </li>
             <li className="flex items-start gap-2.5">
               <Phone size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
-              <a href="tel:0982463691" className="hover:text-white">0982 463 691</a>
+              <a href="tel:0985048952" className="hover:text-white">0985 048 952</a>
             </li>
             <li className="flex items-start gap-2.5">
               <Mail size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
-              <a href="mailto:hello@liorajewelry.shop" className="hover:text-white">hello@liorajewelry.shop</a>
+              <a href="mailto:liorajewelry10@gmail.com" className="hover:text-white">liorajewelry10@gmail.com</a>
             </li>
           </ul>
         </div>

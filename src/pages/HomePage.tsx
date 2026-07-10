@@ -213,6 +213,114 @@ function HeroSlideItem({ idx }: { idx: number }) {
   );
 }
 
+const BST_COLLECTIONS = [
+  {
+    id: 'bst-hanh-trinh',
+    title: 'Hành Trình Nở Hoa',
+    subtitle: 'Mỗi khoảnh khắc đều rạng ngời',
+    image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - NẮNG_Vòng tay hợp kim mạ bạc.jpg',
+    gradient: 'from-rose-600/80 via-pink-500/60 to-transparent',
+  },
+  {
+    id: 'bst-xuan-ha-thu-dong',
+    title: 'Xuân Hạ Thu Đông',
+    subtitle: 'Bốn mùa, một câu chuyện',
+    image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - RỰC_Vòng tay hợp kim mạ bạc.jpg',
+    gradient: 'from-amber-600/80 via-orange-500/60 to-transparent',
+  },
+];
+
+function BstShowcase({ setFilterNav }: { setFilterNav: (slug: string) => void }) {
+  const { state } = useStore();
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const activeProducts = activeId
+    ? state.products.filter(p => p.cat === 'bst' && p.subcat === activeId)
+    : [];
+
+  return (
+    <div>
+      {/* 2 BST Cards */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {BST_COLLECTIONS.map((bst) => {
+          const isActive = activeId === bst.id;
+          return (
+            <button
+              key={bst.id}
+              onClick={() => setActiveId(isActive ? null : bst.id)}
+              className={`group relative block w-full text-left rounded-xl overflow-hidden transition-all duration-300 ${
+                isActive
+                  ? 'ring-3 ring-brand-500 shadow-[0_8px_32px_rgba(244,114,160,0.25)]'
+                  : 'shadow-card hover:shadow-cardHover hover:scale-[1.01]'
+              }`}
+            >
+              <div className="aspect-[16/9] relative overflow-hidden">
+                <img
+                  src={bst.image}
+                  alt={bst.title}
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                {/* Gradient overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${bst.gradient}`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                {/* Text content */}
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7">
+                  <div className="text-white/80 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium mb-1.5">Bộ Sưu Tập</div>
+                  <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-1.5 drop-shadow-md">{bst.title}</h3>
+                  <p className="text-white/85 text-xs md:text-sm font-light italic">{bst.subtitle}</p>
+                  <div className={`inline-flex items-center gap-1.5 mt-3 text-white text-xs font-semibold uppercase tracking-wider transition-all ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}>
+                    <span>{isActive ? 'Thu gọn' : 'Xem sản phẩm'}</span>
+                    <svg
+                      width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                      className={`transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}
+                    >
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Expanded Products */}
+      <AnimatePresence mode="wait">
+        {activeId && activeProducts.length > 0 && (
+          <motion.div
+            key={activeId}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.4, ease: [0.2, 0.6, 0.2, 1] }}
+            className="overflow-hidden"
+          >
+            <div className="pt-8">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-bold text-brand-700">
+                  BST {BST_COLLECTIONS.find(b => b.id === activeId)?.title}
+                  <span className="text-sm font-normal text-mute ml-2">({activeProducts.length} sản phẩm)</span>
+                </h3>
+                <button
+                  onClick={() => setFilterNav(activeId)}
+                  className="text-sm text-brand-500 hover:text-brand-700 font-semibold inline-flex items-center gap-1 transition-colors"
+                >
+                  Xem tất cả
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                </button>
+              </div>
+              <ProductGrid products={activeProducts} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const { state, dispatch, navigate } = useStore();
   const slideCount = state.siteContent.heroSlides.length || HERO_SLIDES.length;
@@ -259,7 +367,7 @@ export default function HomePage() {
     'bst': 'bracelet', 'vong-tay': 'bracelet', 'diy': 'star',
   };
 
-  const bstProducts = state.products.filter(p => p.cat === 'bst').slice(0, 12);
+
   const bestSellerProducts = state.products.filter(p => p.cat === 'vong-tay').slice(0, 12);
 
   const trustBadges: { icon: React.ReactNode; t: string; s: string }[] = [
@@ -293,7 +401,7 @@ export default function HomePage() {
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92Z"/>
         </svg>
       ),
-      t: 'Đặt hàng trực tuyến', s: 'Hotline 0982 463 691',
+      t: 'Đặt hàng trực tuyến', s: 'Hotline 0985 048 952',
     },
   ];
 
@@ -338,10 +446,7 @@ export default function HomePage() {
           </div>
         </Reveal>
         <Reveal delay={0.1}>
-          <ProductGrid products={bstProducts} />
-          <div className="text-center mt-10">
-            <a href="#/shop" onClick={(e) => { e.preventDefault(); setFilterNav('bst'); }} className="btn-outline">KHÁM PHÁ NGAY →</a>
-          </div>
+          <BstShowcase setFilterNav={setFilterNav} />
         </Reveal>
       </section>
 
@@ -447,8 +552,8 @@ export default function HomePage() {
               <div className="overflow-hidden bg-soft">
                 <div 
                   className="photo aspect-[16/10] bg-cover bg-center" 
-                  style={n.image 
-                    ? { backgroundImage: `url(${n.image})` } 
+                  style={n.image
+                    ? { backgroundImage: `url("${n.image.replace(/"/g, '\\"')}")` }
                     : { backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${n.tint} 75%, ${n.tint})` } as React.CSSProperties
                   }
                 >
