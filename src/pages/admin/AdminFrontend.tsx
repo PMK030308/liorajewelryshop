@@ -1,16 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   ChevronDown, ChevronRight, ChevronUp, GripVertical,
-  Image, LayoutList, Menu, Minus, Plus, RefreshCw, Save, Trash2, X,
+  Image, LayoutList, Menu, Minus, Plus, RefreshCw, Save, Trash2, Wand2, X,
 } from 'lucide-react';
 import AdminLayout from './AdminLayout';
 import { useStore } from '../../store/useStore';
-import { DEFAULT_SITE_CONTENT } from '../../data';
-import { CategoryTile, NavCategory, NavSubItem, SiteContent } from '../../types';
+import { DEFAULT_FOOTER, DEFAULT_SITE_CONTENT } from '../../data';
+import { removeImageBackground } from '../../utils/removeBackground';
+import { CategoryTile, FooterContent, FooterLink, NavCategory, NavSubItem, SiteContent } from '../../types';
 import ImageInput from '../../components/admin/ImageInput';
 import { PageHeader, inputCls, labelCls } from '../../components/admin/ui';
 
-type Tab = 'hero' | 'tiles' | 'nav' | 'shop';
+type Tab = 'hero' | 'tiles' | 'nav' | 'shop' | 'footer';
 
 const DEFAULT_NAV: NavCategory[] = [
   { id: 'n1', label: 'Tất Cả Sản Phẩm', slug: 'all' },
@@ -353,6 +354,189 @@ function ShopTab({ draft, setDraft }: { draft: SiteContent; setDraft: React.Disp
   );
 }
 
+/* ─── Section: Footer ─── */
+function FooterLinksEditor({
+  title, links, onChange,
+}: {
+  title: string;
+  links: FooterLink[];
+  onChange: (v: FooterLink[]) => void;
+}) {
+  const update = (i: number, patch: Partial<FooterLink>) =>
+    onChange(links.map((l, idx) => idx === i ? { ...l, ...patch } : l));
+  const add = () => onChange([...links, { label: 'Liên kết mới' }]);
+  const del = (i: number) => onChange(links.filter((_, idx) => idx !== i));
+  const move = (i: number, dir: -1 | 1) => {
+    const j = i + dir;
+    if (j < 0 || j >= links.length) return;
+    const a = [...links];
+    [a[i], a[j]] = [a[j], a[i]];
+    onChange(a);
+  };
+
+  return (
+    <div className="border border-rule rounded-xl p-4">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-semibold text-brand-700 text-sm">{title}</h3>
+        <button onClick={add}
+          className="inline-flex items-center gap-1 text-xs text-brand-600 hover:text-brand-800 font-semibold border border-brand-200 rounded px-2 py-1">
+          <Plus size={12}/> Thêm liên kết
+        </button>
+      </div>
+      <div className="space-y-2">
+        {links.map((l, i) => (
+          <div key={i} className="flex items-center gap-2 bg-brand-50/40 rounded-lg px-3 py-2">
+            <div className="flex flex-col gap-0.5 mr-0.5">
+              <button onClick={() => move(i, -1)} disabled={i===0} className="text-mute hover:text-brand-700 disabled:opacity-30"><ChevronUp size={12}/></button>
+              <button onClick={() => move(i, 1)} disabled={i===links.length-1} className="text-mute hover:text-brand-700 disabled:opacity-30"><ChevronDown size={12}/></button>
+            </div>
+            <input value={l.label} onChange={e => update(i, { label: e.target.value })}
+              className={inputCls} placeholder="Tên hiển thị" />
+            <input value={l.nav ?? ''} onChange={e => update(i, { nav: e.target.value })}
+              className={inputCls} placeholder="Route nội bộ (/about) — bỏ trống nếu dùng href" />
+            <input value={l.href ?? ''} onChange={e => update(i, { href: e.target.value })}
+              className={inputCls} placeholder="href (url)" />
+            <button onClick={() => del(i)} className="text-red-400 hover:text-red-600 flex-shrink-0">
+              <Minus size={15}/>
+            </button>
+          </div>
+        ))}
+        {links.length === 0 && <p className="text-xs text-mute italic">Chưa có liên kết nào.</p>}
+      </div>
+    </div>
+  );
+}
+
+function FooterTab({ draft, setDraft }: { draft: SiteContent; setDraft: React.Dispatch<React.SetStateAction<SiteContent>> }) {
+  const { showToast } = useStore();
+  const footer: FooterContent = { ...DEFAULT_FOOTER, ...(draft.footer ?? {}) };
+  const set = (patch: Partial<FooterContent>) =>
+    setDraft(d => ({ ...d, footer: { ...DEFAULT_FOOTER, ...(d.footer ?? {}), ...patch } }));
+  const setSetting = (patch: Partial<SiteContent['settings']>) =>
+    setDraft(d => ({ ...d, settings: { ...d.settings, ...patch } }));
+
+  const [bgBusy, setBgBusy] = useState(false);
+  const [bgErr, setBgErr] = useState('');
+  const [tolerance, setTolerance] = useState(32);
+
+  const onRemoveBg = async () => {
+    setBgErr('');
+    if (!footer.logo) { setBgErr('Chưa có ảnh logo để tách nền.'); return; }
+    setBgBusy(true);
+    try {
+      const out = await removeImageBackground(footer.logo, tolerance);
+      set({ logo: out });
+      showToast('✅ Đã tách nền logo!');
+    } catch (e: any) {
+      setBgErr(e?.message || 'Tách nền thất bại.');
+    } finally {
+      setBgBusy(false);
+    }
+  };
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="font-bold text-brand-700 text-lg">Footer (Chân trang)</h2>
+        <p className="text-xs text-mute">Chỉnh sửa toàn bộ chân trang: logo, liên hệ, các cột liên kết, đăng ký nhận tin và mạng xã hội.</p>
+      </div>
+
+      {/* Brand + contact */}
+      <div className="border border-rule rounded-xl p-4 space-y-3">
+        <h3 className="font-semibold text-brand-700 text-sm">Cột thương hiệu & Liên hệ</h3>
+        <div className="grid md:grid-cols-[220px_1fr] gap-4">
+          <div className="space-y-3">
+            <ImageInput
+              label="Logo footer"
+              value={footer.logo}
+              onChange={v => set({ logo: v ?? '' })}
+              aspect="4/5"
+              hint="Logo trắng trên nền hồng. Tải lên hoặc dán URL."
+            />
+            {/* Tách nền logo */}
+            <div className="border border-rule rounded-lg p-3 bg-soft/60 space-y-2">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-brand-700">
+                <Wand2 size={13} /> Tách nền logo
+              </div>
+              <p className="text-[11px] text-mute leading-relaxed">
+                Xoá nền đồng nhất (trắng/hồng…) quanh logo, xuất PNG trong suốt. Tăng sai số nếu nền lệch màu nhiều.
+              </p>
+              <div>
+                <div className="flex items-center justify-between text-[11px] text-mute mb-1">
+                  <span>Sai số (độ nhạy)</span>
+                  <span className="font-mono">{tolerance}</span>
+                </div>
+                <input type="range" min={8} max={80} value={tolerance}
+                  onChange={e => setTolerance(Number(e.target.value))}
+                  className="w-full accent-brand-500" />
+              </div>
+              <button onClick={onRemoveBg} disabled={bgBusy || !footer.logo}
+                className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-brand-700 text-white text-xs font-semibold hover:bg-brand-800 disabled:opacity-50">
+                <Wand2 size={13}/> {bgBusy ? 'Đang xử lý…' : 'Tách nền'}
+              </button>
+              {bgErr && <p className="text-[11px] text-red-500">{bgErr}</p>}
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className={labelCls}>Mô tả ngắn dưới logo</label>
+              <textarea value={footer.brandDescription} onChange={e => set({ brandDescription: e.target.value })}
+                rows={3} className={inputCls} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Địa chỉ</label>
+                <input value={draft.settings.address} onChange={e => setSetting({ address: e.target.value })} className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Điện thoại</label>
+                <input value={draft.settings.hotline} onChange={e => setSetting({ hotline: e.target.value })} className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Email</label>
+              <input value={draft.settings.email} onChange={e => setSetting({ email: e.target.value })} className={inputCls} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Link columns */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <FooterLinksEditor title="Cột Chính sách" links={footer.policyLinks} onChange={v => set({ policyLinks: v })} />
+        <FooterLinksEditor title="Cột Hỗ trợ" links={footer.supportLinks} onChange={v => set({ supportLinks: v })} />
+      </div>
+
+      {/* Newsletter + social + copyright */}
+      <div className="border border-rule rounded-xl p-4 space-y-3">
+        <h3 className="font-semibold text-brand-700 text-sm">Đăng ký nhận tin & Mạng xã hội</h3>
+        <div className="grid md:grid-cols-2 gap-3">
+          <div>
+            <label className={labelCls}>Tiêu đề khối đăng ký</label>
+            <input value={footer.newsletterTitle} onChange={e => set({ newsletterTitle: e.target.value })} className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Mô tả đăng ký</label>
+            <input value={footer.newsletterText} onChange={e => set({ newsletterText: e.target.value })} className={inputCls} />
+          </div>
+          <div>
+            <label className={labelCls}>Link Facebook (để trống để ẩn)</label>
+            <input value={footer.facebookUrl} onChange={e => set({ facebookUrl: e.target.value })} className={inputCls} placeholder="https://facebook.com/..." />
+          </div>
+          <div>
+            <label className={labelCls}>Link TikTok (để trống để ẩn)</label>
+            <input value={footer.tiktokUrl} onChange={e => set({ tiktokUrl: e.target.value })} className={inputCls} placeholder="https://tiktok.com/..." />
+          </div>
+        </div>
+        <div>
+          <label className={labelCls}>Dòng bản quyền</label>
+          <input value={footer.copyright} onChange={e => set({ copyright: e.target.value })} className={inputCls} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main AdminFrontend ─── */
 export default function AdminFrontend() {
   const { state, dispatch, showToast } = useStore();
@@ -404,6 +588,7 @@ export default function AdminFrontend() {
     { key: 'tiles', label: 'Ô danh mục (Trang chủ)', icon: <LayoutList size={16}/> },
     { key: 'nav',   label: 'Combo box Menu',        icon: <Menu size={16}/> },
     { key: 'shop',  label: 'Filter chip (Shop)',    icon: <ChevronDown size={16}/> },
+    { key: 'footer', label: 'Footer (Chân trang)',  icon: <LayoutList size={16}/> },
   ];
 
   return (
@@ -445,6 +630,7 @@ export default function AdminFrontend() {
           {activeTab === 'tiles' && <TilesTab draft={draft} setDraft={setDraft} />}
           {activeTab === 'nav'   && <NavTab   draft={draft} setDraft={setDraft} />}
           {activeTab === 'shop'  && <ShopTab  draft={draft} setDraft={setDraft} />}
+          {activeTab === 'footer' && <FooterTab draft={draft} setDraft={setDraft} />}
         </section>
       </div>
     </AdminLayout>

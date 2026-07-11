@@ -182,6 +182,37 @@ export interface NavCategory {
   sub?: NavSubItem[];
 }
 
+/** Một liên kết trong footer (Chính sách / Hỗ trợ). */
+export interface FooterLink {
+  label: string;
+  /** Đường dẫn tĩnh (href) — dùng khi không có nav. */
+  href?: string;
+  /** Route nội bộ (vd: /about) — ưu tiên hơn href. */
+  nav?: string;
+}
+
+/** Nội dung footer — chỉnh sửa được qua Admin → Tùy chỉnh giao diện → Footer. */
+export interface FooterContent {
+  /** Logo footer (URL ảnh hoặc data URL). Mặc định dùng /logotrang.jpg. */
+  logo: string;
+  /** Mô tả ngắn bên dưới logo thương hiệu. */
+  brandDescription: string;
+  /** Cột "Chính sách". */
+  policyLinks: FooterLink[];
+  /** Cột "Hỗ trợ". */
+  supportLinks: FooterLink[];
+  /** Tiêu đề khối đăng ký nhận tin. */
+  newsletterTitle: string;
+  /** Lời mô tả dưới tiêu đề đăng ký nhận tin. */
+  newsletterText: string;
+  /** Link Facebook (để trống để ẩn). */
+  facebookUrl: string;
+  /** Link TikTok (để trống để ẩn). */
+  tiktokUrl: string;
+  /** Dòng bản quyền. */
+  copyright: string;
+}
+
 export interface SiteContent {
   heroSlides: HeroSlide[];
   newsArticles: NewsArticle[];
@@ -195,6 +226,8 @@ export interface SiteContent {
   shopQuickFilters?: string[];
   /** Nội dung trang Giới thiệu (chỉnh sửa qua Admin). */
   about?: AboutContent;
+  /** Nội dung footer (chỉnh sửa qua Admin). */
+  footer?: FooterContent;
 }
 
 export type ShapeKey =

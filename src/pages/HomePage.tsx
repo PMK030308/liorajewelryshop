@@ -219,14 +219,14 @@ const BST_COLLECTIONS = [
     title: 'Hành Trình Nở Hoa',
     subtitle: 'Mỗi khoảnh khắc đều rạng ngời',
     image: '/product/BST _HÀNH TRÌNH NỞ HOA_ - NẮNG_Vòng tay hợp kim mạ bạc.jpg',
-    gradient: 'from-rose-600/80 via-pink-500/60 to-transparent',
+    accent: 'from-rose-500/70 to-rose-500/0',
   },
   {
     id: 'bst-xuan-ha-thu-dong',
     title: 'Xuân Hạ Thu Đông',
     subtitle: 'Bốn mùa, một câu chuyện',
     image: '/product/BST _XUÂN HẠ THU ĐÔNG_ - RỰC_Vòng tay hợp kim mạ bạc.jpg',
-    gradient: 'from-amber-600/80 via-orange-500/60 to-transparent',
+    accent: 'from-amber-500/70 to-amber-500/0',
   },
 ];
 
@@ -241,40 +241,47 @@ function BstShowcase({ setFilterNav }: { setFilterNav: (slug: string) => void })
   return (
     <div>
       {/* 2 BST Cards */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {BST_COLLECTIONS.map((bst) => {
+      <div className="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {BST_COLLECTIONS.map((bst, idx) => {
           const isActive = activeId === bst.id;
           return (
             <button
               key={bst.id}
               onClick={() => setActiveId(isActive ? null : bst.id)}
-              className={`group relative block w-full text-left rounded-xl overflow-hidden transition-all duration-300 ${
+              className={`group relative block w-full text-left overflow-hidden rounded-xl border transition-all duration-500 ${
                 isActive
-                  ? 'ring-3 ring-brand-500 shadow-[0_8px_32px_rgba(244,114,160,0.25)]'
-                  : 'shadow-card hover:shadow-cardHover hover:scale-[1.01]'
+                  ? 'border-brand-400 shadow-cardHover'
+                  : 'border-black/5 shadow-card hover:shadow-cardHover'
               }`}
             >
-              <div className="aspect-[16/9] relative overflow-hidden">
+              <div className="aspect-[4/3] relative overflow-hidden bg-soft">
                 <img
                   src={bst.image}
                   alt={bst.title}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
                 />
-                {/* Gradient overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${bst.gradient}`} />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                {/* Legibility gradient at bottom only */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+                {/* Editorial index */}
+                <div className="absolute top-4 left-4 text-white/60 text-[10px] font-medium tracking-[0.3em]">
+                  0{idx + 1}
+                </div>
 
                 {/* Text content */}
-                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-7">
-                  <div className="text-white/80 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium mb-1.5">Bộ Sưu Tập</div>
-                  <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold mb-1.5 drop-shadow-md">{bst.title}</h3>
-                  <p className="text-white/85 text-xs md:text-sm font-light italic">{bst.subtitle}</p>
-                  <div className={`inline-flex items-center gap-1.5 mt-3 text-white text-xs font-semibold uppercase tracking-wider transition-all ${isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'}`}>
-                    <span>{isActive ? 'Thu gọn' : 'Xem sản phẩm'}</span>
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="h-px w-5 bg-white/60" />
+                    <span className="text-white/80 text-[9px] md:text-[10px] uppercase tracking-[0.25em] font-medium">Bộ Sưu Tập</span>
+                  </div>
+                  <h3 className="text-white text-lg md:text-xl font-semibold leading-tight mb-0.5">{bst.title}</h3>
+                  <p className="text-white/70 text-[11px] md:text-xs font-light italic mb-3">{bst.subtitle}</p>
+                  <div className={`inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider transition-colors ${isActive ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                    <span>{isActive ? 'Thu gọn' : 'Khám phá'}</span>
                     <svg
-                      width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                      width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"
                       className={`transition-transform duration-300 ${isActive ? 'rotate-180' : ''}`}
                     >
                       <path d="m6 9 6 6 6-6"/>

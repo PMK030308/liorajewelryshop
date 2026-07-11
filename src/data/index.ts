@@ -1,4 +1,4 @@
-import { AboutContent, Category, HeroCat, HeroSlide, NewsArticle, SiteContent } from '../types';
+import { AboutContent, Category, FooterContent, HeroCat, HeroSlide, NewsArticle, SiteContent } from '../types';
 
 // Re-export rich product data from products.ts (with image URLs, descriptions, ratings)
 export { PRODUCTS } from './products';
@@ -356,6 +356,32 @@ export const DEFAULT_ABOUT: AboutContent = {
   ctaText: 'Khám phá bộ sưu tập vòng tay đá năng lượng và charm Titan DIY — chọn cho mình một món quà mang dấu ấn câu chuyện của riêng bạn.',
 };
 
+export const DEFAULT_FOOTER: FooterContent = {
+  logo: '/logotrang.jpg',
+  brandDescription:
+    'Trang sức bạc cao cấp dành cho giới trẻ — luôn cập nhật những xu hướng thời trang mới nhất.',
+  policyLinks: [
+    { label: 'Giới thiệu', nav: '/about' },
+    { label: 'Bảo hành, Đổi trả' },
+    { label: 'Chính sách kiểm hàng' },
+    { label: 'Chính sách giao hàng' },
+    { label: 'Bảo mật thông tin' },
+  ],
+  supportLinks: [
+    { label: 'Tra cứu đơn hàng', nav: '/track-order' },
+    { label: 'Hướng dẫn chọn size', nav: '/huong-dan' },
+    { label: 'Hướng dẫn bảo quản', nav: '/huong-dan' },
+    { label: 'Kiểm định GRA', nav: '/kiem-dinh' },
+    { label: 'Feedback', nav: '/feedback' },
+    { label: 'Liên hệ', nav: '/lien-he' },
+  ],
+  newsletterTitle: 'Đăng ký nhận tin',
+  newsletterText: 'Nhận ưu đãi sớm và sản phẩm mới',
+  facebookUrl: 'https://www.facebook.com/liorajewelry.vn',
+  tiktokUrl: '',
+  copyright: 'Copyright © 2026 Liorajewelry.shop — All rights reserved',
+};
+
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   heroSlides: HERO_SLIDES,
   newsArticles: NEWS_ARTICLES.map((article, index) => ({
@@ -396,6 +422,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.facebook.com/liorajewelry.vn&color=8e3051&bgcolor=FDF4F6',
   },
   about: DEFAULT_ABOUT,
+  footer: DEFAULT_FOOTER,
 };
 
 export const findProduct = (slug: string) => PRODUCTS.find(p => p.slug === slug);

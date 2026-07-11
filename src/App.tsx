@@ -165,7 +165,7 @@ export default function App() {
 
       {/* Global overlays */}
       <CartDrawer />
-      <VoucherPopup />
+      {!isAdminRoute && <VoucherPopup />}
       <Toast />
       {!isAdminRoute && <FloatButtons />}
       {!isAdminRoute && <MobileBottomNav />}
