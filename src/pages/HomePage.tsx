@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '../store/useStore';
-import { HERO_CATS, HERO_SLIDES, NEWS_ARTICLES, BRAND_IMAGES, fmt } from '../data';
-import Shapes from '../data/shapes';
+import { HERO_CATS, HERO_SLIDES, BRAND_IMAGES, fmt } from '../data';
 import ProductGrid from '../components/ProductGrid';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
 import Testimonials from '../components/Testimonials';
 import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
-import { getWordPressConfig, fetchWordPressPosts } from '../utils/wordpressService';
-import { NewsArticle } from '../types';
+import { BLOG_URL } from '../lib/blogUrl';
 
 const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
@@ -334,16 +332,6 @@ export default function HomePage() {
   const slideRef = useRef(state.slide);
   slideRef.current = state.slide;
   const [heroPaused, setHeroPaused] = useState(false);
-  const [articles, setArticles] = useState<NewsArticle[]>(
-    state.siteContent.newsArticles.length ? state.siteContent.newsArticles : NEWS_ARTICLES,
-  );
-
-  useEffect(() => {
-    const config = getWordPressConfig();
-    if (!config.useWordPress) {
-      setArticles(state.siteContent.newsArticles.length ? state.siteContent.newsArticles : NEWS_ARTICLES);
-    }
-  }, [state.siteContent.newsArticles]);
 
   useEffect(() => {
     if (heroPaused) return;
@@ -352,21 +340,6 @@ export default function HomePage() {
     }, 7000);
     return () => clearInterval(interval);
   }, [dispatch, heroPaused]);
-
-  useEffect(() => {
-    const config = getWordPressConfig();
-    if (config.useWordPress && config.apiUrl) {
-      fetchWordPressPosts(config)
-        .then(data => {
-          if (data && data.length > 0) {
-            setArticles(data);
-          }
-        })
-        .catch(err => {
-          console.error('Failed to sync posts for homepage:', err);
-        });
-    }
-  }, []);
 
   const setFilterNav = (slug: string) => { dispatch({ type: 'SET_FILTER', payload: slug }); navigate('/shop'); };
 
@@ -544,38 +517,25 @@ export default function HomePage() {
       {/* Testimonials */}
       <Testimonials />
 
-      {/* News */}
+      {/* News → Blog WordPress (SEO). Web React chỉ link sang blog.liorajewelry.com */}
       <section className="container-x section-y">
         <Reveal>
-          <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BLOG</div>
-            <h2 className="sec-title">Tin tức</h2>
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-        <div className="grid md:grid-cols-3 gap-6">
-          {articles.slice(0, 3).map(n => (
-            <a key={n.title} href="#/news" onClick={(e) => { e.preventDefault(); navigate('/news'); }} className="news-card group block bg-white rounded-lg overflow-hidden shadow-card hover:shadow-cardHover border border-rule">
-              <div className="overflow-hidden bg-soft">
-                <div 
-                  className="photo aspect-[16/10] bg-cover bg-center" 
-                  style={n.image
-                    ? { backgroundImage: `url("${n.image.replace(/"/g, '\\"')}")` }
-                    : { backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${n.tint} 75%, ${n.tint})` } as React.CSSProperties
-                  }
-                >
-                  {!n.image && <div className="sil" style={{ color: n.accent }}>{Shapes.sparkle}</div>}
-                </div>
-              </div>
-              <div className="p-5">
-                <div className="text-xs text-mute mb-2 uppercase tracking-wider">{n.date}</div>
-                <h3 className="font-semibold text-lg mb-2 group-hover:text-brand-500 line-clamp-2 transition">{n.title}</h3>
-                <p className="text-sm text-ink2 line-clamp-2 mb-3">{n.excerpt}</p>
-                <span className="text-brand-500 text-sm font-medium inline-flex items-center gap-1 group-hover:gap-2 transition-all">Xem thêm <span className="transition-transform group-hover:translate-x-1">→</span></span>
-              </div>
+          <div className="rounded-3xl overflow-hidden border border-rule bg-gradient-to-br from-brand-50 via-white to-brand-100 px-6 py-12 md:py-16 text-center shadow-card">
+            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BLOG LIORA</div>
+            <h2 className="sec-title mb-3">Tin tức &amp; Kiến thức trang sức</h2>
+            <p className="text-sm md:text-base text-ink2 max-w-2xl mx-auto mb-7">
+              Cập nhật xu hướng trang sức bạc, đá quý, cách bảo quản và phối đồ — viết tối ưu SEO trên Blog Liora.
+            </p>
+            <a
+              href={BLOG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-pink inline-flex items-center gap-2"
+            >
+              Đọc Blog Liora
+              <span className="transition-transform">→</span>
             </a>
-          ))}
-        </div>
+          </div>
         </Reveal>
       </section>
 
