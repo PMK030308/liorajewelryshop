@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import AdminLayout from './AdminLayout';
-import { getWordPressConfig, saveWordPressConfig, fetchWordPressPosts, fetchWooCommerceProducts, WordPressConfig } from '../../utils/wordpressService';
+import { getWordPressConfig, saveWordPressConfig, fetchWordPressPosts, fetchWooCommerceProducts, fetchWordPressSiteContent, WordPressConfig } from '../../utils/wordpressService';
 import { CheckCircle2, XCircle, RefreshCw, Save, HelpCircle, Lightbulb } from 'lucide-react';
 
 export default function WordPressSettings() {
@@ -17,8 +17,10 @@ export default function WordPressSettings() {
   const [testResult, setTestResult] = useState<{
     wpOk?: boolean;
     wcOk?: boolean;
+    scOk?: boolean;
     wpError?: string;
     wcError?: string;
+    scError?: string;
     tested?: boolean;
   }>({});
 
@@ -43,13 +45,15 @@ export default function WordPressSettings() {
     
     let wpOk = false;
     let wcOk = false;
+    let scOk = false;
     let wpError = '';
     let wcError = '';
+    let scError = '';
 
     // 1. Test WordPress posts API
     try {
       if (!testConfig.apiUrl) throw new Error('Chưa điền URL trang web WordPress');
-      
+
       // Temporary enable for test invocation
       const tempConfig = { ...testConfig, useWordPress: true };
       const posts = await fetchWordPressPosts(tempConfig);
@@ -64,7 +68,7 @@ export default function WordPressSettings() {
       if (!testConfig.consumerKey || !testConfig.consumerSecret) {
         throw new Error('Chưa điền đầy đủ Consumer Key hoặc Consumer Secret');
       }
-      
+
       const tempConfig = { ...testConfig, useWordPress: true };
       const products = await fetchWooCommerceProducts(tempConfig);
       wcOk = Array.isArray(products);
@@ -72,19 +76,31 @@ export default function WordPressSettings() {
       wcError = e.message || 'Lỗi không xác định';
     }
 
+    // 3. Test site-content endpoint (liora/v1/site-content — route custom của theme)
+    try {
+      if (!testConfig.apiUrl) throw new Error('Chưa điền URL trang web WordPress');
+      const tempConfig = { ...testConfig, useWordPress: true };
+      const partial = await fetchWordPressSiteContent(tempConfig);
+      scOk = typeof partial === 'object' && partial !== null;
+    } catch (e: any) {
+      scError = e.message || 'Lỗi không xác định';
+    }
+
     setTestResult({
       wpOk,
       wcOk,
+      scOk,
       wpError,
       wcError,
+      scError,
       tested: true,
     });
     setTesting(false);
 
-    if (wpOk && wcOk) {
-      showToast('Kết nối WordPress & WooCommerce thành công!');
+    if (wpOk && wcOk && scOk) {
+      showToast('Kết nối WordPress, WooCommerce & Site Content thành công!');
     } else {
-      showToast('Kiểm tra kết nối thất bại. Vui lòng kiểm tra lại cấu hình.');
+      showToast('Kiểm tra kết nối chưa hoàn tất. Xem chi tiết bên cạnh.');
     }
   };
 
@@ -222,6 +238,23 @@ export default function WordPressSettings() {
                     </p>
                   </div>
                 </div>
+
+                {/* Site Content Status */}
+                <div className="flex items-start gap-3">
+                  {testResult.scOk ? (
+                    <CheckCircle2 className="text-emerald-500 shrink-0 mt-0.5" size={18} />
+                  ) : (
+                    <XCircle className="text-rose-500 shrink-0 mt-0.5" size={18} />
+                  )}
+                  <div>
+                    <h4 className="text-xs font-bold text-ink">Site Content (liora/v1/site-content)</h4>
+                    <p className="text-xs text-mute mt-0.5">
+                      {testResult.scOk
+                        ? 'Kết nối thành công. Endpoint trả JSON override nội dung site.'
+                        : testResult.scError || 'Không thể kết nối. Kiểm tra theme đã cập nhật route + CORS.'}
+                    </p>
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="text-center py-6 text-mute text-xs">
@@ -236,7 +269,8 @@ export default function WordPressSettings() {
               <li>Cài đặt WordPress và plugin <strong>WooCommerce</strong>.</li>
               <li>Đi tới <strong>WooCommerce &gt; Cấu hình &gt; Nâng cao &gt; REST API</strong> bấm Tạo Key.</li>
               <li>Chọn quyền hạn là <strong>Chỉ Đọc (Read)</strong> cho Key này để đảm bảo an toàn.</li>
-              <li>Cài đặt plugin CORS nếu gặp lỗi chặn truy cập từ trình duyệt (ví dụ: plugin <em>WP CORS</em> hoặc chỉnh sửa file <em>.htaccess</em> để cho phép Origin).</li>
+              <li>Cập nhật theme <strong>liora-blog</strong> (file <em>inc/headless.php</em>) để kích hoạt route <code>liora/v1/site-content</code> + CORS. CORS đã được theme tự lo cho route headless &amp; <code>wp/v2/posts</code>.</li>
+              <li>Quản lý nội dung override (hero, settings, footer, about...) tại <strong>Bảng điều khiển WP &gt; Tools &gt; Liora Headless</strong> — dán JSON partial vào ô trống.</li>
               <li>Bật thuộc tính <strong>Permalinks</strong> sang tùy chọn đẹp (ví dụ: Post Name) trong cài đặt WordPress của bạn.</li>
             </ol>
           </div>

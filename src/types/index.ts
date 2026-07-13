@@ -98,6 +98,10 @@ export interface NewsArticle {
   accent: string;
   content?: string;
   image?: string;
+  /** Slug bài (WordPress post slug khi fetch headless, hoặc id seed) — dùng cho route nội bộ /news/<slug>. */
+  slug?: string;
+  /** Permalink bài gốc trên blog WordPress (dùng cho SEO / canonical). */
+  link?: string;
 }
 
 export interface SitePage {

@@ -6,7 +6,6 @@ import ProductGrid from '../components/ProductGrid';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
 import Testimonials from '../components/Testimonials';
 import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
-import { BLOG_URL } from '../lib/blogUrl';
 
 const Reveal = ({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) => (
   <motion.div
@@ -368,6 +367,9 @@ export default function HomePage() {
 
   const bestSellerProducts = state.products.filter(p => p.cat === 'vong-tay').slice(0, 12);
 
+  // Bài tin tức lấy từ WordPress headless (hoặc seed) — hiển thị tại web, link nội bộ tới /news/<slug>.
+  const wpNews = state.siteContent.newsArticles.slice(0, 6);
+
   const trustBadges: { icon: React.ReactNode; t: string; s: string }[] = [
     {
       icon: (
@@ -535,26 +537,83 @@ export default function HomePage() {
       {/* Testimonials */}
       <Testimonials />
 
-      {/* News → Blog WordPress (SEO). Web React chỉ link sang blog.liorajewelry.com */}
+      {/* News → Blog WordPress (SEO). Fetch list bài qua REST khi WP headless bật;
+          fallback CTA-only khi chưa có bài (WP off / fetch fail). */}
       <section className="container-x section-y">
         <Reveal>
-          <div className="rounded-3xl overflow-hidden border border-rule bg-gradient-to-br from-brand-50 via-white to-brand-100 px-6 py-12 md:py-16 text-center shadow-card">
+          <div className="text-center mb-10">
             <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BLOG LIORA</div>
-            <h2 className="sec-title mb-3">Tin tức &amp; Kiến thức trang sức</h2>
-            <p className="text-sm md:text-base text-ink2 max-w-2xl mx-auto mb-7">
-              Cập nhật xu hướng trang sức bạc, đá quý, cách bảo quản và phối đồ — viết tối ưu SEO trên Blog Liora.
-            </p>
-            <a
-              href={BLOG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-pink inline-flex items-center gap-2"
-            >
-              Đọc Blog Liora
-              <span className="transition-transform">→</span>
-            </a>
+            <h2 className="sec-title">Tin tức &amp; Kiến thức trang sức</h2>
           </div>
         </Reveal>
+
+        {wpNews.length > 0 ? (
+          <>
+            <Reveal delay={0.1}>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+                {wpNews.map(article => {
+                  const key = article.slug || article.id || article.title;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => navigate(`/news/${article.slug || article.id}`)}
+                      className="group rounded-2xl overflow-hidden border border-rule bg-white shadow-card hover:shadow-[0_14px_36px_rgba(178,58,104,0.14)] transition-all hover:-translate-y-1 flex flex-col text-left"
+                    >
+                      <div className="aspect-[16/10] bg-brand-50 overflow-hidden">
+                        {article.image ? (
+                          <img
+                            src={article.image}
+                            alt={article.title}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-brand-300">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M4 4h16v16H4z"/><path d="M8 4v16M16 4v16M4 8h16M4 16h16"/></svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4 md:p-5 flex flex-col flex-1">
+                        <div className="text-[11px] text-mute mb-1.5">{article.date}</div>
+                        <h3 className="font-semibold text-ink leading-snug mb-2 line-clamp-2 group-hover:text-brand-700 transition-colors">{article.title}</h3>
+                        <p className="text-sm text-ink2 line-clamp-3 flex-1">{article.excerpt}</p>
+                        <span className="mt-3 text-xs font-semibold text-brand-700 inline-flex items-center gap-1">
+                          Đọc tiếp <span className="transition-transform group-hover:translate-x-1">→</span>
+                        </span>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </Reveal>
+            <div className="text-center mt-10">
+              <button
+                onClick={() => navigate('/news')}
+                className="btn-pink inline-flex items-center gap-2"
+              >
+                Xem tất cả bài viết
+                <span className="transition-transform">→</span>
+              </button>
+            </div>
+          </>
+        ) : (
+          <Reveal delay={0.1}>
+            <div className="rounded-3xl overflow-hidden border border-rule bg-gradient-to-br from-brand-50 via-white to-brand-100 px-6 py-12 md:py-16 text-center shadow-card">
+              <p className="text-sm md:text-base text-ink2 max-w-2xl mx-auto mb-7">
+                Cập nhật xu hướng trang sức bạc, đá quý, cách bảo quản và phối đồ — bài viết soạn chuẩn SEO trên WordPress sẽ hiển thị tại đây.
+              </p>
+              <button
+                onClick={() => navigate('/admin/wordpress')}
+                className="btn-pink inline-flex items-center gap-2"
+              >
+                Cấu hình WordPress
+                <span className="transition-transform">→</span>
+              </button>
+            </div>
+          </Reveal>
+        )}
       </section>
 
       {/* Recently viewed (localStorage) */}

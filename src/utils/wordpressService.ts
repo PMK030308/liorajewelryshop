@@ -1,4 +1,4 @@
-import { Product, NewsArticle, ShapeKey } from '../types';
+import { Product, NewsArticle, ShapeKey, SiteContent } from '../types';
 
 /**
  * Interface mapping configuration for dynamic settings.
@@ -97,8 +97,78 @@ export async function fetchWordPressPosts(config = getWordPressConfig()): Promis
       // Store raw content/featured image in optional extensions if pages need detailed view
       content: post.content?.rendered,
       image: imageUrl,
+      // Slug bài (WP) — dùng cho route nội bộ /news/<slug> của web React.
+      slug: post.slug,
+      // Permalink bài gốc trên blog — dùng làm canonical / SEO (bài đầy đủ do WP render).
+      link: post.link,
     };
   });
+}
+
+/**
+ * Fetch một bài WordPress theo slug — dùng khi mở trực tiếp /news/<slug> mà bài
+ * chưa có trong store (vd: tải lại trang, WP headless chưa fetch xong list).
+ * Endpoint: /wp-json/wp/v2/posts?slug=<slug>&_embed
+ */
+export async function fetchWordPressPostBySlug(slug: string, config = getWordPressConfig()): Promise<NewsArticle | null> {
+  if (!config.useWordPress || !config.apiUrl || !slug) {
+    return null;
+  }
+
+  const url = `${config.apiUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&per_page=1`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const posts = await response.json();
+  const post = Array.isArray(posts) ? posts[0] : null;
+  if (!post) return null;
+
+  let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  if (!imageUrl && post.content?.rendered) {
+    imageUrl = extractImageFromContent(post.content.rendered);
+  }
+
+  const rawDate = new Date(post.date);
+  const dateStr = isNaN(rawDate.getTime())
+    ? 'Gần đây'
+    : `${String(rawDate.getDate()).padStart(2, '0')}/${String(rawDate.getMonth() + 1).padStart(2, '0')}/${rawDate.getFullYear()}`;
+
+  return {
+    date: dateStr,
+    title: stripHtml(post.title?.rendered || ''),
+    excerpt: stripHtml(post.excerpt?.rendered || post.content?.rendered || '').substring(0, 150) + '...',
+    tint: '#fdf4f6',
+    accent: '#f472a0',
+    content: post.content?.rendered,
+    image: imageUrl,
+    slug: post.slug,
+    link: post.link,
+  };
+}
+
+/**
+ * Fetch site content partial từ theme WP (route custom liora/v1/site-content).
+ * Trả về partial override — caller merge over DEFAULT_SITE_CONTENT.
+ * Endpoint: /wp-json/liora/v1/site-content
+ */
+export async function fetchWordPressSiteContent(config = getWordPressConfig()): Promise<Partial<SiteContent>> {
+  if (!config.useWordPress || !config.apiUrl) {
+    throw new Error('WordPress integration is not enabled or API URL is missing.');
+  }
+
+  const url = `${config.apiUrl}/wp-json/liora/v1/site-content`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`WordPress site-content API Error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  // Route trả { seeded: false } khi chưa có override → xem như partial rỗng.
+  if (!data || data.seeded === false) return {};
+  const { seeded, ...partial } = data;
+  return partial as Partial<SiteContent>;
 }
 
 /**

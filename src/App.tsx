@@ -14,6 +14,7 @@ import ProductPage from './pages/ProductPage';
 import CheckoutPage from './pages/CheckoutPage';
 import AboutPage from './pages/AboutPage';
 import NewsPage from './pages/NewsPage';
+import ArticlePage from './pages/ArticlePage';
 import ContactPage from './pages/ContactPage';
 import SimplePage from './pages/SimplePage';
 import LoginPage from './pages/LoginPage';
@@ -68,6 +69,7 @@ function renderRoute(route: string): React.ReactNode {
   if (route.startsWith('/product/')) return <ProductPage slug={route.replace('/product/', '')} />;
   if (route === '/checkout' || route === '/cart-view') return <CheckoutPage />;
   if (route === '/about') return <AboutPage />;
+  if (route.startsWith('/news/')) return <ArticlePage slug={decodeURIComponent(route.replace('/news/', ''))} />;
   if (route === '/news') return <NewsPage />;
   if (route === '/lien-he') return <ContactPage />;
 
@@ -135,7 +137,9 @@ function renderRoute(route: string): React.ReactNode {
 
 function Router() {
   const { state } = useStore();
-  const routeKey = state.route.startsWith('/product/') ? '/product' : state.route;
+  const routeKey = state.route.startsWith('/product/') ? '/product'
+    : state.route.startsWith('/news/') ? '/news'
+    : state.route;
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div

@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import type { Dispatch } from 'react';
 import { CartItem, Order, OrderStatus, Product, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
@@ -299,31 +299,59 @@ export function useStore(): StoreContextType {
   return ctx;
 }
 
-import { getWordPressConfig, fetchWooCommerceProducts } from '../utils/wordpressService';
+import { getWordPressConfig, fetchWooCommerceProducts, fetchWordPressPosts, fetchWordPressSiteContent } from '../utils/wordpressService';
 
 /** Hook that wires up all side-effects — used inside StoreProvider.tsx */
 export function useStoreSetup() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  // Load products from WooCommerce if WordPress is enabled
+  // Ref giữ state mới nhất cho các promise WP async dispatch (tránh stale state trong closure).
+  const stateRef = useRef(state);
+  useEffect(() => { stateRef.current = state; }, [state]);
+
+  // ---- Bootstrap từ WordPress headless (sản phẩm + nội dung site + tin tức) ----
+  // Khi useWordPress ON: WP là nguồn content. Mỗi nguồn fail độc lập (allSettled) → giữ seed/localStorage.
   useEffect(() => {
     const config = getWordPressConfig();
-    if (config.useWordPress && config.apiUrl) {
-      fetchWooCommerceProducts(config)
-        .then(products => {
-          if (products && products.length > 0) {
-            dispatch({ type: 'SET_PRODUCTS', payload: products });
-          }
-        })
-        .catch(err => {
-          console.error('Failed to sync products from WooCommerce:', err);
+    if (!config.useWordPress || !config.apiUrl) return;
+
+    const productsP = fetchWooCommerceProducts(config)
+      .then(products => {
+        if (products && products.length > 0) dispatch({ type: 'SET_PRODUCTS', payload: products });
+      })
+      .catch(err => { console.error('[Liora] load products từ WooCommerce thất bại, giữ seed:', err); });
+
+    const contentP = fetchWordPressSiteContent(config)
+      .then(partial => {
+        if (!partial || Object.keys(partial).length === 0) return;
+        const base = stateRef.current.siteContent;
+        dispatch({
+          type: 'SET_SITE_CONTENT',
+          payload: {
+            ...base,
+            ...partial,
+            settings: partial.settings ? { ...base.settings, ...partial.settings } : base.settings,
+            footer: partial.footer ? { ...base.footer, ...partial.footer } : base.footer,
+          },
         });
-    }
+      })
+      .catch(err => { console.error('[Liora] load site_content từ WP thất bại, giữ mặc định:', err); });
+
+    const newsP = fetchWordPressPosts(config)
+      .then(posts => {
+        if (posts && posts.length > 0) {
+          dispatch({ type: 'SET_SITE_CONTENT', payload: { ...stateRef.current.siteContent, newsArticles: posts } });
+        }
+      })
+      .catch(err => { console.error('[Liora] load news từ WP thất bại, giữ seed:', err); });
+
+    void Promise.allSettled([productsP, contentP, newsP]);
   }, []);
 
   // ---- Bootstrap từ Supabase (sản phẩm + nội dung site) ----
+  // Bỏ qua khi WP đang ON (WP làm nguồn content). Auth/orders vẫn Supabase.
   useEffect(() => {
-    if (!hasSupabase) return; // chưa cấu hình → giữ seed/offline
+    if (!hasSupabase || getWordPressConfig().useWordPress) return; // chưa cấu hình / WP đang dùng → giữ seed/offline
     fetchProducts()
       .then(list => { if (list.length) dispatch({ type: 'SET_PRODUCTS', payload: list }); })
       .catch(err => console.error('[Liora] load products từ Supabase thất bại, giữ seed:', err));
@@ -369,15 +397,16 @@ export function useStoreSetup() {
     if (!config.useWordPress) {
       localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
     }
-    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS)
-    if (hasSupabase && state.user?.role === 'admin') {
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON.
+    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin') {
       syncProducts(state.products);
     }
   }, [state.products, state.user]);
 
   useEffect(() => {
     localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(state.siteContent));
-    if (hasSupabase && state.user?.role === 'admin') {
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON.
+    if (hasSupabase && !getWordPressConfig().useWordPress && state.user?.role === 'admin') {
       syncSiteContent(state.siteContent);
     }
   }, [state.siteContent, state.user]);

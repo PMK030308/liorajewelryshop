@@ -10,6 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Headless: expose site content qua REST (liora/v1/site-content) + CORS + admin page.
+ */
+require_once get_template_directory() . '/inc/headless.php';
+
+/**
  * URL web chính (shop React). Đổi tại đây nếu domain khác.
  */
 if ( ! defined( 'LIORA_SHOP_URL' ) ) {

@@ -4,7 +4,6 @@ import { useStore } from '../store/useStore';
 import { CATEGORIES, fmt } from '../data';
 import Shapes from '../data/shapes';
 import LogoMark from './LogoMark';
-import { BLOG_URL } from '../lib/blogUrl';
 
 export default function Header() {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -204,10 +203,9 @@ export default function Header() {
             ].map(({ path, label }) => (
               <a key={path} href={`#${path}`} onClick={(e) => { e.preventDefault(); navigate(path); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive(path) ? 'active' : ''}`}>{label}</a>
             ))}
-            {/* Blog do WordPress tự render ở subdomain riêng (SEO) */}
-            <a href={BLOG_URL} target="_blank" rel="noopener noreferrer" className="nav-link px-6 py-1 hover:text-brand-500 inline-flex items-center gap-1">
+            {/* Trang tin tức nội bộ — bài viết soạn chuẩn SEO bên WP, hiển thị & render ngay tại web */}
+            <a href="#/news" onClick={(e) => { e.preventDefault(); navigate('/news'); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive('/news') || state.route.startsWith('/news/') ? 'active' : ''}`}>
               Tin tức
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="opacity-60"><path d="M7 17 17 7M7 7h10v10"/></svg>
             </a>
           </nav>
         </div>
@@ -291,16 +289,17 @@ export default function Header() {
                 </a>
               );
             })}
-            {/* Blog do WordPress tự render ở subdomain riêng (SEO) */}
+            {/* Trang tin tức nội bộ — bài viết soạn chuẩn SEO bên WP, hiển thị & render ngay tại web */}
             <a
-              href={BLOG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between px-5 py-3 text-[15px] border-l-[3px] border-transparent text-ink hover:bg-soft hover:text-brand-700 transition-colors"
+              href="#/news"
+              onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate('/news'); }}
+              className={`flex items-center justify-between px-5 py-3 text-[15px] border-l-[3px] transition-colors ${
+                isActive('/news') || state.route.startsWith('/news/')
+                  ? 'border-brand-700 bg-brand-50 text-brand-700 font-semibold'
+                  : 'border-transparent text-ink hover:bg-soft hover:text-brand-700'
+              }`}
             >
               <span>Tin tức</span>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="text-mute"><path d="M7 17 17 7M7 7h10v10"/></svg>
             </a>
           </nav>
 
