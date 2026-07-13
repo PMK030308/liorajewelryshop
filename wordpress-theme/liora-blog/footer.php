@@ -21,6 +21,7 @@ $shop = liora_shop_links();
 				<a href="<?php echo esc_url( $shop['shop'] ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Sản phẩm', 'liora-blog' ); ?></a>
 				<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Tất cả bài viết', 'liora-blog' ); ?></a>
 				<a href="<?php echo esc_url( $shop['contact'] ); ?>" target="_blank" rel="noopener"><?php esc_html_e( 'Liên hệ', 'liora-blog' ); ?></a>
+				<a href="<?php echo esc_url( $shop['shopee'] ); ?>" target="_blank" rel="noopener">Shopee</a>
 			</nav>
 
 			<div style="text-align:right;font-size:.88rem;">

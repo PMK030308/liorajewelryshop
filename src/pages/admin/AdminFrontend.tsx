@@ -524,8 +524,8 @@ function FooterTab({ draft, setDraft }: { draft: SiteContent; setDraft: React.Di
             <input value={footer.facebookUrl} onChange={e => set({ facebookUrl: e.target.value })} className={inputCls} placeholder="https://facebook.com/..." />
           </div>
           <div>
-            <label className={labelCls}>Link TikTok (để trống để ẩn)</label>
-            <input value={footer.tiktokUrl} onChange={e => set({ tiktokUrl: e.target.value })} className={inputCls} placeholder="https://tiktok.com/..." />
+            <label className={labelCls}>Link Shopee (để trống để ẩn)</label>
+            <input value={footer.shopeeUrl} onChange={e => set({ shopeeUrl: e.target.value })} className={inputCls} placeholder="https://shopee.vn/..." />
           </div>
         </div>
         <div>

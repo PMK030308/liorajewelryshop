@@ -58,7 +58,7 @@ export default function Footer() {
 
   const socials = [
     { title: 'Facebook', url: footer.facebookUrl, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg> },
-    { title: 'TikTok', url: footer.tiktokUrl, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 8.5a6 6 0 0 1-3.5-1.1v7.4a5.5 5.5 0 1 1-5.5-5.5v3a2.5 2.5 0 1 0 2.5 2.5V2h3a3 3 0 0 0 3 3v3.5Z"/></svg> },
+    { title: 'Shopee', url: footer.shopeeUrl, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 7h14l.9 11.2A2 2 0 0 1 17.9 20.5H6.1a2 2 0 0 1-2-1.8L5 7Zm5.2-2.5a1.8 1.8 0 0 1 3.6 0V6h2v-1.5a3.8 3.8 0 0 0-7.6 0V6h2v-1.5Z"/></svg> },
   ].filter(s => s.url && s.url.trim() !== '');
 
   return (

@@ -378,7 +378,7 @@ export const DEFAULT_FOOTER: FooterContent = {
   newsletterTitle: 'Đăng ký nhận tin',
   newsletterText: 'Nhận ưu đãi sớm và sản phẩm mới',
   facebookUrl: 'https://www.facebook.com/liorajewelry.vn',
-  tiktokUrl: '',
+  shopeeUrl: 'https://shopee.vn/liora.jewelry',
   copyright: 'Copyright © 2026 Liorajewelry.shop — All rights reserved',
 };
 
@@ -413,13 +413,15 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   ],
   settings: {
     brandName: 'LIORAJEWELRY',
-    tagline: 'Lap Lanh em xinh',
+    tagline: 'Own Your Shine',
     address: 'Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai',
     openHours: 'Mo cua: 9:00 - 21:00 hang ngay',
     hotline: '0985048952',
     email: 'liorajewelry10@gmail.com',
     facebookUrl: 'https://www.facebook.com/liorajewelry.vn',
     qrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://www.facebook.com/liorajewelry.vn&color=8e3051&bgcolor=FDF4F6',
+    shopeeUrl: 'https://shopee.vn/liora.jewelry',
+    shopeeQrUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://shopee.vn/liora.jewelry&color=8e3051&bgcolor=FDF4F6',
   },
   about: DEFAULT_ABOUT,
   footer: DEFAULT_FOOTER,

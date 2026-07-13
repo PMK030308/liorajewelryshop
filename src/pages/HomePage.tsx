@@ -64,8 +64,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                 <div className="absolute top-8 left-0 right-0 flex flex-col items-center pointer-events-none">
                   <div className="font-bold text-xl md:text-2xl tracking-[0.25em] text-white drop-shadow-md">LIORAJEWELRY</div>
                   <div className="text-white/95 text-sm font-light tracking-[0.06em] drop-shadow-md flex items-center gap-1.5 mt-2">
-                    <span className="uppercase">Lấp Lánh</span>
-                    <span className="script text-2xl lowercase leading-none">em xinh</span>
+                    <span className="uppercase tracking-[0.18em]">Own Your Shine</span>
                   </div>
                 </div>
                 {/* Hover Panel Bottom */}
@@ -146,8 +145,7 @@ function HeroSlideItem({ idx }: { idx: number }) {
 
             {/* Slogan */}
             <div className="text-2xl md:text-3xl mt-2 mb-6 flex items-center justify-center gap-3">
-              <span className="font-sans font-light uppercase tracking-[0.2em] text-brand-700">Lấp Lánh</span>
-              <span className="script text-brand-500 lowercase text-4xl md:text-5xl">em xinh</span>
+              <span className="font-sans font-light uppercase tracking-[0.2em] text-brand-700">Own Your Shine</span>
             </div>
 
             {/* Store Info — Address, Hours, QR */}
@@ -167,25 +165,45 @@ function HeroSlideItem({ idx }: { idx: number }) {
                   <span className="text-xs md:text-sm font-medium">{settings.openHours}</span>
                 </div>
               </div>
-              {/* Facebook QR Code */}
-              <a
-                href={settings.facebookUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
-              >
-                <img
-                  src={settings.qrUrl}
-                  alt="QR Facebook Liora"
-                  width="80"
-                  height="80"
-                  className="rounded-lg"
-                />
-                <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
-                  Follow us
-                </div>
-              </a>
+              {/* QR Codes — Facebook & Shopee */}
+              <div className="flex items-center justify-center gap-3 md:gap-4">
+                <a
+                  href={settings.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
+                >
+                  <img
+                    src={settings.qrUrl}
+                    alt="QR Facebook Liora"
+                    width="80"
+                    height="80"
+                    className="rounded-lg"
+                  />
+                  <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
+                    Facebook
+                  </div>
+                </a>
+                <a
+                  href={settings.shopeeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
+                >
+                  <img
+                    src={settings.shopeeQrUrl}
+                    alt="QR Shopee Liora"
+                    width="80"
+                    height="80"
+                    className="rounded-lg"
+                  />
+                  <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#EE4D2D"><path d="M5 7h14l.9 11.2A2 2 0 0 1 17.9 20.5H6.1a2 2 0 0 1-2-1.8L5 7Zm5.2-2.5a1.8 1.8 0 0 1 3.6 0V6h2v-1.5a3.8 3.8 0 0 0-7.6 0V6h2v-1.5Z"/></svg>
+                    Shopee
+                  </div>
+                </a>
+              </div>
             </div>
           </div>
 

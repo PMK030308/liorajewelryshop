@@ -111,6 +111,7 @@ function liora_shop_links() {
 		'shop'    => LIORA_SHOP_URL . '/#/shop',
 		'about'   => LIORA_SHOP_URL . '/#/about',
 		'contact' => LIORA_SHOP_URL . '/#/lien-he',
+		'shopee'  => 'https://shopee.vn/liora.jewelry',
 	);
 }
 

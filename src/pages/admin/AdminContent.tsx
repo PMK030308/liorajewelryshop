@@ -352,8 +352,10 @@ export default function AdminContent() {
                   ['hotline', 'Hotline'],
                   ['facebookUrl', 'Facebook URL'],
                   ['qrUrl', 'QR URL'],
+                  ['shopeeUrl', 'Shopee URL'],
+                  ['shopeeQrUrl', 'Shopee QR URL'],
                 ] as const).map(([key, label]) => (
-                  <div key={key} className={key === 'qrUrl' ? 'md:col-span-2' : ''}>
+                  <div key={key} className={(key === 'qrUrl' || key === 'shopeeQrUrl') ? 'md:col-span-2' : ''}>
                     <label className={labelCls}>{label}</label>
                     <input
                       value={draft.settings[key]}

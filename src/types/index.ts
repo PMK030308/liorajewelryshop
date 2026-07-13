@@ -161,6 +161,10 @@ export interface SiteSettings {
   email: string;
   facebookUrl: string;
   qrUrl: string;
+  /** Link Shopee (dùng cho nút social + QR ở slideshow). */
+  shopeeUrl: string;
+  /** Ảnh QR code Shopee (URL hoặc data URL). */
+  shopeeQrUrl: string;
 }
 
 export interface CategoryTile {
@@ -207,8 +211,8 @@ export interface FooterContent {
   newsletterText: string;
   /** Link Facebook (để trống để ẩn). */
   facebookUrl: string;
-  /** Link TikTok (để trống để ẩn). */
-  tiktokUrl: string;
+  /** Link Shopee (để trống để ẩn). */
+  shopeeUrl: string;
   /** Dòng bản quyền. */
   copyright: string;
 }
