@@ -6,6 +6,61 @@ import type { Product, SiteContent } from '../types';
  * Tất cả hàm đều ném lỗi nếu Supabase chưa cấu hình; caller tự bắt và fallback seed.
  */
 
+// ---------------- Realtime subscriptions ----------------
+
+/**
+ * Lắng nghe thay đổi bảng products theo thời gian thực.
+ * Trả về hàm unsubscribe (gọi khi cleanup).
+ */
+export function subscribeProducts(onChange: (products: Product[]) => void): () => void {
+  if (!supabase) return () => {};
+  const channel = supabase
+    .channel('realtime:products')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'products' },
+      async () => {
+        // Lấy lại toàn bộ danh sách theo thứ tự updated_at
+        try {
+          const list = await fetchProducts();
+          onChange(list);
+        } catch (e) {
+          console.error('[Liora] realtime products fetch thất bại:', e);
+        }
+      }
+    )
+    .subscribe();
+  return () => {
+    supabase?.removeChannel(channel);
+  };
+}
+
+/**
+ * Lắng nghe thay đổi bảng site_content theo thời gian thực.
+ * Trả về hàm unsubscribe (gọi khi cleanup).
+ */
+export function subscribeSiteContent(onChange: (sc: SiteContent) => void): () => void {
+  if (!supabase) return () => {};
+  const channel = supabase
+    .channel('realtime:site_content')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'site_content' },
+      async () => {
+        try {
+          const sc = await fetchSiteContent();
+          onChange(sc);
+        } catch (e) {
+          console.error('[Liora] realtime site_content fetch thất bại:', e);
+        }
+      }
+    )
+    .subscribe();
+  return () => {
+    supabase?.removeChannel(channel);
+  };
+}
+
 // ---------------- Products ----------------
 export async function fetchProducts(): Promise<Product[]> {
   if (!supabase) throw new Error('Supabase chưa cấu hình');

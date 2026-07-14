@@ -103,9 +103,35 @@ create policy "site_content: admin update" on public.site_content for update usi
 create policy "site_content: admin delete" on public.site_content for delete using (public.is_admin());
 
 -- ============================================================
+-- Realtime (Supabase Realtime / postgres_changes)
+-- Bật publication cho các bảng cần đồng bộ theo thời gian thực.
+-- Khi admin cập nhật sản phẩm/nội dung, tất cả client sẽ nhận được thay đổi.
+-- Chạy câu này (hoặc bật trong Dashboard → Database → Replication):
+-- ============================================================
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'products'
+  ) then
+    alter publication supabase_realtime add table public.products;
+  end if;
+
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'site_content'
+  ) then
+    alter publication supabase_realtime add table public.site_content;
+  end if;
+end
+$$;
+
+-- ============================================================
 -- Ghi chú:
 -- - Admin user được tạo bằng script `npm run seed-supabase` (dùng service key),
 --   sau đó script update profiles.role = 'admin' cho user đó.
 -- - Khách vãng lai (anon) chỉ ĐỌC products/site_content; không ghi được (RLS chặn).
 -- - Phase 2 sẽ thêm bảng orders + chính sách tương ứng.
+-- - Realtime: khi 1 người cập nhật, tất cả client tự động nhận thay đổi
+--   (Supabase Realtime postgres_changes). Cần chạy đoạn `alter publication` ở trên.
 -- ============================================================

@@ -3,7 +3,7 @@ import type { Dispatch } from 'react';
 import { CartItem, ContactMessage, NewsletterSub, Order, OrderStatus, Product, Review, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 import { hasSupabase } from '../lib/supabase';
-import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent } from '../lib/repo';
+import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent } from '../lib/repo';
 import { getCurrentUser, onAuthChange } from '../lib/auth';
 
 export interface State {
@@ -338,6 +338,10 @@ export function useStoreSetup() {
   const stateRef = useRef(state);
   useEffect(() => { stateRef.current = state; }, [state]);
 
+  // Guard: khi cập nhật đến từ realtime (người khác thay đổi), KHÔNG sync ngược lên lại
+  // (tránh vòng lặp: remote update → dispatch → sync → remote update → ...).
+  const skipSyncRef = useRef(false);
+
   // ---- Bootstrap từ WordPress headless (sản phẩm + nội dung site + tin tức) ----
   // Khi useWordPress ON: WP là nguồn content. Mỗi nguồn fail độc lập (allSettled) → giữ seed/localStorage.
   useEffect(() => {
@@ -389,6 +393,21 @@ export function useStoreSetup() {
       .catch(err => console.error('[Liora] load site_content từ Supabase thất bại, giữ mặc định:', err));
   }, []);
 
+  // ---- Realtime: lắng nghe thay đổi từ người khác/khác tab ----
+  // Khi có thay đổi trên DB → fetch lại → dispatch (và đánh dấu skipSync để không sync ngược).
+  useEffect(() => {
+    if (!hasSupabase || getWordPressConfig().useWordPress) return;
+    const unsubProducts = subscribeProducts(list => {
+      skipSyncRef.current = true;
+      dispatch({ type: 'SET_PRODUCTS', payload: list });
+    });
+    const unsubSite = subscribeSiteContent(sc => {
+      skipSyncRef.current = true;
+      dispatch({ type: 'SET_SITE_CONTENT', payload: sc });
+    });
+    return () => { unsubProducts(); unsubSite(); };
+  }, []);
+
   // ---- Auth: khôi phục session + lắng nghe thay đổi ----
   useEffect(() => {
     if (!hasSupabase) return;
@@ -438,10 +457,13 @@ export function useStoreSetup() {
     if (!config.useWordPress) {
       localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
     }
-    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON.
-    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin') {
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON
+    // và bỏ qua khi thay đổi đến từ realtime (tránh vòng lặp sync).
+    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin' && !skipSyncRef.current) {
       syncProducts(state.products);
     }
+    // Reset cờ sau khi đã xử lý effect này
+    skipSyncRef.current = false;
   }, [state.products, state.user]);
 
   useEffect(() => {
@@ -451,10 +473,13 @@ export function useStoreSetup() {
     if (!config.useWordPress) {
       localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(state.siteContent));
     }
-    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON.
-    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin') {
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON
+    // và bỏ qua khi thay đổi đến từ realtime (tránh vòng lặp sync).
+    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin' && !skipSyncRef.current) {
       syncSiteContent(state.siteContent);
     }
+    // Reset cờ sau khi đã xử lý effect này
+    skipSyncRef.current = false;
   }, [state.siteContent, state.user]);
 
   useEffect(() => {
