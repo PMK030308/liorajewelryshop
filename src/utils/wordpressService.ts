@@ -66,8 +66,8 @@ export async function fetchWordPressPosts(config = getWordPressConfig()): Promis
     throw new Error('WordPress integration is not enabled or API URL is missing.');
   }
 
-  const url = `${config.apiUrl}/wp-json/wp/v2/posts?_embed&per_page=10`;
-  const response = await fetch(url);
+  const url = `${config.apiUrl}/wp-json/wp/v2/posts?_embed&per_page=10&_t=${Date.now()}`;
+  const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
   }
@@ -115,8 +115,8 @@ export async function fetchWordPressPostBySlug(slug: string, config = getWordPre
     return null;
   }
 
-  const url = `${config.apiUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&per_page=1`;
-  const response = await fetch(url);
+  const url = `${config.apiUrl}/wp-json/wp/v2/posts?slug=${encodeURIComponent(slug)}&_embed&per_page=1&_t=${Date.now()}`;
+  const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
   }
@@ -158,10 +158,13 @@ export async function fetchWordPressSiteContent(config = getWordPressConfig()): 
     throw new Error('WordPress integration is not enabled or API URL is missing.');
   }
 
-  const url = `${config.apiUrl}/wp-json/liora/v1/site-content`;
-  const response = await fetch(url);
+  const url = `${config.apiUrl}/wp-json/liora/v1/site-content?_t=${Date.now()}`;
+  const response = await fetch(url, { cache: 'no-store' });
   if (!response.ok) {
-    throw new Error(`WordPress site-content API Error: ${response.status} ${response.statusText}`);
+    // 404 = theme route chưa kích hoạt (theme chưa activate / permalink chưa flush).
+    // Không throw — trả partial rỗng để frontend giữ mặc định, tránh lỗi console.
+    console.warn(`[Liora] site-content endpoint trả ${response.status} — theme liora-blog có thể chưa kích hoạt route này. Giữ mặc định.`);
+    return {};
   }
 
   const data = await response.json();

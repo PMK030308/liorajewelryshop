@@ -119,10 +119,11 @@ const initProducts = (): Product[] => {
 // Bump khi thay đổi nội dung seed (bài viết SEO, hero, pages...).
 // Khi version khác cache, các trường seed sẽ được làm mới từ default
 // (giữ nguyên tuỳ chỉnh admin ở các trường khác).
-const CONTENT_SEED_VERSION = 3;
+const CONTENT_SEED_VERSION = 4;
 const SEED_VERSION_KEY = 'liora_content_seed_v';
 // Key lưu trữ nội dung site (bump khi cần ép làm mới toàn bộ cache).
-const SITE_CONTENT_KEY = 'liora_site_content_v3';
+// v4: force refresh newsArticles cho khách đang giữ cache stale bài cũ.
+const SITE_CONTENT_KEY = 'liora_site_content_v4';
 
 const initSiteContent = (): SiteContent => {
   // Ưu tiên cache v3; nếu chưa có thì migrate các tuỳ chỉnh từ v2 cũ.
@@ -139,10 +140,11 @@ const initSiteContent = (): SiteContent => {
   })();
   const seedChanged = storedVersion !== CONTENT_SEED_VERSION;
 
-  // Khi seed thay đổi (hoặc chưa có bài nào), làm mới newsArticles từ default
-  // nhưng vẫn giữ các tuỳ chỉnh khác (settings, hero, pages) của admin.
+  // Khi WP headless đang ON → KHÔNG khôi phục newsArticles từ localStorage
+  // (WP là nguồn bài; cache localStorage sẽ gây hiển thị bài cũ/stale).
+  const wpEnabled = getWordPressConfig().useWordPress;
   const newsArticles =
-    seedChanged || !stored?.newsArticles?.length
+    wpEnabled || seedChanged || !stored?.newsArticles?.length
       ? DEFAULT_SITE_CONTENT.newsArticles
       : stored.newsArticles;
 
@@ -443,9 +445,14 @@ export function useStoreSetup() {
   }, [state.products, state.user]);
 
   useEffect(() => {
-    localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(state.siteContent));
+    const config = getWordPressConfig();
+    // Khi WP headless đang ON → không persist siteContent vào localStorage
+    // (WP là nguồn content; localStorage cache stale gây bài mới không hiển thị).
+    if (!config.useWordPress) {
+      localStorage.setItem(SITE_CONTENT_KEY, JSON.stringify(state.siteContent));
+    }
     // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON.
-    if (hasSupabase && !getWordPressConfig().useWordPress && state.user?.role === 'admin') {
+    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin') {
       syncSiteContent(state.siteContent);
     }
   }, [state.siteContent, state.user]);
