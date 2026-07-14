@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import AdminLayout from './AdminLayout';
 import { getWordPressConfig, saveWordPressConfig, fetchWordPressPosts, fetchWooCommerceProducts, fetchWordPressSiteContent, WordPressConfig } from '../../utils/wordpressService';
-import { CheckCircle2, XCircle, RefreshCw, Save, HelpCircle, Lightbulb } from 'lucide-react';
+import { CheckCircle2, XCircle, RefreshCw, Save, HelpCircle, Lightbulb, Info, Globe } from 'lucide-react';
 
 export default function WordPressSettings() {
   const { showToast, navigate } = useStore();
@@ -31,7 +31,7 @@ export default function WordPressSettings() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     saveWordPressConfig(config);
-    showToast('Đã lưu cấu hình WordPress. Tải lại trang để áp dụng.');
+    showToast('Đã lưu cấu hình WordPress (chỉ áp dụng cho trình duyệt này). Để thay đổi cho tất cả người dùng, sửa code hoặc set env vars trên Vercel.');
     
     // Auto-test if enabled
     if (config.useWordPress) {
@@ -112,6 +112,39 @@ export default function WordPressSettings() {
           <p className="text-sm text-mute">Thiết lập Headless WordPress & WooCommerce để quản lý nội dung danh mục và tin tức</p>
         </div>
       </header>
+
+      {/* Banner: giải thích kiến trúc — thay đổi cho tất cả người dùng */}
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
+        <Info size={20} className="text-blue-600 shrink-0 mt-0.5" />
+        <div className="text-xs text-blue-900 space-y-2">
+          <p className="font-semibold text-sm">Cách thay đổi cấu hình cho tất cả người dùng</p>
+          <p>
+            Cấu hình lưu tại đây <strong>chỉ áp dụng cho trình duyệt này</strong> (dùng để test).
+            Để <strong>tất cả người dùng</strong> cùng thay đổi, cần sửa ở cấp compile/deploy:
+          </p>
+          <ul className="list-disc pl-4 space-y-1 text-[11px]">
+            <li>
+              <strong>WordPress URL</strong>: sửa hằng số <code className="bg-blue-100 px-1 rounded">WP_API_URL</code> trong
+              <code className="bg-blue-100 px-1 rounded">src/utils/wordpressService.ts</code>, hoặc set env var
+              <code className="bg-blue-100 px-1 rounded">VITE_WP_API_URL</code> trên Vercel.
+            </li>
+            <li>
+              <strong>WooCommerce Keys</strong>: set env vars
+              <code className="bg-blue-100 px-1 rounded">VITE_WC_CONSUMER_KEY</code> +
+              <code className="bg-blue-100 px-1 rounded">VITE_WC_CONSUMER_SECRET</code> trên Vercel.
+            </li>
+            <li>
+              <strong>Bật/tắt WP</strong>: set env var
+              <code className="bg-blue-100 px-1 rounded">VITE_USE_WORDPRESS=false</code> trên Vercel để tắt cho tất cả.
+            </li>
+            <li>
+              <Globe size={11} className="inline -mt-0.5" /> <strong>Nội dung bài viết</strong>: viết/sửa trực tiếp trên
+              WordPress admin (<code className="bg-blue-100 px-1 rounded">cms.liorajewelry.online/wp-admin</code>) —
+              tất cả người dùng sẽ thấy ngay khi tải lại trang (không cần deploy lại).
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

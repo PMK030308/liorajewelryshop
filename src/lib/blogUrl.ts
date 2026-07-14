@@ -6,4 +6,4 @@
  */
 export const BLOG_URL: string =
   (import.meta.env.VITE_BLOG_URL as string | undefined)?.replace(/\/+$/, '') ||
-  'https://blog.liorajewelry.com';
+  'https://cms.liorajewelry.online';

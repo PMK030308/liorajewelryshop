@@ -11,11 +11,16 @@ export interface WordPressConfig {
   consumerSecret: string;
 }
 
+// Cấu hình WordPress mặc định — hardcode để tất cả người dùng (không chỉ admin)
+// đều thấy bài viết WP. localStorage của admin vẫn override được nếu cần thay đổi.
+// WC credentials từ env vars nếu có, nếu không dùng hardcode mặc định.
+const WP_API_URL = 'https://cms.liorajewelry.online';
+
 const DEFAULT_CONFIG: WordPressConfig = {
-  useWordPress: false,
-  apiUrl: import.meta.env.VITE_WP_API_URL || '',
-  consumerKey: import.meta.env.VITE_WC_CONSUMER_KEY || '',
-  consumerSecret: import.meta.env.VITE_WC_CONSUMER_SECRET || '',
+  useWordPress: true,
+  apiUrl: import.meta.env.VITE_WP_API_URL || WP_API_URL,
+  consumerKey: import.meta.env.VITE_WC_CONSUMER_KEY || 'ck_53aa25c2bd360a5c63ce14c498cafc55a9076b34',
+  consumerSecret: import.meta.env.VITE_WC_CONSUMER_SECRET || 'cs_2c5e1697b9739ae789653f87bfa5a9323bd02f8a',
 };
 
 // Key for saving config in LocalStorage
@@ -32,11 +37,12 @@ export function getWordPressConfig(): WordPressConfig {
     console.error('Failed to parse wordpress configuration', e);
   }
   
-  // Fallback to environment flag VITE_USE_WORDPRESS
-  const envUseWP = import.meta.env.VITE_USE_WORDPRESS === 'true';
+  // Khi không có localStorage config → dùng DEFAULT_CONFIG (đã hardcode WP ON).
+  // VITE_USE_WORDPRESS env var vẫn override được nếu set 'false' để tắt.
+  const envUseWP = import.meta.env.VITE_USE_WORDPRESS;
   return {
     ...DEFAULT_CONFIG,
-    useWordPress: envUseWP,
+    useWordPress: envUseWP === 'false' ? false : DEFAULT_CONFIG.useWordPress,
   };
 }
 
