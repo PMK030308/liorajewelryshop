@@ -1,0 +1,10 @@
+const fs = require('fs');
+const f = 'src/pages/ProductPage.tsx';
+let c = fs.readFileSync(f, 'utf8');
+const old = "AlertTriangle, Check } from 'lucide-react';";
+const neu = "AlertTriangle, Check, Share2, Bell } from 'lucide-react';";
+console.log('Before contains Share2:', c.includes('Share2'));
+c = c.replace(old, neu);
+console.log('After contains Share2:', c.includes('Share2'));
+fs.writeFileSync(f, c);
+console.log('Done');

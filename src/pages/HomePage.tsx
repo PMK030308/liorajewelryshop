@@ -62,8 +62,12 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                 {/* Watermark Top */}
                 <div className="absolute top-8 left-0 right-0 flex flex-col items-center pointer-events-none">
                   <div className="font-bold text-xl md:text-2xl tracking-[0.25em] text-white drop-shadow-md">LIORAJEWELRY</div>
-                  <div className="text-white/95 text-sm font-light tracking-[0.06em] drop-shadow-md flex items-center gap-1.5 mt-2">
-                    <span className="uppercase tracking-[0.18em]">Own Your Shine</span>
+                  <div className="mt-2.5 flex items-center justify-center gap-2.5 drop-shadow-md">
+                    <span className="h-px w-6 bg-gradient-to-r from-transparent to-white/70" />
+                    <span className="text-white/95 text-[11px] md:text-xs font-light uppercase tracking-[0.42em] whitespace-nowrap">
+                      Own Your Shine
+                    </span>
+                    <span className="h-px w-6 bg-gradient-to-l from-transparent to-white/70" />
                   </div>
                 </div>
                 {/* Hover Panel Bottom */}
@@ -143,8 +147,12 @@ function HeroSlideItem({ idx }: { idx: number }) {
             </div>
 
             {/* Slogan */}
-            <div className="text-2xl md:text-3xl mt-2 mb-6 flex items-center justify-center gap-3">
-              <span className="font-sans font-light uppercase tracking-[0.2em] text-brand-700">Own Your Shine</span>
+            <div className="mt-3 mb-6 flex items-center justify-center gap-3 md:gap-4">
+              <span className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent via-brand-400 to-brand-600" />
+              <span className="slogan-luxe font-sans text-base md:text-lg font-light uppercase tracking-[0.45em] bg-gradient-to-r from-brand-600 via-brand-500 to-brand-700 bg-clip-text text-transparent whitespace-nowrap">
+                Own Your Shine
+              </span>
+              <span className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent via-brand-400 to-brand-600" />
             </div>
 
             {/* Store Info — Address, Hours, QR */}
@@ -543,7 +551,7 @@ export default function HomePage() {
         <Reveal>
           <div className="text-center mb-10">
             <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BLOG LIORA</div>
-            <h2 className="sec-title">Tin tức &amp; Kiến thức trang sức</h2>
+            <h2 className="sec-title">Tin tức & Kiến thức trang sức</h2>
           </div>
         </Reveal>
 

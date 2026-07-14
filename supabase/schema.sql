@@ -40,7 +40,18 @@ set search_path = public
 as $$
 begin
   insert into public.profiles (id, email, name, role)
-  values (new.id, new.email, coalesce(new.raw_user_meta_data->>'name', new.email), 'customer')
+  values (
+    new.id,
+    new.email,
+    coalesce(
+      new.raw_user_meta_data->>'name',
+      new.raw_user_meta_data->>'full_name',
+      new.raw_user_meta_data->>'user_name',
+      new.raw_user_meta_data->>'nickname',
+      new.email
+    ),
+    'customer'
+  )
   on conflict (id) do nothing;
   return new;
 end;

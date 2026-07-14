@@ -12,6 +12,7 @@ import HomePage from './pages/HomePage';
 import ShopPage from './pages/ShopPage';
 import ProductPage from './pages/ProductPage';
 import CheckoutPage from './pages/CheckoutPage';
+import CartViewPage from './pages/CartViewPage';
 import AboutPage from './pages/AboutPage';
 import NewsPage from './pages/NewsPage';
 import ArticlePage from './pages/ArticlePage';
@@ -22,6 +23,8 @@ import RegisterPage from './pages/RegisterPage';
 import AccountPage from './pages/AccountPage';
 import WishlistPage from './pages/WishlistPage';
 import TrackOrderPage from './pages/TrackOrderPage';
+import PolicyPage from './pages/PolicyPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminProducts from './pages/admin/AdminProducts';
 import AdminOrders from './pages/admin/AdminOrders';
@@ -67,7 +70,8 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/' || route === '') return <HomePage />;
   if (route === '/shop') return <ShopPage />;
   if (route.startsWith('/product/')) return <ProductPage slug={route.replace('/product/', '')} />;
-  if (route === '/checkout' || route === '/cart-view') return <CheckoutPage />;
+  if (route === '/checkout') return <CheckoutPage />;
+  if (route === '/cart-view') return <CartViewPage />;
   if (route === '/about') return <AboutPage />;
   if (route.startsWith('/news/')) return <ArticlePage slug={decodeURIComponent(route.replace('/news/', ''))} />;
   if (route === '/news') return <NewsPage />;
@@ -78,6 +82,8 @@ function renderRoute(route: string): React.ReactNode {
   if (route === '/account') return <AccountPage />;
   if (route === '/wishlist') return <WishlistPage />;
   if (route === '/track-order') return <TrackOrderPage />;
+  if (route === '/chinh-sach') return <PolicyPage />;
+  if (route === '/quen-mat-khau') return <ForgotPasswordPage />;
 
   if (route === '/admin' || route === '/admin/dashboard') return <AdminDashboard />;
   if (route === '/admin/products') return <AdminProducts />;

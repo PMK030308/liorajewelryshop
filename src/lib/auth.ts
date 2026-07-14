@@ -79,6 +79,25 @@ export async function signOut(): Promise<void> {
   await supabase.auth.signOut();
 }
 
+/**
+ * Đăng nhập bằng OAuth (Google / Facebook).
+ * Supabase sẽ redirect đến provider, sau khi xác thực redirect về `redirectTo`.
+ * Session khôi phục tự động qua `onAuthChange`.
+ */
+export async function signInWithOAuth(
+  provider: 'google' | 'facebook',
+  redirectTo?: string,
+): Promise<void> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình — không thể đăng nhập mạng xã hội.');
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo: redirectTo || `${window.location.origin}${window.location.pathname}`,
+    },
+  });
+  if (error) throw error;
+}
+
 /** Cập nhật profile (tên/SĐT) — khách tự sửa của mình. */
 export async function updateProfile(uid: string, patch: { name?: string; phone?: string }): Promise<void> {
   if (!supabase) throw new Error('Supabase chưa cấu hình.');
@@ -92,7 +111,28 @@ export function onAuthChange(cb: (user: User | null) => void): () => void {
   const { data } = supabase.auth.onAuthStateChange(async (_event, session) => {
     const uid = session?.user?.id;
     if (!uid) { cb(null); return; }
-    const user = await mapUser(uid);
+    // Trigger handle_new_user có thể chưa kịp tạo profile (đặc biệt sau OAuth redirect)
+    // → retry vài lần trước khi báo đăng xuất.
+    let user = await mapUser(uid);
+    if (!user) {
+      for (let i = 0; i < 3; i++) {
+        await new Promise(r => setTimeout(r, 300));
+        user = await mapUser(uid);
+        if (user) break;
+      }
+    }
+    if (!user) {
+      // Profile vẫn chưa sẵn → tạo user tối thiểu từ session để user không bị đăng xuất ngay
+      const sUser = session.user;
+      cb({
+        id: uid,
+        email: sUser?.email ?? '',
+        name: sUser?.user_metadata?.name || sUser?.user_metadata?.full_name || sUser?.user_metadata?.user_name || (sUser?.email ? sUser.email.split('@')[0] : 'Khách'),
+        role: 'customer',
+        createdAt: Date.now(),
+      });
+      return;
+    }
     cb(user);
   });
   return () => data.subscription.unsubscribe();
@@ -104,5 +144,11 @@ export async function getCurrentUser(): Promise<User | null> {
   const { data } = await supabase.auth.getSession();
   const uid = data.session?.user?.id;
   if (!uid) return null;
-  return mapUser(uid);
+  // Trigger có thể chưa kịp tạo profile (sau OAuth redirect) → retry
+  let user = await mapUser(uid);
+  if (!user) {
+    await new Promise(r => setTimeout(r, 400));
+    user = await mapUser(uid);
+  }
+  return user;
 }

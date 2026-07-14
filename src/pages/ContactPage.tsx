@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { ContactMessage } from '../types';
 
 export default function ContactPage() {
-  const { navigate, showToast } = useStore();
+  const { navigate, dispatch, showToast } = useStore();
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const msg: ContactMessage = {
+      id: 'cm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim() || undefined,
+      message: message.trim(),
+      createdAt: Date.now(),
+    };
+    dispatch({ type: 'ADD_CONTACT_MESSAGE', payload: msg });
     showToast('✓ Đã gửi tin nhắn! Liorajewelry sẽ phản hồi sớm.');
+    setName(''); setPhone(''); setEmail(''); setMessage('');
   };
   return (
     <main className="page container-x py-10">
@@ -26,10 +42,10 @@ export default function ContactPage() {
         </div>
         <form className="space-y-3" onSubmit={handleSubmit}>
           <h3 className="font-bold text-lg mb-2">Gửi tin nhắn cho chúng mình</h3>
-          <input required placeholder="Họ tên" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
-          <input required type="tel" placeholder="Số điện thoại" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
-          <input type="email" placeholder="Email" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
-          <textarea required rows={5} placeholder="Nội dung tin nhắn…" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <input required value={name} onChange={e => setName(e.target.value)} placeholder="Họ tên" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <input required type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Số điện thoại" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
+          <textarea required rows={5} value={message} onChange={e => setMessage(e.target.value)} placeholder="Nội dung tin nhắn…" className="w-full border border-rule rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
           <button className="btn-primary w-full justify-center">Gửi tin nhắn →</button>
         </form>
       </div>

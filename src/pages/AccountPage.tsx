@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, Package } from 'lucide-react';
+import { FileText, Package, XCircle, RefreshCw, Search, KeyRound, Eye, EyeOff } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import { Order, OrderStatus } from '../types';
@@ -22,6 +22,14 @@ export const formatDate = (ts: number) => new Date(ts).toLocaleString('vi-VN', {
 export default function AccountPage() {
   const { state, dispatch, navigate, showToast } = useStore();
   const user = state.user;
+  const [orderFilter, setOrderFilter] = useState<OrderStatus | 'all'>('all');
+  const [orderSearch, setOrderSearch] = useState('');
+  const [showPwForm, setShowPwForm] = useState(false);
+  const [oldPw, setOldPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [showPw, setShowPw] = useState(false);
+  const [pwErr, setPwErr] = useState('');
 
   useEffect(() => {
     if (!user) navigate('/login');
@@ -38,6 +46,42 @@ export default function AccountPage() {
   if (!user) return null;
 
   const myOrders = state.orders.filter(o => o.userId === user.id);
+  const filteredOrders = myOrders.filter(o => {
+    if (orderFilter !== 'all' && o.status !== orderFilter) return false;
+    if (orderSearch) {
+      const q = orderSearch.trim().toLowerCase();
+      return o.id.toLowerCase().includes(q) || o.id.slice(-8).toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  const cancelOrder = (orderId: string) => {
+    if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
+    dispatch({ type: 'UPDATE_ORDER_STATUS', payload: { id: orderId, status: 'cancelled' } });
+    showToast('Đơn hàng đã được hủy');
+  };
+
+  const changePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwErr('');
+    if (newPw.length < 6) { setPwErr('Mật khẩu mới cần tối thiểu 6 ký tự.'); return; }
+    if (newPw !== confirmPw) { setPwErr('Mật khẩu xác nhận không khớp.'); return; }
+    if (!hasSupabase) {
+      if (user.password && oldPw !== user.password) { setPwErr('Mật khẩu cũ không đúng.'); return; }
+      dispatch({ type: 'UPDATE_USER', payload: { id: user.id, password: newPw } });
+    }
+    showToast('✓ Đã đổi mật khẩu thành công');
+    setShowPwForm(false);
+    setOldPw(''); setNewPw(''); setConfirmPw('');
+  };
+
+  const reorder = (order: Order) => {
+    order.items.forEach(item => {
+      dispatch({ type: 'ADD_TO_CART', payload: item });
+    });
+    showToast('Đã thêm sản phẩm vào giỏ hàng');
+    setTimeout(() => navigate('/checkout'), 300);
+  };
 
   const saveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,21 +145,111 @@ export default function AccountPage() {
               className="w-full mt-3 text-sm border border-red-200 text-red-600 font-semibold py-2.5 rounded-md hover:bg-red-50 transition-colors">
               Đăng xuất
             </button>
+
+            <div className="mt-4 border-t border-rule pt-4">
+              <button
+                onClick={() => setShowPwForm(v => !v)}
+                className="w-full text-left text-sm font-semibold text-ink2 hover:text-brand-700 inline-flex items-center gap-2"
+              >
+                <KeyRound size={16} strokeWidth={1.8} />
+                Đổi mật khẩu
+              </button>
+              {showPwForm && (
+                <form onSubmit={changePassword} className="mt-3 space-y-2">
+                  <input
+                    type={showPw ? 'text' : 'password'}
+                    value={oldPw}
+                    onChange={e => setOldPw(e.target.value)}
+                    required
+                    placeholder="Mật khẩu cũ"
+                    className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500"
+                  />
+                  <div className="relative">
+                    <input
+                      type={showPw ? 'text' : 'password'}
+                      value={newPw}
+                      onChange={e => setNewPw(e.target.value)}
+                      required
+                      placeholder="Mật khẩu mới (tối thiểu 6 ký tự)"
+                      className="w-full border border-rule rounded-md px-3 py-2 pr-10 text-sm focus:outline-none focus:border-brand-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPw(v => !v)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-mute hover:text-brand-500"
+                    >
+                      {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                  <input
+                    type={showPw ? 'text' : 'password'}
+                    value={confirmPw}
+                    onChange={e => setConfirmPw(e.target.value)}
+                    required
+                    placeholder="Xác nhận mật khẩu mới"
+                    className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500"
+                  />
+                  {pwErr && <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-2 py-1">{pwErr}</div>}
+                  <div className="flex gap-2">
+                    <button type="submit" className="flex-1 bg-brand-700 text-white text-sm font-semibold py-2 rounded-md hover:bg-brand-800 transition-colors">
+                      Cập nhật
+                    </button>
+                    <button type="button" onClick={() => { setShowPwForm(false); setOldPw(''); setNewPw(''); setConfirmPw(''); setPwErr(''); }} className="px-4 border border-rule text-sm font-semibold py-2 rounded-md hover:bg-soft">
+                      Hủy
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
         </aside>
 
         {/* Orders */}
         <section className="lg:col-span-2">
           <h2 className="text-xl font-bold mb-4 text-brand-700">Đơn hàng của bạn ({myOrders.length})</h2>
+
+          {myOrders.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <select
+                value={orderFilter}
+                onChange={(e) => setOrderFilter(e.target.value as OrderStatus | 'all')}
+                className="border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
+              >
+                <option value="all">Tất cả trạng thái</option>
+                <option value="pending">Chờ xác nhận</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="shipping">Đang giao</option>
+                <option value="done">Hoàn tất</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+              <div className="relative flex-1 min-w-[180px]">
+                <Search size={15} strokeWidth={2} className="absolute left-3 top-1/2 -translate-y-1/2 text-mute" />
+                <input
+                  value={orderSearch}
+                  onChange={(e) => setOrderSearch(e.target.value)}
+                  placeholder="Tìm theo mã đơn…"
+                  className="w-full border border-rule rounded-md pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-brand-500"
+                />
+              </div>
+            </div>
+          )}
+
           {myOrders.length === 0 ? (
             <div className="bg-soft border border-rule rounded-lg p-10 text-center">
               <Package size={48} strokeWidth={1.2} className="mb-3 mx-auto text-mute" />
               <p className="text-ink2 mb-4">Bạn chưa có đơn hàng nào</p>
               <a href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }} className="btn-pink">Mua sắm ngay →</a>
             </div>
+          ) : filteredOrders.length === 0 ? (
+            <div className="bg-soft border border-rule rounded-lg p-10 text-center">
+              <p className="text-ink2 mb-4">Không có đơn hàng phù hợp với bộ lọc.</p>
+              <button onClick={() => { setOrderFilter('all'); setOrderSearch(''); }} className="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2 rounded-md">
+                Xoá bộ lọc
+              </button>
+            </div>
           ) : (
             <div className="space-y-3">
-              {myOrders.map(o => {
+              {filteredOrders.map(o => {
                 const meta = STATUS_META[o.status];
                 return (
                   <details key={o.id} className="bg-white border border-rule rounded-lg shadow-card overflow-hidden group">
@@ -148,14 +282,32 @@ export default function AccountPage() {
                         <span>Tổng cộng</span><span>{fmt(o.total)}</span>
                       </div>
                       <div className="flex flex-wrap gap-2 mt-3">
-                        <button
-                          onClick={() => setInvoiceOrder(o)}
-                          className="text-xs font-semibold border border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white px-4 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
-                        >
-                          <FileText size={12} strokeWidth={2} />
-                          Xem & in hóa đơn
-                        </button>
-                      </div>
+                         <button
+                           onClick={() => setInvoiceOrder(o)}
+                           className="text-xs font-semibold border border-brand-700 text-brand-700 hover:bg-brand-700 hover:text-white px-4 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
+                         >
+                           <FileText size={12} strokeWidth={2} />
+                           Xem & in hóa đơn
+                         </button>
+                        {(o.status === 'pending' || o.status === 'confirmed') && (
+                          <button
+                            onClick={() => cancelOrder(o.id)}
+                            className="text-xs font-semibold border border-red-200 text-red-600 hover:bg-red-50 px-4 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
+                          >
+                            <XCircle size={12} strokeWidth={2} />
+                            Hủy đơn
+                          </button>
+                        )}
+                        {o.status === 'done' && (
+                          <button
+                            onClick={() => reorder(o)}
+                            className="text-xs font-semibold border border-green-200 text-green-700 hover:bg-green-50 px-4 py-1.5 rounded inline-flex items-center gap-1.5 transition-colors"
+                          >
+                            <RefreshCw size={12} strokeWidth={2} />
+                            Mua lại
+                          </button>
+                        )}
+                       </div>
                     </div>
                   </details>
                 );

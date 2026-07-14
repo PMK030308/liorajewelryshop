@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Pencil, Star, Mail, Sparkles, AlertTriangle, Check } from 'lucide-react';
+import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Pencil, Star, Mail, Sparkles, AlertTriangle, Check, Share2, Bell } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
@@ -60,7 +60,26 @@ export default function ProductPage({ slug }: { slug: string }) {
   const [engraveText, setEngraveText] = useState('');
   const [engraveFont, setEngraveFont] = useState<'sans' | 'script'>('script');
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [stockAlertEmail, setStockAlertEmail] = useState('');
+  const [stockAlertSent, setStockAlertSent] = useState(false);
   const ctaRef = useRef<HTMLDivElement>(null);
+
+  const shareProduct = async () => {
+    const url = `${window.location.origin}/#/product/${p.slug}`;
+    const shareData = {
+      title: p.name,
+      text: p.description || `${p.name} - LIORA Jewelry`,
+      url,
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(url);
+        showToast('✓ Đã sao chép link sản phẩm');
+      }
+    } catch { /* user cancelled */ }
+  };
 
   // Default size if not set
   useEffect(() => {
@@ -551,7 +570,53 @@ export default function ProductPage({ slug }: { slug: string }) {
               <MessageCircle size={18} strokeWidth={1.8} />
               Chat Messenger để được tư vấn
             </a>
+            <button
+              onClick={shareProduct}
+              className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium text-mute hover:text-brand-700 transition-colors"
+            >
+              <Share2 size={16} strokeWidth={1.8} />
+              Chia sẻ sản phẩm
+            </button>
           </div>
+
+          {/* --- Back-in-stock alert (chỉ hiển thị khi hết hàng) --- */}
+          {isSold && (
+            <div className="border-2 border-dashed border-brand-300 rounded-md p-4 bg-brand-50/30">
+              <div className="flex items-center gap-2 mb-2">
+                <Bell size={16} strokeWidth={1.8} className="text-brand-700" />
+                <span className="font-semibold text-sm text-brand-700">Thông báo khi có hàng</span>
+              </div>
+              {stockAlertSent ? (
+                <div className="text-sm text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2 inline-flex items-center gap-1.5">
+                  <Check size={14} strokeWidth={2} /> Đã đăng ký! Chúng tôi sẽ email cho bạn khi sản phẩm về hàng.
+                </div>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setStockAlertSent(true);
+                    showToast('✓ Đã đăng ký nhận thông báo');
+                  }}
+                  className="flex gap-2"
+                >
+                  <input
+                    type="email"
+                    required
+                    value={stockAlertEmail}
+                    onChange={(e) => setStockAlertEmail(e.target.value)}
+                    placeholder="Email của bạn"
+                    className="flex-1 border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2 rounded-md transition-colors"
+                  >
+                    Đăng ký
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
 
           {/* --- Promo widget: free gifts (dynamic list) --- */}
           {FREE_GIFTS.length > 0 && (

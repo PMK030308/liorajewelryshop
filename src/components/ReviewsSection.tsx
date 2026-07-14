@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Star, ChevronDown, CheckCircle2 } from 'lucide-react';
-import { Product } from '../types';
+import { Product, Review as StoredReview } from '../types';
+import { useStore } from '../store/useStore';
 
 interface Review {
   id: string;
@@ -68,7 +69,25 @@ function getReviewsFor(slug: string): Review[] {
 }
 
 export default function ReviewsSection({ product }: { product: Product }) {
-  const allReviews = useMemo(() => getReviewsFor(product.slug), [product.slug]);
+  const { state, dispatch } = useStore();
+  const userReviews = useMemo(
+    () => state.reviews.filter(r => r.productSlug === product.slug),
+    [state.reviews, product.slug]
+  );
+  const allReviews = useMemo(() => {
+    const mockReviews = getReviewsFor(product.slug);
+    const userReviewsMapped: Review[] = userReviews.map(r => ({
+      id: r.id,
+      name: r.name,
+      initials: r.name.split(' ').slice(-2).map(s => s[0]).join('').toUpperCase(),
+      tint: '#fde2e4',
+      rating: r.rating,
+      date: r.date,
+      content: r.content,
+      verified: true,
+    }));
+    return [...userReviewsMapped, ...mockReviews];
+  }, [product.slug, userReviews]);
   const [filter, setFilter] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
   const [form, setForm] = useState({ rating: 5, name: '', content: '' });
@@ -89,6 +108,16 @@ export default function ReviewsSection({ product }: { product: Product }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const review: StoredReview = {
+      id: 'r-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      productSlug: product.slug,
+      name: form.name.trim(),
+      rating: form.rating,
+      content: form.content.trim(),
+      date: new Date().toLocaleDateString('vi-VN'),
+      verified: false,
+    };
+    dispatch({ type: 'ADD_REVIEW', payload: review });
     setSubmitted(true);
     setForm({ rating: 5, name: '', content: '' });
   };

@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import type { Dispatch } from 'react';
-import { CartItem, Order, OrderStatus, Product, SiteContent, SortOption, User } from '../types';
+import { CartItem, ContactMessage, NewsletterSub, Order, OrderStatus, Product, Review, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 import { hasSupabase } from '../lib/supabase';
 import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent } from '../lib/repo';
@@ -30,6 +30,12 @@ export interface State {
   products: Product[];
   /** WordPress-like editable site content. */
   siteContent: SiteContent;
+  /** User-submitted product reviews (persisted to localStorage). */
+  reviews: Review[];
+  /** Contact form submissions (persisted to localStorage). */
+  contactMessages: ContactMessage[];
+  /** Newsletter email subscriptions (persisted to localStorage). */
+  newsletterSubs: NewsletterSub[];
 }
 
 export type Action =
@@ -69,7 +75,13 @@ export type Action =
   | { type: 'SET_PRODUCTS'; payload: Product[] }
   // ---- Site CMS ----
   | { type: 'SET_SITE_CONTENT'; payload: SiteContent }
-  | { type: 'RESET_SITE_CONTENT' };
+  | { type: 'RESET_SITE_CONTENT' }
+  // ---- Reviews ----
+  | { type: 'ADD_REVIEW'; payload: Review }
+  // ---- Contact Messages ----
+  | { type: 'ADD_CONTACT_MESSAGE'; payload: ContactMessage }
+  // ---- Newsletter ----
+  | { type: 'ADD_NEWSLETTER_SUB'; payload: NewsletterSub };
 
 export const parseHash = (): string =>
   window.location.hash.replace(/^#/, '') || '/';
@@ -168,6 +180,9 @@ export const initialState: State = {
   orders: safeParse<Order[]>('liora_orders', []),
   products: initProducts(),
   siteContent: initSiteContent(),
+  reviews: safeParse<Review[]>('liora_reviews', []),
+  contactMessages: safeParse<ContactMessage[]>('liora_contact_messages', []),
+  newsletterSubs: safeParse<NewsletterSub[]>('liora_newsletter_subs', []),
 };
 
 export function reducer(state: State, action: Action): State {
@@ -280,6 +295,18 @@ export function reducer(state: State, action: Action): State {
     case 'RESET_SITE_CONTENT':
       return { ...state, siteContent: DEFAULT_SITE_CONTENT };
 
+    // ---- Reviews ----
+    case 'ADD_REVIEW':
+      return { ...state, reviews: [action.payload, ...state.reviews] };
+
+    // ---- Contact Messages ----
+    case 'ADD_CONTACT_MESSAGE':
+      return { ...state, contactMessages: [action.payload, ...state.contactMessages] };
+
+    // ---- Newsletter ----
+    case 'ADD_NEWSLETTER_SUB':
+      return { ...state, newsletterSubs: [action.payload, ...state.newsletterSubs] };
+
     default: return state;
   }
 }
@@ -390,6 +417,18 @@ export function useStoreSetup() {
   useEffect(() => {
     localStorage.setItem('liora_orders', JSON.stringify(state.orders));
   }, [state.orders]);
+
+  useEffect(() => {
+    localStorage.setItem('liora_reviews', JSON.stringify(state.reviews));
+  }, [state.reviews]);
+
+  useEffect(() => {
+    localStorage.setItem('liora_contact_messages', JSON.stringify(state.contactMessages));
+  }, [state.contactMessages]);
+
+  useEffect(() => {
+    localStorage.setItem('liora_newsletter_subs', JSON.stringify(state.newsletterSubs));
+  }, [state.newsletterSubs]);
 
   useEffect(() => {
     // Cache offline (luôn giữ để app chạy được khi Supabase chưa xong)

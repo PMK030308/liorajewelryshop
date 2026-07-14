@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MapPin, Phone, Mail, ChevronDown, Banknote, CreditCard } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { DEFAULT_FOOTER } from '../data';
-import { FooterLink } from '../types';
+import { FooterLink, NewsletterSub } from '../types';
 import LogoMark from './LogoMark';
 import MoMoIcon from './icons/MoMoIcon';
 
@@ -44,7 +44,7 @@ function FooterLinkSection({ title, links, navigate, span }: FooterLinkSectionPr
 }
 
 export default function Footer() {
-  const { state, navigate, showToast } = useStore();
+  const { state, dispatch, navigate, showToast } = useStore();
   const [email, setEmail] = React.useState('');
 
   const footer = { ...DEFAULT_FOOTER, ...(state.siteContent.footer ?? {}) };
@@ -52,6 +52,12 @@ export default function Footer() {
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
+    const sub: NewsletterSub = {
+      id: 'ns-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+      email: email.trim(),
+      createdAt: Date.now(),
+    };
+    dispatch({ type: 'ADD_NEWSLETTER_SUB', payload: sub });
     showToast('Cảm ơn bạn đã đăng ký!');
     setEmail('');
   };

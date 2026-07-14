@@ -303,3 +303,31 @@ export interface Order {
   status: OrderStatus;
   createdAt: number;
 }
+
+/** Đánh giá sản phẩm từ khách hàng. */
+export interface Review {
+  id: string;
+  productSlug: string;
+  name: string;
+  rating: number;
+  content: string;
+  date: string;
+  verified?: boolean;
+}
+
+/** Tin nhắn liên hệ từ khách hàng. */
+export interface ContactMessage {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  message: string;
+  createdAt: number;
+}
+
+/** Email đăng ký nhận tin (newsletter). */
+export interface NewsletterSub {
+  id: string;
+  email: string;
+  createdAt: number;
+}
