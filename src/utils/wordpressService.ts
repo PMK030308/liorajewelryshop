@@ -66,20 +66,37 @@ function extractImageFromContent(content: string): string | undefined {
 /**
  * Fetch and map news articles from a standard WordPress site.
  * Endpoint: /wp-json/wp/v2/posts
+ *
+ * Lấy TẤT CẢ bài đã published: WP giới hạn per_page tối đa 100,
+ * nên ta phân trang tự động cho đến khi hết bài.
  */
 export async function fetchWordPressPosts(config = getWordPressConfig()): Promise<NewsArticle[]> {
   if (!config.useWordPress || !config.apiUrl) {
     throw new Error('WordPress integration is not enabled or API URL is missing.');
   }
 
-  const url = `${config.apiUrl}/wp-json/wp/v2/posts?_embed&per_page=10&_t=${Date.now()}`;
-  const response = await fetch(url, { cache: 'no-store' });
-  if (!response.ok) {
-    throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
-  }
+  const allPosts: any[] = [];
+  let page = 1;
+  const perPage = 100; // WP REST API tối đa 100 bài/trang
+  // Cờ an toàn chống vòng lặp vô hạn
+  let safety = 0;
 
-  const posts = await response.json();
-  
+  // Lặp từng trang cho đến khi trang không còn bài nào
+  while (safety++ < 50) {
+    const url = `${config.apiUrl}/wp-json/wp/v2/posts?_embed&per_page=${perPage}&page=${page}&_t=${Date.now()}`;
+    const response = await fetch(url, { cache: 'no-store' });
+    if (!response.ok) {
+      throw new Error(`WordPress API Error: ${response.status} ${response.statusText}`);
+    }
+    const posts: any[] = await response.json();
+    if (!Array.isArray(posts) || posts.length === 0) break;
+    allPosts.push(...posts);
+    // Trang này có ít hơn perPage bài → đây là trang cuối
+    if (posts.length < perPage) break;
+    page++;
+  }
+  const posts = allPosts;
+
   return posts.map((post: any) => {
     // Attempt to extract featured media image url, fall back to first image in content, then default shapes tint
     let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
