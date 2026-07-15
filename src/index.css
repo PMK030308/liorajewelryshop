@@ -63,17 +63,25 @@
     border-color: #ffcfdd;
   }
 
-  /* Wishlist heart */
+  /* Wishlist heart — luôn hiện trên mobile (tap), hover trên desktop */
   .wish-btn {
     position: absolute; top: 10px; right: 10px;
     width: 32px; height: 32px; border-radius: 999px;
     background: rgba(255,255,255,0.95); backdrop-filter: blur(6px);
     display: flex; align-items: center; justify-content: center;
-    color: #8a8a8a; z-index: 3; opacity: 0; transform: translateY(-4px);
-    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), background 0.2s, color 0.2s;
+    color: #8a8a8a; z-index: 3;
     box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(.2,.6,.2,1), background 0.2s, color 0.2s;
   }
-  .pcard:hover .wish-btn { opacity: 1; transform: translateY(0); }
+  /* Desktop hover: reveal */
+  @media (hover: hover) and (pointer: fine) {
+    .wish-btn { opacity: 0; transform: translateY(-4px); }
+    .pcard:hover .wish-btn { opacity: 1; transform: translateY(0); }
+  }
+  /* Touch device: luôn hiện để dễ tap */
+  @media (hover: none) {
+    .wish-btn { opacity: 1; transform: translateY(0); }
+  }
   .wish-btn:hover { background: #b23a68; color: #fff; }
   .wish-btn.wished { color: #f472a0; background: #fff; opacity: 1; transform: translateY(0); }
   .wish-btn.wished:hover { background: #f472a0; color: #fff; }
@@ -451,3 +459,50 @@ svg[stroke="currentColor"] {
   font-size: 0.9em;
 }
 .article-content pre code { background: none; padding: 0; }
+
+/* ------------------------------------------------------------------ *
+ * MOBILE ENHANCEMENTS — tối ưu trải nghiệm touch & màn nhỏ
+ * ------------------------------------------------------------------ */
+@media (max-width: 767px) {
+  /* Giảm padding section trên mobile */
+  .section-y { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+
+  /* Drawer full width trên mobile nhỏ */
+  .drawer { max-width: 100%; }
+
+  /* Search panel input lớn hơn trên mobile */
+  .search-panel { padding-top: 14px; padding-bottom: 14px; }
+  .search-panel input { font-size: 16px; }
+
+  /* Nút trên mobile lớn hơn dễ tap — min height 44px chuẩn Apple */
+  .btn-primary, .btn-outline { min-height: 44px; justify-content: center; }
+
+  /* Chip filter dễ bấm hơn */
+  .chip {
+    padding: 8px 14px; font-size: 12px; min-height: 36px;
+    display: inline-flex; align-items: center;
+  }
+
+  /* Product card text nhỏ hơn cho lưới 2 cột mobile */
+  .pcard h3 { font-size: 12px; }
+
+  /* Toast lên cao hơn tránh bottom nav */
+  .toast { bottom: 80px; }
+
+  /* Form inputs trên mobile — height lớn hơn dễ tap + tránh iOS auto-zoom */
+  input[type="text"], input[type="email"], input[type="tel"], input[type="password"],
+  input[type="number"], select, textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  /* Article content font nhỏ hơn mobile */
+  .article-content { font-size: 15px; line-height: 1.75; }
+  .article-content h2 { font-size: 1.3rem; }
+  .article-content h3 { font-size: 1.1rem; }
+}
+
+/* Safe area cho iPhone notch */
+@supports (padding: env(safe-area-inset-top)) {
+  header.sticky { padding-top: env(safe-area-inset-top, 0); }
+}

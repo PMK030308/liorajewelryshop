@@ -107,10 +107,21 @@ export default function Header() {
             className="text-brand-700 logo-link transition-all"
           />
 
-          <HeaderSearchBox />
+          {/* Ô tìm kiếm desktop — ẩn trên mobile (mobile dùng nút search riêng) */}
+          <div className="hidden lg:block w-full">
+            <HeaderSearchBox />
+          </div>
           <span style={{ display: 'none' }}>{/* legacy form reference removed */}</span>
 
-          <div className="flex items-center gap-5 md:gap-7">
+          <div className="flex items-center gap-3 md:gap-7">
+            {/* Nút tìm kiếm — chỉ hiện trên mobile (lg:hidden) */}
+            <button
+              className="lg:hidden w-10 h-10 rounded hover:bg-soft flex items-center justify-center text-brand-700"
+              onClick={() => dispatch({ type: 'OPEN_SEARCH' })}
+              aria-label="Tìm kiếm"
+            >
+              <Search size={22} strokeWidth={1.6} />
+            </button>
             <UserMenu />
             <button className="flex items-center gap-2 text-brand-700 hover:text-brand-500 transition-colors" onClick={() => dispatch({ type: 'OPEN_CART' })} aria-label="Giỏ hàng">
               <span className="relative">
