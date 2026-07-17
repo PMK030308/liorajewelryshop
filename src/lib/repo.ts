@@ -1,9 +1,9 @@
 import { supabase } from './supabase';
-import type { Product, SiteContent } from '../types';
+import type { Product, SiteContent, Order } from '../types';
 
 /**
- * Repo — đọc/ghi sản phẩm & nội dung site lên Supabase.
- * Tất cả hàm đều ném lỗi nếu Supabase chưa cấu hình; caller tự bắt và fallback seed.
+ * Repo — đọc/ghi sản phẩm, nội dung site & đơn hàng lên Supabase.
+ * Tất cả hàm đều ném lỗi nếu Supabase chưa cấu hình; caller tự bắt và fallback seed/localStorage.
  */
 
 // ---------------- Realtime subscriptions ----------------
@@ -52,6 +52,32 @@ export function subscribeSiteContent(onChange: (sc: SiteContent) => void): () =>
           onChange(sc);
         } catch (e) {
           console.error('[Liora] realtime site_content fetch thất bại:', e);
+        }
+      }
+    )
+    .subscribe();
+  return () => {
+    supabase?.removeChannel(channel);
+  };
+}
+
+/**
+ * Lắng nghe thay đổi bảng orders theo thời gian thực.
+ * Trả về hàm unsubscribe (gọi khi cleanup).
+ */
+export function subscribeOrders(onChange: (orders: Order[]) => void): () => void {
+  if (!supabase) return () => {};
+  const channel = supabase
+    .channel('realtime:orders')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'orders' },
+      async () => {
+        try {
+          const list = await fetchOrders();
+          onChange(list);
+        } catch (e) {
+          console.error('[Liora] realtime orders fetch thất bại:', e);
         }
       }
     )
@@ -145,4 +171,66 @@ export function syncSiteContent(sc: SiteContent): void {
       console.error('[Liora] syncSiteContent thất bại:', e);
     }
   }, 800);
+}
+
+// ---------------- Orders ----------------
+
+/**
+ * Lấy danh sách đơn hàng.
+ * - Admin: lấy tất cả (xem mọi đơn trong admin).
+ * - Khách: chỉ lấy đơn của user_id = auth.uid() (RLS tự lọc).
+ */
+export async function fetchOrders(): Promise<Order[]> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const { data, error } = await supabase
+    .from('orders')
+    .select('data')
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return (data ?? [])
+    .map((row: { data: unknown }) => row.data as Order)
+    .filter(Boolean);
+}
+
+/**
+ * Tạo đơn hàng mới lên Supabase.
+ * - Khách: user_id = auth.uid() (RLS cho phép insert khi user_id = chính mình).
+ * - Admin: có thể tạo đơn cho user khác.
+ */
+export async function createOrder(order: Order): Promise<void> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData.user?.id ?? null;
+  const { error } = await supabase
+    .from('orders')
+    .insert({
+      id: order.id,
+      user_id: order.userId ?? userId,
+      data: order as unknown as Record<string, unknown>,
+    });
+  if (error) throw error;
+}
+
+/**
+ * Cập nhật đơn hàng (admin đổi trạng thái, sửa đơn).
+ */
+export async function updateOrder(order: Order): Promise<void> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const { error } = await supabase
+    .from('orders')
+    .update({ data: order as unknown as Record<string, unknown> })
+    .eq('id', order.id);
+  if (error) throw error;
+}
+
+/**
+ * Xóa đơn hàng (admin).
+ */
+export async function deleteOrder(id: string): Promise<void> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const { error } = await supabase
+    .from('orders')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
 }

@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Star, AlertTriangle, Check, Share2, Bell } from 'lucide-react';
+import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, ZoomIn, Star, AlertTriangle, Check, Share2, Bell } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
 import ProductGrid from '../components/ProductGrid';
-import SizeGuideModal from '../components/SizeGuideModal';
 import ImageLightbox from '../components/ImageLightbox';
 import ReviewsSection from '../components/ReviewsSection';
 import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
@@ -13,8 +12,8 @@ import { pushRecentlyViewed } from '../utils/recentlyViewed';
 
 const SIZES = ['18cm', '20cm'];
 const SIZE_DETAILS: Record<string, { label: string; desc: string }> = {
-  '18cm': { label: '18 cm', desc: 'Size vừa — ôm nhẹ cổ tay' },
-  '20cm': { label: '20 cm', desc: 'Size lỏng — thoải mái, dễ điều chỉnh' },
+  '18cm': { label: '18 cm', desc: 'Size vừa — ôm nhẹ cổ tay, chuẩn nữ tính' },
+  '20cm': { label: '20 cm', desc: 'Size lỏng — thoải mái, dễ stack cùng charm' },
 };
 
 // Possible packaging variants (mocked — server would return these dynamically).
@@ -49,7 +48,6 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   // --- Local state ---
   const [packaging, setPackaging] = useState('tui-vai');
-  const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [stockAlertEmail, setStockAlertEmail] = useState('');
@@ -94,9 +92,6 @@ export default function ProductPage({ slug }: { slug: string }) {
     obs.observe(el);
     return () => obs.disconnect();
   }, [p?.slug]);
-
-  // Decide size-guide type — chỉ bán vòng tay, luôn dùng bảng size vòng tay
-  const sizeGuideType: 'ring' | 'bracelet' | 'necklace' = 'bracelet';
 
   // --- Derived data ---
   const discount = useMemo(() => {
@@ -362,17 +357,11 @@ export default function ProductPage({ slug }: { slug: string }) {
           {/* --- Size selector — vòng tay, tinh tế --- */}
           {showSize && (
             <div>
-              <div className="flex items-baseline justify-between mb-2">
+              <div className="flex items-baseline justify-between mb-2.5">
                 <span className="text-sm font-semibold">Kích thước vòng tay</span>
-                <button
-                  onClick={() => setSizeGuideOpen(true)}
-                  className="text-xs text-brand-500 hover:text-brand-700 inline-flex items-center gap-1"
-                >
-                  <Ruler size={12} strokeWidth={2} />
-                  Hướng dẫn chọn size
-                </button>
+                <span className="text-[11px] text-mute italic">Dây rút điều chỉnh linh hoạt</span>
               </div>
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="flex gap-2 flex-wrap">
                 {SIZES.map(s => {
                   const active = state.pdpSize === s;
                   const detail = SIZE_DETAILS[s];
@@ -381,20 +370,26 @@ export default function ProductPage({ slug }: { slug: string }) {
                       key={s}
                       type="button"
                       onClick={() => dispatch({ type: 'SET_PDP_SIZE', payload: s })}
-                      className={`relative text-center rounded-md border transition-all ${
+                      title={detail?.desc}
+                      className={`relative px-4 py-2.5 rounded-full border text-sm font-medium transition-all ${
                         active
-                          ? 'border-brand-700 bg-brand-50/60 ring-1 ring-brand-700/20 shadow-sm'
-                          : 'border-rule bg-white hover:border-brand-400 hover:bg-brand-50/30'
+                          ? 'border-brand-700 bg-brand-700 text-white shadow-sm'
+                          : 'border-rule bg-white text-ink2 hover:border-brand-400 hover:text-brand-700'
                       }`}
                     >
-                      <div className="px-4 py-3">
-                        <div className={`text-base font-semibold ${active ? 'text-brand-700' : 'text-ink'}`}>{detail?.label || s}</div>
-                        <div className="text-[11px] text-mute mt-0.5 leading-tight">{detail?.desc}</div>
-                      </div>
+                      {detail?.label || s}
+                      {active && (
+                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-400 ring-2 ring-white" />
+                      )}
                     </button>
                   );
                 })}
               </div>
+              <p className="text-[11px] text-mute mt-2">
+                {state.pdpSize && SIZE_DETAILS[state.pdpSize]
+                  ? SIZE_DETAILS[state.pdpSize].desc
+                  : 'Chọn size phù hợp với cổ tay của bạn'}
+              </p>
             </div>
           )}
 
@@ -673,7 +668,6 @@ export default function ProductPage({ slug }: { slug: string }) {
       <RecentlyViewedStrip exclude={[p.slug]} className="border-t border-rule" />
 
       {/* === Modals === */}
-      <SizeGuideModal open={sizeGuideOpen} onClose={() => setSizeGuideOpen(false)} type={sizeGuideType} />
       <ImageLightbox
         open={lightboxOpen}
         images={hasImages ? galleryImages : []}

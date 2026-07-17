@@ -414,7 +414,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   settings: {
     brandName: 'LIORAJEWELRY',
     tagline: 'Own Your Shine',
-    address: 'Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai',
+    address: 'Tổ 10, KP Miễu, Phường Phước Tân, TP. Đồng Nai',
     openHours: 'Mo cua: 9:00 - 21:00 hang ngay',
     hotline: '0985048952',
     email: 'liorajewelry10@gmail.com',

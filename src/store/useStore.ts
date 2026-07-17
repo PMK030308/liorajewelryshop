@@ -3,7 +3,7 @@ import type { Dispatch } from 'react';
 import { CartItem, ContactMessage, NewsletterSub, Order, OrderStatus, Product, Review, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 import { hasSupabase } from '../lib/supabase';
-import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent } from '../lib/repo';
+import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent, fetchOrders, subscribeOrders, updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder } from '../lib/repo';
 import { getCurrentUser, onAuthChange } from '../lib/auth';
 
 export interface State {
@@ -67,6 +67,7 @@ export type Action =
   | { type: 'ADD_ORDER'; payload: Order }
   | { type: 'UPDATE_ORDER_STATUS'; payload: { id: string; status: OrderStatus } }
   | { type: 'DELETE_ORDER'; payload: string }
+  | { type: 'SET_ORDERS'; payload: Order[] }
   // ---- Products CRUD (admin) ----
   | { type: 'ADD_PRODUCT'; payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
@@ -275,6 +276,8 @@ export function reducer(state: State, action: Action): State {
       };
     case 'DELETE_ORDER':
       return { ...state, orders: state.orders.filter(o => o.id !== action.payload) };
+    case 'SET_ORDERS':
+      return { ...state, orders: action.payload };
 
     // ---- Products CRUD ----
     case 'ADD_PRODUCT':
@@ -388,10 +391,16 @@ export function useStoreSetup() {
     void Promise.allSettled([productsP, contentP, newsP]);
   }, []);
 
-  // ---- Bootstrap từ Supabase (sản phẩm + nội dung site) ----
-  // Bỏ qua khi WP đang ON (WP làm nguồn content). Auth/orders vẫn Supabase.
+  // ---- Bootstrap từ Supabase (sản phẩm + nội dung site + đơn hàng) ----
+  // Sản phẩm + nội dung: bỏ qua khi WP đang ON (WP làm nguồn content). Orders luôn dùng Supabase.
   useEffect(() => {
-    if (!hasSupabase || getWordPressConfig().useWordPress) return; // chưa cấu hình / WP đang dùng → giữ seed/offline
+    if (!hasSupabase) return;
+    // Orders luôn load từ Supabase (admin xem tất cả, khách xem của mình qua RLS)
+    fetchOrders()
+      .then(list => { if (list.length) dispatch({ type: 'SET_ORDERS', payload: list }); })
+      .catch(err => console.error('[Liora] load orders từ Supabase thất bại, giữ localStorage:', err));
+
+    if (getWordPressConfig().useWordPress) return; // WP đang dùng → bỏ qua products/site_content
     fetchProducts()
       .then(list => { if (list.length) dispatch({ type: 'SET_PRODUCTS', payload: list }); })
       .catch(err => console.error('[Liora] load products từ Supabase thất bại, giữ seed:', err));
@@ -403,7 +412,13 @@ export function useStoreSetup() {
   // ---- Realtime: lắng nghe thay đổi từ người khác/khác tab ----
   // Khi có thay đổi trên DB → fetch lại → dispatch (và đánh dấu skipSync để không sync ngược).
   useEffect(() => {
-    if (!hasSupabase || getWordPressConfig().useWordPress) return;
+    if (!hasSupabase) return;
+    // Orders realtime luôn bật (không phụ thuộc WP)
+    const unsubOrders = subscribeOrders(list => {
+      skipSyncRef.current = true;
+      dispatch({ type: 'SET_ORDERS', payload: list });
+    });
+    if (getWordPressConfig().useWordPress) return () => unsubOrders();
     const unsubProducts = subscribeProducts(list => {
       skipSyncRef.current = true;
       dispatch({ type: 'SET_PRODUCTS', payload: list });
@@ -412,7 +427,7 @@ export function useStoreSetup() {
       skipSyncRef.current = true;
       dispatch({ type: 'SET_SITE_CONTENT', payload: sc });
     });
-    return () => { unsubProducts(); unsubSite(); };
+    return () => { unsubProducts(); unsubSite(); unsubOrders(); };
   }, []);
 
   // ---- Auth: khôi phục session + lắng nghe thay đổi ----

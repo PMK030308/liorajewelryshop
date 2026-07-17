@@ -127,11 +127,42 @@ end
 $$;
 
 -- ============================================================
+-- orders: đơn hàng (1 dòng / đơn)
+-- ============================================================
+create table if not exists public.orders (
+  id          text primary key,                  -- app-side order id (vd: o-<ts>-<rand>)
+  user_id     uuid references auth.users(id) on delete set null,
+  data        jsonb not null,                    -- toàn bộ object Order (items, shipping, payment, totals, status...)
+  created_at  timestamptz not null default now()
+);
+
+alter table public.orders enable row level security;
+
+-- Khách chỉ xem đơn của chính mình; admin xem tất cả
+create policy "orders: self read"   on public.orders for select using (auth.uid() = user_id or public.is_admin());
+-- Khách có thể tạo đơn cho chính mình; admin có thể tạo bất kỳ
+create policy "orders: self insert" on public.orders for insert with check (auth.uid() = user_id or public.is_admin());
+-- Khách không tự đổi trạng thái; admin đổi trạng thái + sửa đơn
+create policy "orders: admin update" on public.orders for update using (public.is_admin()) with check (public.is_admin());
+create policy "orders: admin delete" on public.orders for delete using (public.is_admin());
+
+-- Realtime cho bảng orders
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'orders'
+  ) then
+    alter publication supabase_realtime add table public.orders;
+  end if;
+end
+$$;
+
+-- ============================================================
 -- Ghi chú:
 -- - Admin user được tạo bằng script `npm run seed-supabase` (dùng service key),
 --   sau đó script update profiles.role = 'admin' cho user đó.
--- - Khách vãng lai (anon) chỉ ĐỌC products/site_content; không ghi được (RLS chặn).
--- - Phase 2 sẽ thêm bảng orders + chính sách tương ứng.
+-- - Khách vãng lai (anon) chỉ ĐỌC products/site_content/orders của mình; không ghi được (RLS chặn).
 -- - Realtime: khi 1 người cập nhật, tất cả client tự động nhận thay đổi
 --   (Supabase Realtime postgres_changes). Cần chạy đoạn `alter publication` ở trên.
 -- ============================================================

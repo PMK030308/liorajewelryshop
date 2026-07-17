@@ -7,6 +7,8 @@ import { OrderStatus, Order } from '../../types';
 import { STATUS_META, formatDate } from '../AccountPage';
 import InvoiceModal from '../../components/InvoiceModal';
 import { SearchInput, EmptyState, Modal, ConfirmDialog, StatusBadge, Pagination, BulkBar } from '../../components/admin/ui';
+import { hasSupabase } from '../../lib/supabase';
+import { updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder } from '../../lib/repo';
 
 const STATUS_KEYS: OrderStatus[] = ['pending', 'confirmed', 'shipping', 'done', 'cancelled'];
 
@@ -55,18 +57,31 @@ export default function AdminOrders() {
   const changeStatus = (id: string, status: OrderStatus) => {
     dispatch({ type: 'UPDATE_ORDER_STATUS', payload: { id, status } });
     showToast(`Đã đổi trạng thái → ${STATUS_META[status].label}`);
+    // Sync lên Supabase
+    if (hasSupabase) {
+      const order = state.orders.find(o => o.id === id);
+      if (order) repoUpdateOrder({ ...order, status }).catch(err => console.error('[Liora] updateOrder Supabase:', err));
+    }
   };
 
   const removeOne = (id: string) => {
     dispatch({ type: 'DELETE_ORDER', payload: id });
     showToast('Đã xóa đơn hàng');
     if (selected?.id === id) setSelected(null);
+    // Sync lên Supabase
+    if (hasSupabase) {
+      repoDeleteOrder(id).catch(err => console.error('[Liora] deleteOrder Supabase:', err));
+    }
   };
 
   const bulkDelete = () => {
     selectedIds.forEach(id => dispatch({ type: 'DELETE_ORDER', payload: id }));
     showToast(`Đã xóa ${selectedIds.size} đơn hàng`);
     if (selected && selectedIds.has(selected.id)) setSelected(null);
+    // Sync lên Supabase
+    if (hasSupabase) {
+      selectedIds.forEach(id => repoDeleteOrder(id).catch(err => console.error('[Liora] bulkDelete Supabase:', err)));
+    }
     setSelectedIds(new Set());
   };
 
@@ -82,6 +97,13 @@ export default function AdminOrders() {
   const applyBulkStatus = (status: OrderStatus) => {
     selectedIds.forEach(id => dispatch({ type: 'UPDATE_ORDER_STATUS', payload: { id, status } }));
     showToast(`Đã đổi ${selectedIds.size} đơn → ${STATUS_META[status].label}`);
+    // Sync lên Supabase
+    if (hasSupabase) {
+      selectedIds.forEach(id => {
+        const order = state.orders.find(o => o.id === id);
+        if (order) repoUpdateOrder({ ...order, status }).catch(err => console.error('[Liora] bulkUpdate Supabase:', err));
+      });
+    }
     setBulkStatus('');
   };
 

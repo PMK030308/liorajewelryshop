@@ -6,6 +6,8 @@ import Shapes from '../data/shapes';
 import { Order } from '../types';
 import InvoiceModal from '../components/InvoiceModal';
 import MoMoIcon from '../components/icons/MoMoIcon';
+import { hasSupabase } from '../lib/supabase';
+import { createOrder } from '../lib/repo';
 
 const PAYMENT_LABELS: Record<Order['payment'], string> = {
   cod: 'Thanh toán khi nhận hàng (COD)',
@@ -105,6 +107,10 @@ export default function CheckoutPage() {
     showToast('Đặt hàng thành công!');
     setPlacedOrder(order);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Sync lên Supabase (nếu đã cấu hình). Fail thì vẫn giữ localStorage.
+    if (hasSupabase) {
+      createOrder(order).catch(err => console.error('[Liora] createOrder lên Supabase thất bại, đã lưu local:', err));
+    }
   };
 
   // ====== ORDER SUCCESS SCREEN ======
