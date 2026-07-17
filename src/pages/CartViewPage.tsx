@@ -64,13 +64,17 @@ export default function CartViewPage() {
               return (
                 <div key={it.cartId} className="bg-white border border-rule rounded-lg p-4 flex gap-4 shadow-card">
                   {/* Image */}
-                  <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0">
-                    <div
-                      className="photo h-full w-full"
-                      style={{ aspectRatio: 'auto', backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${it.tint} 75%, ${it.tint2})` } as React.CSSProperties}
-                    >
-                      <div className="sil" style={{ color: it.accent }}>{ShapeSvg}</div>
-                    </div>
+                  <div className="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-soft">
+                    {it.image ? (
+                      <img src={it.image} alt={it.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div
+                        className="photo h-full w-full"
+                        style={{ aspectRatio: 'auto', backgroundImage: `radial-gradient(120% 80% at 50% 30%, #ffffff, ${it.tint} 75%, ${it.tint2})` } as React.CSSProperties}
+                      >
+                        <div className="sil" style={{ color: it.accent }}>{ShapeSvg}</div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Info */}

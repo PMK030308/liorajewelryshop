@@ -235,13 +235,17 @@ export default function CheckoutPage() {
                 const ShapeSvg = Shapes[it.shape] || Shapes['gem'];
                 return (
                   <div key={it.cartId} className="flex gap-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                      <div
-                        className="photo h-full w-full"
-                        style={{ aspectRatio:'auto', backgroundImage:`radial-gradient(120% 80% at 50% 30%, #ffffff, ${it.tint} 75%, ${it.tint2})` } as React.CSSProperties}
-                      >
-                        <div className="sil" style={{ color: it.accent }}>{ShapeSvg}</div>
-                      </div>
+                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-soft">
+                      {it.image ? (
+                        <img src={it.image} alt={it.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div
+                          className="photo h-full w-full"
+                          style={{ aspectRatio:'auto', backgroundImage:`radial-gradient(120% 80% at 50% 30%, #ffffff, ${it.tint} 75%, ${it.tint2})` } as React.CSSProperties}
+                        >
+                          <div className="sil" style={{ color: it.accent }}>{ShapeSvg}</div>
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-medium line-clamp-2">{it.name}</div>

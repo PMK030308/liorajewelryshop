@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Pencil, Star, Mail, Sparkles, AlertTriangle, Check, Share2, Bell } from 'lucide-react';
+import { ShoppingBag, Zap, MessageCircle, ChevronDown, Plus, Minus, Truck, RotateCcw, ShieldCheck, Gift, Ruler, ZoomIn, Star, AlertTriangle, Check, Share2, Bell } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { fmt } from '../data';
 import PhotoPlaceholder from '../components/PhotoPlaceholder';
@@ -11,7 +11,11 @@ import RecentlyViewedStrip from '../components/RecentlyViewedStrip';
 import { Product, ShapeKey } from '../types';
 import { pushRecentlyViewed } from '../utils/recentlyViewed';
 
-const SIZES = ['#5', '#6', '#7', '#8', '#9'];
+const SIZES = ['18cm', '20cm'];
+const SIZE_DETAILS: Record<string, { label: string; desc: string }> = {
+  '18cm': { label: '18 cm', desc: 'Size vừa — ôm nhẹ cổ tay' },
+  '20cm': { label: '20 cm', desc: 'Size lỏng — thoải mái, dễ điều chỉnh' },
+};
 
 // Possible packaging variants (mocked — server would return these dynamically).
 interface VariantOption {
@@ -19,24 +23,16 @@ interface VariantOption {
   label: string;
   available?: boolean;
 }
-const PACKAGING_OPTIONS: VariantOption[] = [
-  { key: 'hop-co-ban', label: 'Hộp cơ bản' },
-  { key: 'hop-tang-cao-cap', label: 'Hộp tặng cao cấp' },
-  { key: 'tui-velvet', label: 'Túi velvet (+50K)' },
-  { key: 'da-het', label: 'Giấy gói VIP', available: false },
+const PACKAGING_OPTIONS: (VariantOption & { feeText: string; desc: string })[] = [
+  { key: 'tui-vai', label: 'Túi vải cao cấp', feeText: '+30.000₫', desc: 'Túi vải nhung mềm mại, thanh lịch — phù hợp mang theo hàng ngày.' },
+  { key: 'hop-dung', label: 'Hộp đựng sang trọng', feeText: '+50.000₫', desc: 'Hộp quà cứng cao cấp, đúc nổi logo — lựa chọn hoàn hảo cho quà tặng.' },
+  { key: 'tui-vai-va-hop', label: 'Túi vải + Hộp quà', feeText: '+80.000₫', desc: 'Bộ trọn gói: hộp quà sang trọng kèm túi vải — trải nghiệm unboxing đẳng cấp.' },
 ];
-
-interface GiftItem {
-  id: string;
-  title: string;
-  desc: string;
-  icon: React.ReactNode;
-}
-const FREE_GIFTS: GiftItem[] = [
-  { id: 'card', title: 'Thiệp lời chúc khắc tên', desc: 'Tặng kèm thiệp giấy mỹ thuật dày 250gsm, khắc tên người nhận miễn phí.', icon: <Mail size={18} strokeWidth={1.8} /> },
-  { id: 'cloth', title: 'Khăn lau bạc cao cấp', desc: 'Khăn microfiber mềm chuyên dụng — giúp giữ bạc luôn sáng đẹp như mới.', icon: <Sparkles size={18} strokeWidth={1.8} /> },
-  { id: 'voucher', title: 'Voucher 50K cho đơn tiếp theo', desc: 'Gửi qua email sau khi đơn hàng giao thành công.', icon: <Star size={18} strokeWidth={1.8} /> },
-];
+const PACKAGING_FEE: Record<string, number> = {
+  'tui-vai': 30000,
+  'hop-dung': 50000,
+  'tui-vai-va-hop': 80000,
+};
 
 export default function ProductPage({ slug }: { slug: string }) {
   const { state, dispatch, navigate, showToast } = useStore();
@@ -52,13 +48,9 @@ export default function ProductPage({ slug }: { slug: string }) {
   }
 
   // --- Local state ---
-  const [packaging, setPackaging] = useState('hop-co-ban');
-  const [selectedGift, setSelectedGift] = useState('card');
+  const [packaging, setPackaging] = useState('tui-vai');
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [engraveOn, setEngraveOn] = useState(false);
-  const [engraveText, setEngraveText] = useState('');
-  const [engraveFont, setEngraveFont] = useState<'sans' | 'script'>('script');
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [stockAlertEmail, setStockAlertEmail] = useState('');
   const [stockAlertSent, setStockAlertSent] = useState(false);
@@ -83,7 +75,7 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   // Default size if not set
   useEffect(() => {
-    if (!state.pdpSize) dispatch({ type: 'SET_PDP_SIZE', payload: SIZES[2] });
+    if (!state.pdpSize) dispatch({ type: 'SET_PDP_SIZE', payload: SIZES[0] });
   }, [state.pdpSize, dispatch]);
 
   // Push to recently viewed
@@ -103,10 +95,8 @@ export default function ProductPage({ slug }: { slug: string }) {
     return () => obs.disconnect();
   }, [p?.slug]);
 
-  // Decide size-guide type based on subcat
-  const sizeGuideType: 'ring' | 'bracelet' | 'necklace' =
-    p?.subcat === 'lac-tay' ? 'bracelet' :
-    p?.subcat === 'day-chuyen' ? 'necklace' : 'ring';
+  // Decide size-guide type — chỉ bán vòng tay, luôn dùng bảng size vòng tay
+  const sizeGuideType: 'ring' | 'bracelet' | 'necklace' = 'bracelet';
 
   // --- Derived data ---
   const discount = useMemo(() => {
@@ -116,7 +106,7 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   const inStock = p.inStock ?? 0;
   const isSold = !!p.sold || inStock === 0;
-  const showSize = p.subcat === 'nhan-don' || p.subcat === 'cap-doi';
+  const showSize = true;
   const productHighlights = p.highlights?.filter(Boolean) || [];
   const productSpecs = p.specifications?.filter(item => item.label && item.value) || [];
   const productCare = p.careInstructions || 'Tránh tiếp xúc nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau khi đeo. Đem đến Liorajewelry để được vệ sinh miễn phí trọn đời.';
@@ -174,26 +164,20 @@ export default function ProductPage({ slug }: { slug: string }) {
   const related = state.products.filter(x => x.subcat === p.subcat && x.slug !== p.slug).slice(0, 4);
 
   // --- Actions ---
-  const engravingValid = engraveOn && engraveText.trim().length > 0;
-  const engravingFee = engravingValid ? 50000 : 0;
-  const finalPrice = p.price + engravingFee;
+  const packagingFee = PACKAGING_FEE[packaging] ?? 0;
+  const finalPrice = p.price + packagingFee;
 
   const addToCart = () => {
     if (isSold) { showToast('Sản phẩm tạm hết hàng'); return; }
-    if (engraveOn && !engraveText.trim()) {
-      showToast('Vui lòng nhập nội dung khắc tên');
-      return;
-    }
-    const cartId = `${p.slug}__${state.pdpSize}__${packaging}${engravingValid ? '__' + engraveText.trim() : ''}`;
-    const displayName = engravingValid
-      ? `${p.name} (khắc: "${engraveText.trim()}")`
-      : p.name;
+    const cartId = `${p.slug}__${state.pdpSize}__${packaging}`;
+    const displayName = p.name;
     dispatch({
       type: 'ADD_TO_CART',
       payload: {
         cartId, slug: p.slug, name: displayName, price: finalPrice,
         qty: state.pdpQty, size: state.pdpSize || undefined,
         tint: p.tint, tint2: p.tint2, accent: p.accent, shape: p.shape,
+        image: mainImage,
       },
     });
     showToast('Đã thêm vào giỏ hàng');
@@ -362,7 +346,7 @@ export default function ProductPage({ slug }: { slug: string }) {
               <div className="text-2xl md:text-3xl font-bold text-brand-700">{fmt(finalPrice)}</div>
               {p.originalPrice && p.originalPrice > p.price && (
                 <>
-                  <div className="text-mute line-through text-sm">{fmt(p.originalPrice + engravingFee)}</div>
+                  <div className="text-mute line-through text-sm">{fmt(p.originalPrice + packagingFee)}</div>
                   <span className="bg-red-700 text-white text-[10px] tracking-wider px-2 py-1 font-bold">−{discount}%</span>
                 </>
               )}
@@ -370,16 +354,16 @@ export default function ProductPage({ slug }: { slug: string }) {
             {p.originalPrice && p.originalPrice > p.price && (
               <div className="text-xs text-ink2 mt-1.5">Tiết kiệm {fmt(p.originalPrice - p.price)} hôm nay</div>
             )}
-            {engravingFee > 0 && (
-              <div className="text-xs text-brand-700 mt-1.5">Đã bao gồm phí khắc tên: {fmt(engravingFee)}</div>
+            {packagingFee > 0 && (
+              <div className="text-xs text-brand-700 mt-1.5">Đã bao gồm phí đóng gói: {fmt(packagingFee)}</div>
             )}
           </div>
 
-          {/* --- Variants: Size --- */}
+          {/* --- Size selector — vòng tay, tinh tế --- */}
           {showSize && (
-            <VariantGroup
-              label="Kích thước"
-              helper={
+            <div>
+              <div className="flex items-baseline justify-between mb-2">
+                <span className="text-sm font-semibold">Kích thước vòng tay</span>
                 <button
                   onClick={() => setSizeGuideOpen(true)}
                   className="text-xs text-brand-500 hover:text-brand-700 inline-flex items-center gap-1"
@@ -387,32 +371,76 @@ export default function ProductPage({ slug }: { slug: string }) {
                   <Ruler size={12} strokeWidth={2} />
                   Hướng dẫn chọn size
                 </button>
-              }
-            >
-              {SIZES.map(s => (
-                <VariantButton
-                  key={s}
-                  active={state.pdpSize === s}
-                  onClick={() => dispatch({ type: 'SET_PDP_SIZE', payload: s })}
-                >{s}</VariantButton>
-              ))}
-            </VariantGroup>
+              </div>
+              <div className="grid grid-cols-2 gap-2.5">
+                {SIZES.map(s => {
+                  const active = state.pdpSize === s;
+                  const detail = SIZE_DETAILS[s];
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => dispatch({ type: 'SET_PDP_SIZE', payload: s })}
+                      className={`relative text-center rounded-md border transition-all ${
+                        active
+                          ? 'border-brand-700 bg-brand-50/60 ring-1 ring-brand-700/20 shadow-sm'
+                          : 'border-rule bg-white hover:border-brand-400 hover:bg-brand-50/30'
+                      }`}
+                    >
+                      <div className="px-4 py-3">
+                        <div className={`text-base font-semibold ${active ? 'text-brand-700' : 'text-ink'}`}>{detail?.label || s}</div>
+                        <div className="text-[11px] text-mute mt-0.5 leading-tight">{detail?.desc}</div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           )}
 
-          {/* --- Variants: Packaging (hộp/túi) --- */}
-          <VariantGroup label="Hộp / Túi">
-            {PACKAGING_OPTIONS.map(v => {
-              const disabled = v.available === false;
-              return (
-                <VariantButton
-                  key={v.key}
-                  active={packaging === v.key}
-                  disabled={disabled}
-                  onClick={() => setPackaging(v.key)}
-                >{v.label}</VariantButton>
-              );
-            })}
-          </VariantGroup>
+          {/* --- Packaging (hộp/túi) — gói quà cao cấp --- */}
+          <div>
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-sm font-semibold">Gói quà & Đóng gói</span>
+              <span className="text-[11px] text-mute italic">Tinh tế — Sang trọng</span>
+            </div>
+            <div className="grid gap-2.5">
+              {PACKAGING_OPTIONS.map(v => {
+                const active = packaging === v.key;
+                const disabled = v.available === false;
+                return (
+                  <button
+                    key={v.key}
+                    type="button"
+                    disabled={disabled}
+                    onClick={() => setPackaging(v.key)}
+                    className={`group relative text-left rounded-md border transition-all ${
+                      active
+                        ? 'border-brand-700 bg-brand-50/60 ring-1 ring-brand-700/20 shadow-sm'
+                        : disabled
+                          ? 'border-rule bg-soft text-mute opacity-50 cursor-not-allowed'
+                          : 'border-rule bg-white hover:border-brand-400 hover:bg-brand-50/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-3 px-4 py-3">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                          active ? 'border-brand-700 bg-brand-700' : 'border-rule'
+                        }`}>
+                          {active && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </span>
+                        <div className="min-w-0">
+                          <div className={`text-sm font-medium truncate ${active ? 'text-brand-700' : 'text-ink'}`}>{v.label}</div>
+                          <div className="text-[11px] text-mute line-clamp-1">{v.desc}</div>
+                        </div>
+                      </div>
+                      <span className={`text-xs font-semibold flex-shrink-0 ${active ? 'text-brand-700' : 'text-ink2'}`}>{v.feeText}</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {/* --- Quantity + Stock --- */}
           <div>
@@ -467,72 +495,6 @@ export default function ProductPage({ slug }: { slug: string }) {
                 <span className="text-xs text-red-600 font-semibold inline-flex items-center gap-1"><AlertTriangle size={13} strokeWidth={2} /> Sản phẩm tạm hết hàng</span>
               )}
             </div>
-          </div>
-
-          {/* --- Engraving (khắc tên) — optional --- */}
-          <div className="border border-rule rounded-md">
-            <button
-              type="button"
-              onClick={() => setEngraveOn(v => !v)}
-              className="w-full flex items-center justify-between gap-2 px-4 py-3 text-left"
-              aria-expanded={engraveOn}
-            >
-              <span className="flex items-center gap-2.5">
-                <span className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                  engraveOn ? 'bg-brand-700 border-brand-700' : 'border-rule'
-                }`}>
-                  {engraveOn && <Check size={12} strokeWidth={3} className="text-white" />}
-                </span>
-                <Pencil size={16} strokeWidth={1.8} className="text-brand-700" />
-                <span className="font-semibold text-sm">Khắc tên cá nhân hoá</span>
-                <span className="text-xs text-mute">(+50.000₫)</span>
-              </span>
-              <ChevronDown size={14} strokeWidth={2} className={`text-mute transition-transform ${engraveOn ? 'rotate-180' : ''}`} />
-            </button>
-            {engraveOn && (
-              <div className="border-t border-rule p-4 space-y-3 bg-soft/50">
-                <div>
-                  <label className="block text-xs font-semibold text-ink2 mb-1.5">Nội dung khắc <span className="text-mute">(tối đa 12 ký tự)</span></label>
-                  <input
-                    value={engraveText}
-                    onChange={(e) => setEngraveText(e.target.value.slice(0, 12))}
-                    placeholder="VD: Mai Anh"
-                    maxLength={12}
-                    className="w-full border border-rule rounded-md px-3 py-2 text-sm focus:outline-none focus:border-brand-500 bg-white"
-                  />
-                  <div className="text-[11px] text-mute mt-1 text-right">{engraveText.length}/12 ký tự</div>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-ink2 mb-1.5">Kiểu chữ</label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setEngraveFont('script')}
-                      className={`flex-1 border-2 px-3 py-2 text-base ${engraveFont === 'script' ? 'border-brand-700 bg-brand-50' : 'border-rule hover:border-brand-400'}`}
-                    >
-                      <span className="script text-xl">Viết tay</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEngraveFont('sans')}
-                      className={`flex-1 border-2 px-3 py-2 text-base ${engraveFont === 'sans' ? 'border-brand-700 bg-brand-50' : 'border-rule hover:border-brand-400'}`}
-                    >
-                      <span className="uppercase font-bold tracking-wider">SANS-SERIF</span>
-                    </button>
-                  </div>
-                </div>
-                {/* Live preview */}
-                {engraveText.trim() && (
-                  <div className="bg-white border border-dashed border-brand-300 rounded p-4 text-center">
-                    <div className="text-[10px] uppercase tracking-wider text-mute mb-1">Xem trước khắc</div>
-                    <div className={`text-2xl md:text-3xl text-brand-700 ${engraveFont === 'script' ? 'script' : 'font-bold uppercase tracking-widest'}`}>
-                      {engraveText}
-                    </div>
-                  </div>
-                )}
-                <p className="text-[11px] text-mute italic inline-flex items-center gap-1"><AlertTriangle size={12} strokeWidth={1.8} /> Sản phẩm khắc tên sẽ không áp dụng đổi trả</p>
-              </div>
-            )}
           </div>
 
           {/* --- CTAs full-width vertical stack --- */}
@@ -616,41 +578,6 @@ export default function ProductPage({ slug }: { slug: string }) {
                 </form>
               )}
             </div>
-          )}
-
-          {/* --- Promo widget: free gifts (dynamic list) --- */}
-          {FREE_GIFTS.length > 0 && (
-            <fieldset className="border-2 border-dashed border-brand-300 rounded p-4 bg-brand-50/30">
-              <legend className="px-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-700">
-                <Gift size={14} strokeWidth={2} />
-                Quà tặng kèm
-              </legend>
-              <ul className="space-y-2.5 mt-1">
-                {FREE_GIFTS.map(g => {
-                  const isSelected = selectedGift === g.id;
-                  return (
-                    <li key={g.id}>
-                      <label className="flex items-start gap-3 cursor-pointer group">
-                        <input
-                          type="radio"
-                          name="gift"
-                          checked={isSelected}
-                          onChange={() => setSelectedGift(g.id)}
-                          className="mt-1 accent-brand-700 w-4 h-4 flex-shrink-0"
-                        />
-                        <div className="w-10 h-10 flex-shrink-0 bg-white border border-rule flex items-center justify-center text-base text-brand-500 group-hover:border-brand-400 transition-colors">
-                          {g.icon}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className={`text-sm font-semibold ${isSelected ? 'text-brand-700' : 'text-ink'} break-words`}>{g.title}</div>
-                          <div className="text-xs text-mute break-words">{g.desc}</div>
-                        </div>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </fieldset>
           )}
 
           {/* --- Trust badges --- */}
@@ -756,7 +683,7 @@ export default function ProductPage({ slug }: { slug: string }) {
       />
 
       {/* === Mobile sticky CTA bar === */}
-      <div className={`md:hidden fixed left-0 right-0 bottom-16 z-30 transition-transform duration-300 ${
+      <div className={`md:hidden fixed left-0 right:0 bottom-16 z-30 transition-transform duration-300 ${
         showStickyBar ? 'translate-y-0' : 'translate-y-full'
       }`}>
         <div className="bg-white border-t border-rule shadow-[0_-4px_16px_rgba(0,0,0,0.08)] px-3 py-2.5 flex items-center gap-2">
@@ -783,45 +710,5 @@ export default function ProductPage({ slug }: { slug: string }) {
         </div>
       </div>
     </main>
-  );
-}
-
-/* ============================ Reusable variant components ============================ */
-
-function VariantGroup({
-  label, helper, children,
-}: { label: string; helper?: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="flex items-baseline justify-between mb-2">
-        <span className="text-sm font-semibold">{label}</span>
-        {helper}
-      </div>
-      <div className="flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
-
-function VariantButton({
-  active, disabled, onClick, children,
-}: { active: boolean; disabled?: boolean; onClick?: () => void; children: React.ReactNode }) {
-  if (disabled) {
-    return (
-      <button
-        disabled
-        className="px-4 py-2 text-sm border-2 border-rule text-mute opacity-40 cursor-not-allowed select-none"
-        aria-disabled="true"
-      >{children}</button>
-    );
-  }
-  return (
-    <button
-      onClick={onClick}
-      className={`px-4 py-2 text-sm border-2 transition-colors ${
-        active
-          ? 'bg-ink text-white border-ink'
-          : 'bg-white text-ink border-rule hover:border-ink'
-      }`}
-    >{children}</button>
   );
 }

@@ -80,7 +80,6 @@ export default function PolicyPage() {
             <section>
               <h3 className="font-semibold text-ink mb-2">3. Các trường hợp KHÔNG đổi trả</h3>
               <ul className="space-y-1.5 pl-5 list-disc">
-                <li>Sản phẩm đã <strong>khắc tên cá nhân hoá</strong> (theo yêu cầu riêng của khách).</li>
                 <li>Sản phẩm bị hư hỏng do sử dụng sai cách, va đập mạnh hoặc tiếp xúc hoá chất.</li>
                 <li>Đã qua 7 ngày kể từ ngày nhận hàng.</li>
               </ul>

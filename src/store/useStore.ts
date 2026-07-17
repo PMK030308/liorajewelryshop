@@ -350,7 +350,14 @@ export function useStoreSetup() {
 
     const productsP = fetchWooCommerceProducts(config)
       .then(products => {
-        if (products && products.length > 0) dispatch({ type: 'SET_PRODUCTS', payload: products });
+        if (products && products.length > 0) {
+          // MERGE: giữ sản phẩm cũ (seed/local) + thêm/cập nhật sản phẩm từ WP.
+          // Sản phẩm WP trùng slug sẽ override sản phẩm cũ, sản phẩm mới sẽ được thêm vào.
+          const existing = stateRef.current.products;
+          const wpSlugs = new Set(products.map(p => p.slug));
+          const keptOld = existing.filter(p => !wpSlugs.has(p.slug));
+          dispatch({ type: 'SET_PRODUCTS', payload: [...products, ...keptOld] });
+        }
       })
       .catch(err => { console.error('[Liora] load products từ WooCommerce thất bại, giữ seed:', err); });
 

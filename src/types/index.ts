@@ -63,6 +63,7 @@ export interface CartItem {
   tint2: string;
   accent: string;
   shape: ShapeKey;
+  image?: string;
 }
 
 export interface Category {
