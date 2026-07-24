@@ -170,6 +170,14 @@ export interface SiteSettings {
   shopeeUrl: string;
   /** Ảnh QR code Shopee (URL hoặc data URL). */
   shopeeQrUrl: string;
+  /** Link Google Maps tới cửa hàng (dùng cho nút bản đồ / FloatButtons). */
+  mapUrl?: string;
+  /** Link Messenger (m.me/...) để chat với page. */
+  messengerUrl?: string;
+  /** Mã số thuế (MST) hiển thị trên hóa đơn. */
+  taxId?: string;
+  /** Đường dẫn logo (URL hoặc data URL) dùng cho hóa đơn. */
+  invoiceLogo?: string;
 }
 
 export interface CategoryTile {

@@ -8,40 +8,41 @@ export default {
     extend: {
       colors: {
         brand: {
-          50:  '#fff7f9',
-          100: '#ffe9f1',
-          200: '#ffcfdd',
-          300: '#ffb0c7',
-          400: '#ff8daa',
-          500: '#f472a0',  /* pastel pink — primary accent, hợp logo & sản phẩm */
-          600: '#e1588e',
-          650: '#d04f82',
-          700: '#b23a68',  /* rose for buttons/footer (đủ tương phản với chữ trắng) */
-          800: '#923055',
-          850: '#7a2a47',
-          900: '#64243c',
+          50:  '#FFF7FA',  /* section background — trắng pha hồng rất nhạt */
+          100: '#FCEAF1',  /* tint nền hồng rất nhạt cho menu/subtle */
+          200: '#F2DCE5',  /* border pastel */
+          300: '#EBC8D9',  /* light accent */
+          400: '#E6A8BF',  /* PRIMARY — hồng pastel accent */
+          500: '#E6A8BF',  /* alias primary */
+          600: '#D98CA8',  /* HOVER — hồng pastel đậm hơn */
+          700: '#C57A94',  /* active/strong accent */
+          800: '#A85F7C',  /* deep rose (dùng tiết kiệm) */
+          850: '#8A4F66',
+          900: '#6E3F52',
         },
-        ink:  '#2a2025',
-        ink2: '#5d5157',
-        mute: '#9a8b92',
-        rule: '#f7d5e1',
-        soft: '#fff7f9',
+        ink:  '#4A3C40',   /* text chính — nâu/xám đậm sang trọng */
+        ink2: '#8A7C82',   /* text phụ */
+        mute: '#A89AA0',   /* text muted */
+        rule: '#F2DCE5',   /* border pastel */
+        soft: '#FFF7FA',   /* section bg nhạt */
+        bg:   '#FFFDFD',   /* background chủ đạo — trắng pha hồng cực nhạt */
       },
       fontFamily: {
-        sans: ['"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+        sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'system-ui', 'sans-serif'],
+        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         script: ['"Dancing Script"', 'cursive'],
       },
       boxShadow: {
-        card:      '0 1px 2px rgba(0,0,0,0.04), 0 4px 18px -8px rgba(0,0,0,0.08)',
-        cardHover: '0 8px 30px -8px rgba(244,114,160,0.22)',
-        float:     '0 6px 22px rgba(244,114,160,0.24)',
+        card:      '0 1px 2px rgba(74,60,64,0.04), 0 4px 18px -10px rgba(74,60,64,0.08)',
+        cardHover: '0 8px 30px -10px rgba(198,122,148,0.18)',
+        float:     '0 6px 22px rgba(198,122,148,0.16)',
       },
       keyframes: {
         slideUp:    { from: { opacity: '0', transform: 'translateY(30px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         fadeUp:     { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
         floatPulse: {
-          '0%, 100%': { boxShadow: '0 6px 22px rgba(244,114,160,0.28)' },
-          '50%':      { boxShadow: '0 6px 28px rgba(255,176,199,0.5)' },
+          '0%, 100%': { boxShadow: '0 6px 22px rgba(230,168,191,0.20)' },
+          '50%':      { boxShadow: '0 6px 28px rgba(217,140,168,0.30)' },
         },
         cartBounce: {
           '0%':   { transform: 'scale(1) rotate(0)' },

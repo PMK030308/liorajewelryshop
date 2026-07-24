@@ -11,7 +11,8 @@ const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function PolicyPage() {
-  const { navigate } = useStore();
+  const { navigate, state } = useStore();
+  const settings = state.siteContent.settings;
   const [tab, setTab] = useState<Tab>('bao-hanh');
 
   return (
@@ -88,7 +89,7 @@ export default function PolicyPage() {
             <section>
               <h3 className="font-semibold text-ink mb-2">4. Cách thức đổi trả</h3>
               <ol className="space-y-1.5 pl-5 list-decimal">
-                <li>Liên hệ hotline <a href="tel:0985048952" className="text-brand-500 font-semibold">0985 048 952</a> hoặc Messenger để báo tình trạng.</li>
+                <li>Liên hệ hotline <a href={`tel:${settings.hotline}`} className="text-brand-500 font-semibold">{settings.hotline}</a> hoặc Messenger để báo tình trạng.</li>
                 <li>Gửi sản phẩm về địa chỉ cửa hàng (hoặc gửi qua đơn vị vận chuyển).</li>
                 <li>Shop kiểm tra và đổi/trả/bảo hành trong vòng 2–5 ngày làm việc.</li>
               </ol>
@@ -179,10 +180,10 @@ export default function PolicyPage() {
             Cần hỗ trợ thêm về chính sách? Liên hệ ngay:
           </div>
           <div className="flex gap-2">
-            <a href="tel:0985048952" className="inline-flex items-center gap-1.5 text-sm font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md transition-colors">
+            <a href={`tel:${settings.hotline}`} className="inline-flex items-center gap-1.5 text-sm font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md transition-colors">
               <Phone size={14} strokeWidth={2} /> Hotline
             </a>
-            <a href="mailto:liorajewelry10@gmail.com" className="inline-flex items-center gap-1.5 text-sm font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md transition-colors">
+            <a href={`mailto:${settings.email}`} className="inline-flex items-center gap-1.5 text-sm font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded-md transition-colors">
               <Mail size={14} strokeWidth={2} /> Email
             </a>
           </div>

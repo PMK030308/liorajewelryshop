@@ -4,7 +4,8 @@ import { useStore } from '../store/useStore';
 import { ContactMessage } from '../types';
 
 export default function ContactPage() {
-  const { navigate, dispatch, showToast } = useStore();
+  const { state, navigate, dispatch, showToast } = useStore();
+  const { settings } = state.siteContent;
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -21,7 +22,7 @@ export default function ContactPage() {
       createdAt: Date.now(),
     };
     dispatch({ type: 'ADD_CONTACT_MESSAGE', payload: msg });
-    showToast('✓ Đã gửi tin nhắn! Liorajewelry sẽ phản hồi sớm.');
+    showToast(`✓ Đã gửi tin nhắn! ${settings.brandName} sẽ phản hồi sớm.`);
     setName(''); setPhone(''); setEmail(''); setMessage('');
   };
   return (
@@ -29,15 +30,15 @@ export default function ContactPage() {
       <div className="text-xs text-mute mb-4">
         <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className="hover:text-brand-500">Trang chủ</a> / Liên Hệ
       </div>
-      <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Liên hệ với Liorajewelry</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-6 md:mb-8">Liên hệ với {settings.brandName}</h1>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <h3 className="font-bold text-lg mb-4">Thông tin cửa hàng</h3>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><MapPin size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Địa chỉ</div><div className="text-ink2">Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai</div></div></li>
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Phone size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Hotline</div><a href="tel:0985048952" className="text-brand-500 hover:underline">0985 048 952</a></div></li>
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Mail size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Email</div><a href="mailto:liorajewelry10@gmail.com" className="text-brand-500 hover:underline">liorajewelry10@gmail.com</a></div></li>
-            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Clock size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Giờ làm việc</div><div className="text-ink2">Thứ 2 – CN: 9:00 – 22:00</div></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><MapPin size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Địa chỉ</div><div className="text-ink2">{settings.address}</div></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Phone size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Hotline</div><a href={`tel:${settings.hotline}`} className="text-brand-500 hover:underline">{settings.hotline}</a></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Mail size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Email</div><a href={`mailto:${settings.email}`} className="text-brand-500 hover:underline">{settings.email}</a></div></li>
+            <li className="flex items-start gap-3"><span className="text-xl text-brand-700 mt-0.5"><Clock size={20} strokeWidth={1.8} /></span><div><div className="font-semibold">Giờ làm việc</div><div className="text-ink2">{settings.openHours}</div></div></li>
           </ul>
         </div>
         <form className="space-y-3" onSubmit={handleSubmit}>

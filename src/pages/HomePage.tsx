@@ -36,7 +36,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
   ];
 
   return (
-    <section className="bg-white py-16 md:py-24 relative">
+    <section className="bg-white section-y relative">
       <div className="container-x relative">
         <div
           ref={scrollerRef}
@@ -74,7 +74,7 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
                 <div className="hover-panel">
                   <div className="hover-name">{c.title}</div>
                   <div className="hover-btn">
-                    <button className="bg-brand-700 text-white hover:bg-brand-800 transition-colors text-[11px] font-semibold px-5 py-1.5 rounded uppercase tracking-[0.18em]">
+                    <button className="bg-brand-400 text-white hover:bg-brand-600 transition-colors text-[11px] font-semibold px-5 py-1.5 rounded uppercase tracking-[0.18em]">
                       Xem Ngay
                     </button>
                   </div>
@@ -86,14 +86,14 @@ function CategorySlider({ setFilterNav }: { setFilterNav: (slug: string) => void
         {/* Slider Arrows — small, white, overlap card edges */}
         <button
           onClick={() => scrollBy(-1)}
-          className="hidden md:flex absolute left-1 md:-left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-brand-50 transition z-10 border border-rule"
+          className="hidden md:flex absolute left-1 md:-left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-soft transition z-10 border border-rule"
           aria-label="Lùi"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
         <button
           onClick={() => scrollBy(1)}
-          className="hidden md:flex absolute right-1 md:-right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-brand-50 transition z-10 border border-rule"
+          className="hidden md:flex absolute right-1 md:-right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-card items-center justify-center text-ink hover:bg-soft transition z-10 border border-rule"
           aria-label="Tiếp"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
@@ -119,103 +119,90 @@ function HeroSlideItem({ idx }: { idx: number }) {
       transition={{ duration: 0.8, ease: [0.2, 0.6, 0.2, 1] }}
       className="absolute inset-0"
     >
-      <div className="absolute inset-0 flex items-center" style={{ background: `linear-gradient(110deg, ${s.tint} 0%, #fffdfd 55%, ${s.tint} 100%)` }}>
-        {/* Wavy line */}
+      {/* Nền trắng chủ đạo, ảnh sản phẩm là điểm nhấn chính */}
+      <div className="absolute inset-0 flex items-center bg-white">
+        {/* Đường nét trang trí cực nhạt */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1200 400" preserveAspectRatio="none">
-          <path d="M0,200 C300,100 900,300 1200,200" fill="none" stroke="white" strokeWidth="1.5" opacity="0.5" />
+          <path d="M0,200 C300,100 900,300 1200,200" fill="none" stroke="#F2DCE5" strokeWidth="1.5" opacity="0.7" />
         </svg>
-        {/* Monogram wings — left & right */}
-        <div className="hidden md:block absolute inset-y-0 left-0 w-[18%] monogram-bg pointer-events-none" />
-        <div className="hidden md:block absolute inset-y-0 right-0 w-[18%] monogram-bg pointer-events-none" />
-        <div className="container-x grid md:grid-cols-2 gap-2 items-center w-full relative z-10">
-          <div className="text-center px-4 md:px-8 py-6 relative">
+        <div className="container-x grid md:grid-cols-2 gap-6 items-center w-full relative z-10">
+          <div className="text-center px-4 md:px-10 py-8 md:py-12 relative">
             <a
               href="#/"
               onClick={(e) => { e.preventDefault(); navigate('/'); }}
-              className="flex flex-col items-center mb-4 md:mb-6 hover:opacity-90 transition-opacity"
+              className="flex flex-col items-center mb-6 md:mb-8 hover:opacity-90 transition-opacity"
             >
-              <img src="/logoliora2.jpg" alt="LIORA" className="object-contain h-16 md:h-20 w-auto mix-blend-multiply" />
+              <img src="/logoliora2.jpg" alt="LIORA" className="object-contain h-14 md:h-16 w-auto mix-blend-multiply" />
             </a>
-            
-            {/* Title Frame */}
-            <div className="inline-block relative mb-6">
-              <div className="absolute -top-3 -left-3 w-8 h-8 border-t-[1.5px] border-l-[1.5px] border-brand-300/70"></div>
-              <div className="absolute -bottom-3 -right-3 w-8 h-8 border-b-[1.5px] border-r-[1.5px] border-brand-300/70"></div>
-              <div className="bg-brand-700 text-white px-8 md:px-14 py-5 md:py-7 relative z-10 shadow-[0_16px_36px_rgba(178,58,104,0.22)]">
-                <div className="text-lg md:text-2xl lg:text-3xl font-light tracking-[0.12em] uppercase leading-tight whitespace-pre-line">{s.plaque}</div>
-              </div>
-            </div>
+
+            {/* Tiêu đề serif nâu/xám đậm, không dùng khối nền hồng */}
+            <h1 className="font-serif text-2xl md:text-4xl lg:text-5xl font-semibold text-ink leading-tight tracking-wide mb-5 whitespace-pre-line">
+              {s.plaque}
+            </h1>
 
             {/* Slogan */}
-            <div className="mt-3 mb-6 flex items-center justify-center gap-3 md:gap-4">
-              <span className="h-px w-8 md:w-12 bg-gradient-to-r from-transparent via-brand-400 to-brand-600" />
-              <span className="slogan-luxe font-sans text-base md:text-lg font-light uppercase tracking-[0.45em] bg-gradient-to-r from-brand-600 via-brand-500 to-brand-700 bg-clip-text text-transparent whitespace-nowrap">
+            <div className="mb-8 flex items-center justify-center gap-3 md:gap-4">
+              <span className="h-px w-8 md:w-12 bg-brand-300" />
+              <span className="font-sans text-sm md:text-base font-light uppercase tracking-[0.42em] text-brand-600 whitespace-nowrap">
                 Own Your Shine
               </span>
-              <span className="h-px w-8 md:w-12 bg-gradient-to-l from-transparent via-brand-400 to-brand-600" />
+              <span className="h-px w-8 md:w-12 bg-brand-300" />
             </div>
 
-            {/* Store Info — Address, Hours, QR */}
+            {/* CTA button hồng pastel */}
+            <a
+              href="#/shop"
+              onClick={(e) => { e.preventDefault(); setFilterNav('all'); }}
+              className="btn-primary mb-8"
+            >
+              Khám phá bộ sưu tập
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </a>
+
+            {/* Store Info — chỉ icon Facebook/Shopee, QR chuyển xuống Footer */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
-              {/* Address & Hours */}
               <div className="flex flex-col gap-2.5 text-left">
-                <div className="flex items-start gap-2 text-brand-700">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mt-0.5 flex-shrink-0 opacity-70">
+                <div className="flex items-start gap-2 text-ink2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="mt-0.5 flex-shrink-0 text-brand-500">
                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/>
                   </svg>
                   <span className="text-xs md:text-sm leading-snug font-medium">{settings.address}</span>
                 </div>
-                <div className="flex items-center gap-2 text-brand-700">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="flex-shrink-0 opacity-70">
+                <div className="flex items-center gap-2 text-ink2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="flex-shrink-0 text-brand-500">
                     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                   </svg>
                   <span className="text-xs md:text-sm font-medium">{settings.openHours}</span>
                 </div>
               </div>
-              {/* QR Codes — Facebook & Shopee */}
-              <div className="flex items-center justify-center gap-3 md:gap-4">
+              {/* Chỉ icon Facebook/Shopee — QR đã chuyển xuống Footer */}
+              <div className="flex items-center justify-center gap-3">
                 <a
                   href={settings.facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
+                  className="w-10 h-10 rounded-full bg-white border border-brand-200 flex items-center justify-center text-brand-600 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all"
+                  title="Facebook Liora"
+                  aria-label="Facebook Liora"
                 >
-                  <img
-                    src={settings.qrUrl}
-                    alt="QR Facebook Liora"
-                    width="80"
-                    height="80"
-                    className="rounded-lg"
-                  />
-                  <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
-                    Facebook
-                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.87v-6.98H7.9V12h2.5V9.8c0-2.46 1.47-3.83 3.72-3.83 1.08 0 2.21.2 2.21.2v2.43h-1.25c-1.23 0-1.61.76-1.61 1.55V12h2.74l-.44 2.89H13.5v6.98A10 10 0 0 0 22 12Z"/></svg>
                 </a>
                 <a
                   href={settings.shopeeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col items-center gap-1.5 bg-white/95 backdrop-blur-sm rounded-xl p-2.5 shadow-[0_6px_20px_rgba(244,114,160,0.12)] border border-brand-200 hover:shadow-[0_10px_28px_rgba(244,114,160,0.20)] transition-all hover:scale-105"
+                  className="w-10 h-10 rounded-full bg-white border border-brand-200 flex items-center justify-center text-brand-600 hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all"
+                  title="Shopee Liora"
+                  aria-label="Shopee Liora"
                 >
-                  <img
-                    src={settings.shopeeQrUrl}
-                    alt="QR Shopee Liora"
-                    width="80"
-                    height="80"
-                    className="rounded-lg"
-                  />
-                  <div className="flex items-center gap-1 text-[10px] md:text-[11px] font-semibold text-brand-700 tracking-wide">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#EE4D2D"><path d="M5 7h14l.9 11.2A2 2 0 0 1 17.9 20.5H6.1a2 2 0 0 1-2-1.8L5 7Zm5.2-2.5a1.8 1.8 0 0 1 3.6 0V6h2v-1.5a3.8 3.8 0 0 0-7.6 0V6h2v-1.5Z"/></svg>
-                    Shopee
-                  </div>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 7h14l.9 11.2A2 2 0 0 1 17.9 20.5H6.1a2 2 0 0 1-2-1.8L5 7Zm5.2-2.5a1.8 1.8 0 0 1 3.6 0V6h2v-1.5a3.8 3.8 0 0 0-7.6 0V6h2v-1.5Z"/></svg>
                 </a>
               </div>
             </div>
           </div>
 
           <div className="flex justify-center items-center relative order-first md:order-last mb-4 md:mb-0">
-            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-white/70 shadow-[0_12px_30px_-10px_rgba(244,114,160,0.25)] md:shadow-[0_20px_50px_-12px_rgba(244,114,160,0.22)] hero-float bg-gradient-to-b from-brand-100 to-brand-200">
+            <div className="relative w-44 h-56 sm:w-56 sm:h-72 md:w-80 md:h-[32rem] lg:w-96 lg:h-[36rem] rounded-full overflow-hidden border-[4px] md:border-[6px] border-brand-100 hero-float bg-brand-100">
               {s.image && (
                 <img
                   src={s.image}
@@ -330,14 +317,14 @@ function BstShowcase({ setFilterNav }: { setFilterNav: (slug: string) => void })
           >
             <div className="pt-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-brand-700">
-                  BST {BST_COLLECTIONS.find(b => b.id === activeId)?.title}
-                  <span className="text-sm font-normal text-mute ml-2">({activeProducts.length} sản phẩm)</span>
-                </h3>
-                <button
-                  onClick={() => setFilterNav(activeId)}
-                  className="text-sm text-brand-500 hover:text-brand-700 font-semibold inline-flex items-center gap-1 transition-colors"
-                >
+              <h3 className="text-lg font-semibold text-ink">
+                BST {BST_COLLECTIONS.find(b => b.id === activeId)?.title}
+                <span className="text-sm font-normal text-mute ml-2">({activeProducts.length} sản phẩm)</span>
+              </h3>
+              <button
+                onClick={() => setFilterNav(activeId)}
+                className="text-sm text-brand-600 hover:text-brand-700 font-semibold inline-flex items-center gap-1 transition-colors"
+              >
                   Xem tất cả
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
                 </button>
@@ -409,7 +396,7 @@ export default function HomePage() {
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.92Z"/>
         </svg>
       ),
-      t: 'Đặt hàng trực tuyến', s: 'Hotline 0985 048 952',
+      t: 'Đặt hàng trực tuyến', s: `Hotline ${state.siteContent.settings.hotline}`,
     },
   ];
 
@@ -418,23 +405,22 @@ export default function HomePage() {
       {/* Hero Slider */}
       <section className="relative">
         <div
-          className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden squiggle-bg"
-          style={{ backgroundColor: '#fff7f9' }}
+          className="relative aspect-[4/5] sm:aspect-[16/9] md:aspect-[24/9] overflow-hidden bg-white"
           onMouseEnter={() => setHeroPaused(true)}
           onMouseLeave={() => setHeroPaused(false)}
         >
           <AnimatePresence mode="sync" initial={false}>
             <HeroSlideItem key={state.slide} idx={state.slide} />
           </AnimatePresence>
-          <button className="absolute left-0 top-1/2 -translate-y-1/2 px-4 py-12 md:px-6 z-10 text-brand-700/40 hover:text-brand-700 transition-colors" onClick={() => dispatch({ type: 'SET_SLIDE', payload: state.slide - 1 })} aria-label="Trước">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m15 18-6-6 6-6"/></svg>
+          <button className="absolute left-0 top-1/2 -translate-y-1/2 px-4 py-12 md:px-6 z-10 text-brand-400 hover:text-brand-600 transition-colors" onClick={() => dispatch({ type: 'SET_SLIDE', payload: state.slide - 1 })} aria-label="Trước">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m15 18-6-6 6-6"/></svg>
           </button>
-          <button className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-12 md:px-6 z-10 text-brand-700/40 hover:text-brand-700 transition-colors" onClick={() => dispatch({ type: 'SET_SLIDE', payload: state.slide + 1 })} aria-label="Sau">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m9 18 6-6-6-6"/></svg>
+          <button className="absolute right-0 top-1/2 -translate-y-1/2 px-4 py-12 md:px-6 z-10 text-brand-400 hover:text-brand-600 transition-colors" onClick={() => dispatch({ type: 'SET_SLIDE', payload: state.slide + 1 })} aria-label="Sau">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="m9 18 6-6-6-6"/></svg>
           </button>
           <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
             {Array.from({ length: slideCount }).map((_, i) => (
-              <button key={i} onClick={() => dispatch({ type: 'SET_SLIDE', payload: i })} className={`w-2 h-2 rounded-full transition ${state.slide === i ? 'bg-white' : 'bg-white/60'}`} aria-label={`Slide ${i + 1}`} />
+              <button key={i} onClick={() => dispatch({ type: 'SET_SLIDE', payload: i })} className={`w-2 h-2 rounded-full transition ${state.slide === i ? 'bg-brand-500' : 'bg-brand-300'}`} aria-label={`Slide ${i + 1}`} />
             ))}
           </div>
         </div>
@@ -447,10 +433,10 @@ export default function HomePage() {
       {/* Bộ Sưu Tập Nổi Bật (BST) */}
       <section className="container-x section-y">
         <Reveal>
-          <div className="text-center mb-10">
-            <div className="text-[11px] tracking-widest text-brand-500 font-semibold mb-2">BỘ SƯU TẬP NỔI BẬT</div>
+          <div className="text-center mb-12">
+            <div className="text-[11px] tracking-[0.25em] text-brand-500 font-semibold mb-3 uppercase">Bộ Sưu Tập Nổi Bật</div>
             <h2 className="sec-title">Bộ Sưu Tập Mới Nhất</h2>
-            <p className="text-sm text-ink2 mt-2 max-w-xl mx-auto">Thiết kế tinh xảo, phản chiếu nét riêng độc đáo trong từng khoảnh khắc đặc biệt</p>
+            <p className="text-sm text-ink2 mt-3 max-w-xl mx-auto">Thiết kế tinh xảo, phản chiếu nét riêng độc đáo trong từng khoảnh khắc đặc biệt</p>
           </div>
         </Reveal>
         <Reveal delay={0.1}>
@@ -501,7 +487,7 @@ export default function HomePage() {
               <a
                 href="#/about"
                 onClick={(e) => { e.preventDefault(); navigate('/about'); }}
-                className="inline-flex items-center gap-2 border-2 border-brand-700 text-brand-700 px-6 py-3 rounded-md font-semibold text-sm hover:bg-brand-700 hover:text-white transition-colors"
+                className="btn-outline"
               >
                 Xem thêm về chúng tôi
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
@@ -517,8 +503,8 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
             {trustBadges.map(b => (
               <div key={b.t} className="text-center">
-                <div className="w-14 h-14 mx-auto rounded-full bg-brand-50 text-brand-700 flex items-center justify-center mb-3">{b.icon}</div>
-                <div className="font-semibold mb-1 text-brand-700 text-sm">{b.t}</div>
+                <div className="w-14 h-14 mx-auto rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mb-4">{b.icon}</div>
+                <div className="font-semibold mb-1 text-ink text-sm">{b.t}</div>
                 <div className="text-xs text-mute">{b.s}</div>
               </div>
             ))}
@@ -566,9 +552,9 @@ export default function HomePage() {
                       key={key}
                       type="button"
                       onClick={() => navigate(`/news/${article.slug || article.id}`)}
-                      className="group rounded-2xl overflow-hidden border border-rule bg-white shadow-card hover:shadow-[0_14px_36px_rgba(178,58,104,0.14)] transition-all hover:-translate-y-1 flex flex-col text-left"
+                      className="group rounded-2xl overflow-hidden border border-rule bg-white shadow-card hover:shadow-cardHover transition-all hover:-translate-y-1 flex flex-col text-left"
                     >
-                      <div className="aspect-[16/10] bg-brand-50 overflow-hidden">
+                      <div className="aspect-[16/10] bg-brand-100 overflow-hidden">
                         {article.image ? (
                           <img
                             src={article.image}
@@ -599,7 +585,7 @@ export default function HomePage() {
             <div className="text-center mt-10">
               <button
                 onClick={() => navigate('/news')}
-                className="btn-pink inline-flex items-center gap-2"
+                className="btn-primary inline-flex items-center gap-2"
               >
                 Xem tất cả bài viết
                 <span className="transition-transform">→</span>
@@ -608,13 +594,13 @@ export default function HomePage() {
           </>
         ) : (
           <Reveal delay={0.1}>
-            <div className="rounded-3xl overflow-hidden border border-rule bg-gradient-to-br from-brand-50 via-white to-brand-100 px-6 py-12 md:py-16 text-center shadow-card">
+            <div className="rounded-3xl overflow-hidden border border-rule bg-brand-100 px-6 py-12 md:py-16 text-center shadow-card">
               <p className="text-sm md:text-base text-ink2 max-w-2xl mx-auto mb-7">
                 Cập nhật xu hướng trang sức bạc, đá quý, cách bảo quản và phối đồ — bài viết soạn chuẩn SEO trên WordPress sẽ hiển thị tại đây.
               </p>
               <button
                 onClick={() => navigate('/admin/wordpress')}
-                className="btn-pink inline-flex items-center gap-2"
+                className="btn-primary inline-flex items-center gap-2"
               >
                 Cấu hình WordPress
                 <span className="transition-transform">→</span>

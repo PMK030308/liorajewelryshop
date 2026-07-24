@@ -40,6 +40,7 @@ export default function ProductCard({ product: p }: Props) {
         onClick={(e) => { e.preventDefault(); open(); }}
         className="block relative"
       >
+        {/* Ảnh sản phẩm chiếm ~70-75% card — tăng tỉ lệ ảnh, giảm padding */}
         <PhotoPlaceholder
           tint={p.tint}
           tint2={p.tint2}
@@ -55,18 +56,19 @@ export default function ProductCard({ product: p }: Props) {
         />
       </a>
 
-      <div className="px-3 pt-3 pb-4 md:px-4 md:pt-4 md:pb-5">
+      {/* Khoảng trắng nhiều hơn, text tối giản, giá màu nâu/xám đậm */}
+      <div className="px-4 pt-4 pb-5 md:px-5 md:pt-5 md:pb-6">
         <a
           href={`#/product/${p.slug}`}
           onClick={(e) => { e.preventDefault(); open(); }}
           className="block"
         >
-          <h3 className="text-[13px] md:text-[13.5px] font-medium leading-snug line-clamp-2 text-ink hover:text-brand-500 transition-colors min-h-[2.6em] mb-2 text-center">
+          <h3 className="text-[13px] md:text-[13.5px] font-medium leading-snug line-clamp-2 text-ink hover:text-brand-600 transition-colors min-h-[2.6em] mb-2 text-center">
             {p.name}
           </h3>
         </a>
         <div className="flex items-baseline justify-center gap-2">
-          <div className="font-bold text-brand-700 text-base md:text-lg tracking-tight">{fmt(p.price)}</div>
+          <div className="font-semibold text-ink text-base md:text-lg tracking-tight">{fmt(p.price)}</div>
           {p.originalPrice && p.originalPrice > p.price && (
             <div className="text-xs text-mute line-through">{fmt(p.originalPrice)}</div>
           )}

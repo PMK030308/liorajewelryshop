@@ -20,6 +20,7 @@ const formatDate = (ts: number) =>
 
 export default function TrackOrderPage() {
   const { state, navigate } = useStore();
+  const settings = state.siteContent.settings;
   const [code, setCode] = useState('');
   const [phone, setPhone] = useState('');
   const [searched, setSearched] = useState(false);
@@ -104,7 +105,7 @@ export default function TrackOrderPage() {
             Tra cứu đơn hàng
           </button>
           <p className="text-xs text-mute text-center pt-2">
-            Không tìm thấy đơn? Liên hệ hotline <a href="tel:0985048952" className="text-brand-500 font-semibold">0985 048 952</a>
+            Không tìm thấy đơn? Liên hệ hotline <a href={`tel:${settings.hotline}`} className="text-brand-500 font-semibold">{settings.hotline}</a>
           </p>
         </form>
       )}
@@ -122,7 +123,7 @@ export default function TrackOrderPage() {
               Tra cứu lại
             </button>
             <a
-              href="tel:0985048952"
+              href={`tel:${settings.hotline}`}
               className="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-5 py-2.5 rounded-md inline-flex items-center gap-2"
             >
               <Phone size={14} strokeWidth={2} />
@@ -228,7 +229,7 @@ export default function TrackOrderPage() {
                 Xem & in hóa đơn
               </button>
               <a
-                href="tel:0985048952"
+                href={`tel:${settings.hotline}`}
                 className="text-xs font-semibold border border-rule text-ink2 hover:border-brand-500 hover:text-brand-700 px-4 py-2 rounded inline-flex items-center gap-1.5 transition-colors"
               >
                 <Phone size={12} strokeWidth={2} />

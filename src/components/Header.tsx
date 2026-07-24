@@ -84,7 +84,7 @@ export default function Header() {
                   <div className="text-sm font-medium line-clamp-1">{p.name}</div>
                   <div className="text-xs text-mute">Mã: {p.code}</div>
                 </div>
-                <div className="font-bold text-brand-500 text-sm whitespace-nowrap">{fmt(p.price)}</div>
+                <div className="font-bold text-ink text-sm whitespace-nowrap">{fmt(p.price)}</div>
               </a>
             );
           })}
@@ -97,14 +97,14 @@ export default function Header() {
 
   return (
     <>
-      <header className={`sticky top-0 z-40 bg-white border-b border-rule transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_18px_-12px_rgba(26,48,80,0.25)]' : ''}`}>
+      <header className={`sticky top-0 z-40 bg-white border-b border-rule transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_18px_-12px_rgba(74,60,64,0.12)]' : ''}`}>
         {/* Row 1 */}
         <div className={`container-x grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8 transition-[padding] duration-300 ${scrolled ? 'py-2' : 'py-4'}`}>
           <LogoMark
             href="#/"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
-            size={scrolled ? 50 : 70}
-            className="text-brand-700 logo-link transition-all"
+            size={scrolled ? 48 : 64}
+            className="text-ink logo-link transition-all"
           />
 
           {/* Ô tìm kiếm desktop — ẩn trên mobile (mobile dùng nút search riêng) */}
@@ -116,14 +116,14 @@ export default function Header() {
           <div className="flex items-center gap-3 md:gap-7">
             {/* Nút tìm kiếm — chỉ hiện trên mobile (lg:hidden) */}
             <button
-              className="lg:hidden w-10 h-10 rounded hover:bg-soft flex items-center justify-center text-brand-700"
+              className="lg:hidden w-10 h-10 rounded hover:bg-soft flex items-center justify-center text-ink"
               onClick={() => dispatch({ type: 'OPEN_SEARCH' })}
               aria-label="Tìm kiếm"
             >
               <Search size={22} strokeWidth={1.6} />
             </button>
             <UserMenu />
-            <button className="flex items-center gap-2 text-brand-700 hover:text-brand-500 transition-colors" onClick={() => dispatch({ type: 'OPEN_CART' })} aria-label="Giỏ hàng">
+            <button className="flex items-center gap-2 text-ink hover:text-brand-600 transition-colors" onClick={() => dispatch({ type: 'OPEN_CART' })} aria-label="Giỏ hàng">
               <span className="relative">
                 <span className={`inline-block ${bouncing ? 'animate-cartBounce' : ''}`} style={{ transformOrigin: 'center' }}>
                   <ShoppingBag size={24} strokeWidth={1.6} />
@@ -138,17 +138,17 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Row 2: Main nav */}
-        <div className="border-t border-rule">
-          <nav className={`container-x hidden lg:flex items-center justify-center text-[14px] font-light text-brand-700 transition-[padding] duration-300 ${scrolled ? 'py-1.5' : 'py-3'}`}>
-            <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className={`px-6 py-1 hover:text-brand-500 transition-colors ${isActive('/') ? 'text-brand-500 font-medium' : ''}`}>Trang chủ</a>
+        {/* Row 2: Main nav — nền hồng rất nhạt để tạo phân tầng, active = chữ đậm + border-bottom hồng */}
+        <div className="border-t border-rule bg-brand-50">
+          <nav className={`container-x hidden lg:flex items-center justify-center text-[14px] font-light text-ink transition-[padding] duration-300 ${scrolled ? 'py-1.5' : 'py-3'}`}>
+            <a href="#/" onClick={(e) => { e.preventDefault(); navigate('/'); }} className={`nav-link px-6 py-1 hover:text-brand-600 transition-colors ${isActive('/') ? 'active text-brand-600 font-medium' : ''}`}>Trang chủ</a>
             <div className="relative group has-drop">
-              <a href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }} className={`nav-link px-6 py-1 hover:text-brand-500 flex items-center gap-1.5 ${isActive('/shop') ? 'active' : ''}`}>
+              <a href="#/shop" onClick={(e) => { e.preventDefault(); navigate('/shop'); }} className={`nav-link px-6 py-1 hover:text-brand-600 flex items-center gap-1.5 ${isActive('/shop') ? 'active text-brand-600 font-medium' : ''}`}>
                 Sản phẩm
                 <ChevronDown size={12} strokeWidth={1.6} />
               </a>
               <div className="absolute top-full left-0 pt-2 z-[1000] opacity-0 invisible -translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200">
-                <div className="w-[240px] bg-white shadow-[0_12px_28px_rgba(178,58,104,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                <div className="w-[240px] bg-white shadow-[0_12px_28px_rgba(74,60,64,0.10)] border border-rule rounded-md overflow-hidden">
                   <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
                     {(state.siteContent.navCategories || [
                       { id: 'all-p', label: 'Tất Cả Sản Phẩm', slug: 'all' },
@@ -167,27 +167,27 @@ export default function Header() {
                         { label: 'Vòng Tay Charm', slug: 'vong-tay-charm' },
                       ]},
                     ]).map((item, i, arr) => (
-                      <li key={item.label} className={`relative group/sub ${i !== arr.length - 1 ? 'border-b border-brand-50' : ''}`}>
+                      <li key={item.label} className={`relative group/sub ${i !== arr.length - 1 ? 'border-b border-rule' : ''}`}>
                         <a 
                           href={`#/shop?cat=${item.slug}`}
                           onClick={(e) => { e.preventDefault(); setFilterNav(item.slug || 'all'); }}
-                          className="flex items-center justify-between px-[18px] py-[11px] hover:bg-brand-50 hover:text-brand-700 hover:font-medium cursor-pointer transition-colors"
+                          className="flex items-center justify-between px-[18px] py-[11px] hover:bg-soft hover:text-brand-600 hover:font-medium cursor-pointer transition-colors"
                         >
                           {item.label}
                           {item.sub && (
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#f472a0" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#E6A8BF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                           )}
                         </a>
                         {item.sub && (
                           <div className="absolute top-0 left-full pl-1 z-[1001] opacity-0 invisible -translate-y-2 group-hover/sub:opacity-100 group-hover/sub:visible group-hover/sub:translate-y-0 transition-all duration-200">
-                            <div className="w-[200px] bg-white shadow-[0_12px_28px_rgba(178,58,104,0.12)] border border-brand-100 rounded-md overflow-hidden">
+                            <div className="w-[200px] bg-white shadow-[0_12px_28px_rgba(74,60,64,0.10)] border border-rule rounded-md overflow-hidden">
                               <ul className="flex flex-col text-[13.5px] text-ink2 font-sans font-normal">
                                 {item.sub.map((subItem, j, subArr) => (
-                                  <li key={subItem.label} className={j !== subArr.length - 1 ? 'border-b border-brand-50' : ''}>
+                                  <li key={subItem.label} className={j !== subArr.length - 1 ? 'border-b border-rule' : ''}>
                                     <a 
                                       href={`#/shop?cat=${subItem.slug}`}
                                       onClick={(e) => { e.preventDefault(); setFilterNav(subItem.slug); }}
-                                      className="flex items-center px-[18px] py-[11px] hover:bg-brand-50 hover:text-brand-700 hover:font-medium cursor-pointer transition-colors"
+                                      className="flex items-center px-[18px] py-[11px] hover:bg-soft hover:text-brand-600 hover:font-medium cursor-pointer transition-colors"
                                     >
                                       {subItem.label}
                                     </a>
@@ -203,7 +203,7 @@ export default function Header() {
                 </div>
               </div>
             </div>
-            <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive('/about') ? 'active' : ''}`}>
+            <a href="#/about" onClick={(e) => { e.preventDefault(); navigate('/about'); }} className={`nav-link px-6 py-1 hover:text-brand-600 ${isActive('/about') ? 'active text-brand-600 font-medium' : ''}`}>
               Giới thiệu
             </a>
             {[
@@ -212,10 +212,10 @@ export default function Header() {
               { path:'/huong-dan', label:'Hướng dẫn' },
               { path:'/lien-he',   label:'Liên hệ' },
             ].map(({ path, label }) => (
-              <a key={path} href={`#${path}`} onClick={(e) => { e.preventDefault(); navigate(path); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive(path) ? 'active' : ''}`}>{label}</a>
+              <a key={path} href={`#${path}`} onClick={(e) => { e.preventDefault(); navigate(path); }} className={`nav-link px-6 py-1 hover:text-brand-600 ${isActive(path) ? 'active text-brand-600 font-medium' : ''}`}>{label}</a>
             ))}
             {/* Trang tin tức nội bộ — bài viết soạn chuẩn SEO bên WP, hiển thị & render ngay tại web */}
-            <a href="#/news" onClick={(e) => { e.preventDefault(); navigate('/news'); }} className={`nav-link px-6 py-1 hover:text-brand-500 ${isActive('/news') || state.route.startsWith('/news/') ? 'active' : ''}`}>
+            <a href="#/news" onClick={(e) => { e.preventDefault(); navigate('/news'); }} className={`nav-link px-6 py-1 hover:text-brand-600 ${isActive('/news') || state.route.startsWith('/news/') ? 'active text-brand-600 font-medium' : ''}`}>
               Tin tức
             </a>
           </nav>
@@ -235,8 +235,8 @@ export default function Header() {
           aria-modal="true"
           aria-label="Menu chính"
         >
-          {/* User section */}
-          <div className="bg-brand-700 text-white p-5 pb-6">
+          {/* User section — nền ink sang trọng thay vì hồng đặc */}
+          <div className="bg-ink text-white p-5 pb-6">
             <button
               onClick={() => setMobileOpen(false)}
               className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white"
@@ -246,7 +246,7 @@ export default function Header() {
             </button>
             {state.user ? (
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-white text-brand-700 flex items-center justify-center font-bold text-base">
+                <div className="w-12 h-12 rounded-full bg-white text-ink flex items-center justify-center font-bold text-base">
                   {state.user.name.split(' ').slice(-2).map(s => s[0]).join('').toUpperCase()}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -256,15 +256,15 @@ export default function Header() {
               </div>
             ) : (
               <div>
-                <div className="font-semibold mb-3 flex items-center gap-1.5">Chào mừng đến LIORA <Hand size={16} strokeWidth={1.8} className="text-brand-500" /></div>
+                <div className="font-semibold mb-3 flex items-center gap-1.5">Chào mừng đến LIORA <Hand size={16} strokeWidth={1.8} className="text-brand-400" /></div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setMobileOpen(false); navigate('/login'); }}
-                    className="flex-1 bg-white text-brand-700 text-sm font-semibold py-2 rounded-md hover:bg-brand-50"
+                    className="flex-1 bg-brand-400 text-white text-sm font-semibold py-2 rounded-md hover:bg-brand-600"
                   >Đăng nhập</button>
                   <button
                     onClick={() => { setMobileOpen(false); navigate('/register'); }}
-                    className="flex-1 border border-white/40 text-white text-sm font-semibold py-2 rounded-md hover:bg-white/10"
+                    className="flex-1 border border-white/30 text-white text-sm font-semibold py-2 rounded-md hover:bg-white/10"
                   >Đăng ký</button>
                 </div>
               </div>
@@ -290,12 +290,12 @@ export default function Header() {
                   onClick={(e) => { e.preventDefault(); navigate(path); setMobileOpen(false); }}
                   className={`flex items-center justify-between px-5 py-3 text-[15px] border-l-[3px] transition-colors ${
                     active
-                      ? 'border-brand-700 bg-brand-50 text-brand-700 font-semibold'
-                      : 'border-transparent text-ink hover:bg-soft hover:text-brand-700'
+                      ? 'border-brand-400 bg-brand-50 text-brand-600 font-semibold'
+                      : 'border-transparent text-ink hover:bg-soft hover:text-brand-600'
                   }`}
                 >
                   <span>{label}</span>
-                  {accent && !active && <span className="text-xs text-brand-500 font-medium">{state.products.length} SP</span>}
+                  {accent && !active && <span className="text-xs text-brand-400 font-medium">{state.products.length} SP</span>}
                   <ChevronDown size={14} strokeWidth={2} className="text-mute -rotate-90" />
                 </a>
               );
@@ -306,8 +306,8 @@ export default function Header() {
               onClick={(e) => { e.preventDefault(); setMobileOpen(false); navigate('/news'); }}
               className={`flex items-center justify-between px-5 py-3 text-[15px] border-l-[3px] transition-colors ${
                 isActive('/news') || state.route.startsWith('/news/')
-                  ? 'border-brand-700 bg-brand-50 text-brand-700 font-semibold'
-                  : 'border-transparent text-ink hover:bg-soft hover:text-brand-700'
+                  ? 'border-brand-400 bg-brand-50 text-brand-600 font-semibold'
+                  : 'border-transparent text-ink hover:bg-soft hover:text-brand-600'
               }`}
             >
               <span>Tin tức</span>
@@ -327,7 +327,7 @@ export default function Header() {
               {state.user.role === 'admin' && (
                 <button
                   onClick={() => { setMobileOpen(false); navigate('/admin/dashboard'); }}
-                  className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-brand-50 flex items-center gap-2 text-brand-700 font-semibold"
+                  className="w-full text-left px-3 py-2 text-sm rounded-md hover:bg-soft flex items-center gap-2 text-brand-600 font-semibold"
                 >
                   <LayoutDashboard size={16} strokeWidth={1.8} />
                   Trang quản trị
@@ -349,8 +349,8 @@ export default function Header() {
           )}
 
           <div className="border-t border-rule px-5 py-3 text-[11px] text-mute">
-            <div className="font-semibold text-brand-700 mb-1">Hotline 0985 048 952</div>
-            <div>9:00 – 21:00 hàng ngày</div>
+            <div className="font-semibold text-ink mb-1">Hotline {state.siteContent.settings.hotline}</div>
+            <div>{state.siteContent.settings.openHours}</div>
           </div>
         </aside>
       </div>
@@ -368,7 +368,7 @@ export default function Header() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-1 bg-transparent text-lg outline-none placeholder-mute"
             />
-            <button className="text-xs text-mute hover:text-brand-500 uppercase tracking-wider" onClick={() => { dispatch({ type: 'CLOSE_ALL' }); setSearchQuery(''); }}>ĐÓNG</button>
+            <button className="text-xs text-mute hover:text-brand-600 uppercase tracking-wider" onClick={() => { dispatch({ type: 'CLOSE_ALL' }); setSearchQuery(''); }}>ĐÓNG</button>
           </div>
           <div className="py-4 max-h-[60vh] overflow-y-auto">{renderSearchResults()}</div>
         </div>
@@ -408,13 +408,13 @@ function UserMenu() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(v => !v)}
-        className="flex items-center justify-center text-brand-700 hover:text-brand-500 transition-colors"
+        className="flex items-center justify-center text-ink hover:text-brand-600 transition-colors"
         aria-label="Tài khoản"
         aria-haspopup="menu"
         aria-expanded={open}
       >
         {user ? (
-          <span className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold border-2 border-brand-200">
+          <span className="w-8 h-8 rounded-full bg-brand-100 text-ink flex items-center justify-center text-xs font-bold border-2 border-brand-200">
             {initials}
           </span>
         ) : (
@@ -430,18 +430,18 @@ function UserMenu() {
           {user ? (
             <>
               <div className="px-4 py-3 border-b border-rule bg-soft">
-                <div className="font-semibold text-sm text-brand-700 truncate">{user.name}</div>
+                <div className="font-semibold text-sm text-ink truncate">{user.name}</div>
                 <div className="text-xs text-mute truncate">{user.email}</div>
-                <div className="text-[10px] inline-block bg-brand-100 text-brand-700 px-2 py-0.5 rounded mt-1 uppercase tracking-wider font-semibold">
+                <div className="text-[10px] inline-block bg-brand-100 text-ink px-2 py-0.5 rounded mt-1 uppercase tracking-wider font-semibold">
                   {user.role === 'admin' ? 'Admin' : 'Khách hàng'}
                 </div>
               </div>
-              <button onClick={() => go('/account')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2">
+              <button onClick={() => go('/account')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-soft flex items-center gap-2">
                 <UserIcon size={16} strokeWidth={1.6} />
                 Tài khoản của tôi
               </button>
               {user.role === 'admin' && (
-                <button onClick={() => go('/admin/dashboard')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 text-brand-700 font-semibold">
+                <button onClick={() => go('/admin/dashboard')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-soft flex items-center gap-2 text-brand-600 font-semibold">
                   <LayoutDashboard size={16} strokeWidth={1.8} />
                   Trang quản trị
                 </button>
@@ -453,11 +453,11 @@ function UserMenu() {
             </>
           ) : (
             <>
-              <button onClick={() => go('/login')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 font-medium">
+              <button onClick={() => go('/login')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-soft flex items-center gap-2 font-medium">
                 <LogIn size={16} strokeWidth={1.8} />
                 Đăng nhập
               </button>
-              <button onClick={() => go('/register')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-brand-50 flex items-center gap-2 border-t border-rule">
+              <button onClick={() => go('/register')} className="w-full text-left px-4 py-2.5 text-sm hover:bg-soft flex items-center gap-2 border-t border-rule">
                 <UserPlus size={16} strokeWidth={1.8} />
                 Đăng ký tài khoản
               </button>
@@ -526,7 +526,7 @@ function HeaderSearchBox() {
         />
         <button
           type="submit"
-          className="bg-brand-700 hover:bg-brand-800 w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors"
+          className="bg-brand-400 hover:bg-brand-600 w-11 flex-shrink-0 flex items-center justify-center text-white transition-colors"
           aria-label="Tìm"
         >
           <Search size={18} strokeWidth={2} />
@@ -543,7 +543,7 @@ function HeaderSearchBox() {
                   <li key={p.slug}>
                     <button
                       onClick={() => goToProduct(p.slug)}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-brand-50 text-left transition-colors"
+                      className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-soft text-left transition-colors"
                     >
                       <div className="w-10 h-10 bg-soft flex-shrink-0 overflow-hidden">
                         {p.image ? (
@@ -562,7 +562,7 @@ function HeaderSearchBox() {
                 <li className="border-t border-rule">
                   <button
                     onClick={() => { dispatch({ type: 'OPEN_SEARCH' }); setFocused(false); }}
-                    className="w-full text-center text-xs text-brand-500 hover:text-brand-700 hover:bg-brand-50 py-2.5 font-semibold"
+                    className="w-full text-center text-xs text-brand-600 hover:text-brand-700 hover:bg-soft py-2.5 font-semibold"
                   >
                     Xem tất cả kết quả cho "{q}" →
                   </button>
@@ -581,7 +581,7 @@ function HeaderSearchBox() {
                   <button
                     key={t}
                     onClick={() => setQ(t)}
-                    className="text-xs border border-rule hover:border-brand-500 hover:text-brand-700 px-3 py-1.5 rounded-full text-ink2"
+                    className="text-xs border border-rule hover:border-brand-400 hover:text-brand-600 px-3 py-1.5 rounded-full text-ink2"
                   >{t}</button>
                 ))}
               </div>

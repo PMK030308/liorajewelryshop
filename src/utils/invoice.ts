@@ -6,7 +6,7 @@
  * runtime to render diacritics correctly.
  */
 import jsPDF from 'jspdf';
-import { Order } from '../types';
+import { Order, SiteSettings } from '../types';
 
 const fmt = (n: number) => n.toLocaleString('vi-VN') + '₫';
 const formatDate = (ts: number) =>
@@ -36,6 +36,8 @@ function vi(s: string): string {
 interface BuildOpts {
   /** Print directly instead of downloading. */
   autoPrint?: boolean;
+  /** Site settings (address, hotline, email) to render in the footer. */
+  settings?: SiteSettings;
 }
 
 /**
@@ -43,6 +45,7 @@ interface BuildOpts {
  * Set `autoPrint: true` to open the print dialog in a new tab instead.
  */
 export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
+  const s = opts.settings;
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
   const W = doc.internal.pageSize.getWidth();
@@ -193,7 +196,10 @@ export function generateInvoicePdf(order: Order, opts: BuildOpts = {}): jsPDF {
   y += 12;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.text(vi('To 19, KP Mieu, Phuong Phuoc Tan, TP. Bien Hoa, Dong Nai · Hotline 0985 048 952 · liorajewelry10@gmail.com'), W / 2, y, { align: 'center' });
+  const footerInfo = s
+    ? `${s.address} · Hotline ${s.hotline} · ${s.email}`
+    : 'To 19, KP Mieu, Phuong Phuoc Tan, TP. Bien Hoa, Dong Nai · Hotline 0985 048 952 · liorajewelry10@gmail.com';
+  doc.text(vi(footerInfo), W / 2, y, { align: 'center' });
 
   if (opts.autoPrint) {
     // Open in a new tab and trigger print

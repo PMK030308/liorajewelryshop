@@ -3,6 +3,7 @@ import { Printer, X } from 'lucide-react';
 import { Order } from '../types';
 import { fmt } from '../data';
 import { numberToVietnameseWords, capitalize } from '../utils/numberToWords';
+import { useStore } from '../store/useStore';
 
 interface Props {
   order: Order | null;
@@ -31,6 +32,9 @@ const formatDate = (ts: number) =>
   });
 
 export default function InvoiceModal({ order, onClose }: Props) {
+  const { state } = useStore();
+  const settings = state.siteContent.settings;
+
   // Lock body scroll while open
   useEffect(() => {
     if (!order) return;
@@ -83,11 +87,11 @@ export default function InvoiceModal({ order, onClose }: Props) {
             <div className="flex items-start gap-3">
               <img src="/logoliora2.jpg" alt="LIORA" className="h-12 w-auto object-contain mix-blend-multiply" />
               <div className="text-[11px] leading-snug">
-                <div className="text-mute uppercase tracking-wider">Liorajewelry.shop</div>
-                <div className="text-ink">Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Tỉnh Đồng Nai</div>
-                <div className="text-ink">Hotline: 0985 048 952</div>
-                <div className="text-ink">Email: liorajewelry10@gmail.com</div>
-                <div className="text-mute mt-1">MST: 8662980683-001</div>
+                <div className="text-mute uppercase tracking-wider">{settings.brandName}</div>
+                <div className="text-ink">{settings.address}</div>
+                <div className="text-ink">Hotline: {settings.hotline}</div>
+                <div className="text-ink">Email: {settings.email}</div>
+                {settings.taxId && <div className="text-mute mt-1">MST: {settings.taxId}</div>}
               </div>
             </div>
             <div className="text-right">

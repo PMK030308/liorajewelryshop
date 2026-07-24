@@ -68,7 +68,7 @@ export default function Footer() {
   ].filter(s => s.url && s.url.trim() !== '');
 
   return (
-    <footer className="bg-brand-700 text-white/80 pt-16 pb-6 mt-16">
+    <footer className="bg-ink text-white/80 pt-16 pb-6 mt-16">
       <div className="container-x grid md:grid-cols-12 gap-10">
         {/* Col 1 — Brand + contact */}
         <div className="md:col-span-4">
@@ -78,18 +78,18 @@ export default function Footer() {
             className="h-14 w-auto object-contain mb-4 hover:opacity-90 transition-opacity cursor-pointer"
             onClick={(e) => { e.preventDefault(); navigate('/'); }}
           />
-          <p className="text-sm leading-relaxed mb-5 text-white/75">{footer.brandDescription}</p>
-          <ul className="space-y-2.5 text-sm text-white/85">
+          <p className="text-sm leading-relaxed mb-5 text-white/70">{footer.brandDescription}</p>
+          <ul className="space-y-2.5 text-sm text-white/80">
             <li className="flex items-start gap-2.5">
-              <MapPin size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
+              <MapPin size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-brand-400" />
               <span>{settings.address}</span>
             </li>
             <li className="flex items-start gap-2.5">
-              <Phone size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
+              <Phone size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-brand-400" />
               <a href={`tel:${settings.hotline}`} className="hover:text-white">{settings.hotline}</a>
             </li>
             <li className="flex items-start gap-2.5">
-              <Mail size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0" />
+              <Mail size={16} strokeWidth={1.6} className="mt-0.5 flex-shrink-0 text-brand-400" />
               <a href={`mailto:${settings.email}`} className="hover:text-white">{settings.email}</a>
             </li>
           </ul>
@@ -121,15 +121,50 @@ export default function Footer() {
               onChange={e => setEmail(e.target.value)}
               className="flex-1 bg-transparent px-3 py-2.5 text-sm text-white placeholder-white/50 outline-none"
             />
-            <button type="submit" className="bg-white text-brand-700 px-4 text-sm font-semibold hover:bg-brand-50 transition-colors">Gửi</button>
+            <button type="submit" className="bg-brand-400 text-white px-4 text-sm font-semibold hover:bg-brand-600 transition-colors">Gửi</button>
           </form>
           {socials.length > 0 && (
-            <div className="flex gap-3">
+            <div className="flex gap-3 mb-5">
               {socials.map(s => (
-                <a key={s.title} href={s.url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white hover:text-brand-700 flex items-center justify-center transition-all" title={s.title}>{s.icon}</a>
+                <a key={s.title} href={s.url} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-brand-400 hover:text-white flex items-center justify-center transition-all" title={s.title}>{s.icon}</a>
               ))}
             </div>
           )}
+          {/* QR Facebook & Shopee — chuyển từ banner xuống footer, nhỏ gọn & thanh lịch */}
+          <div className="flex items-start gap-3">
+            <a
+              href={settings.facebookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-1.5 bg-white/5 rounded-lg p-2 hover:bg-white/10 transition"
+              title="Quét mã Facebook Liora"
+            >
+              <img
+                src={settings.qrUrl}
+                alt="QR Facebook Liora"
+                width="56"
+                height="56"
+                className="rounded-md bg-white p-0.5"
+              />
+              <span className="text-[10px] font-medium text-white/80 tracking-wide">Facebook</span>
+            </a>
+            <a
+              href={settings.shopeeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-1.5 bg-white/5 rounded-lg p-2 hover:bg-white/10 transition"
+              title="Quét mã Shopee Liora"
+            >
+              <img
+                src={settings.shopeeQrUrl}
+                alt="QR Shopee Liora"
+                width="56"
+                height="56"
+                className="rounded-md bg-white p-0.5"
+              />
+              <span className="text-[10px] font-medium text-white/80 tracking-wide">Shopee</span>
+            </a>
+          </div>
         </div>
       </div>
 
