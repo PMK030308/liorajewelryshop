@@ -25,7 +25,7 @@ export default function CheckoutPage() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-  const [city, setCity] = useState('Hà Nội');
+  const [city, setCity] = useState('TP. Hồ Chí Minh');
   const [district, setDistrict] = useState('');
   const [note, setNote] = useState('');
   const [payment, setPayment] = useState<'cod' | 'bank' | 'momo' | 'card'>('cod');
@@ -205,7 +205,7 @@ export default function CheckoutPage() {
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
             <input required value={address} onChange={e => setAddress(e.target.value)} placeholder="Địa chỉ chi tiết *" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" />
             <select value={city} onChange={e => setCity(e.target.value)} className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500">
-              <option>Hà Nội</option><option>TP. Hồ Chí Minh</option><option>Đà Nẵng</option>
+              <option>TP. Hồ Chí Minh</option><option>TP. Đồng Nai</option>
             </select>
             <input value={district} onChange={e => setDistrict(e.target.value)} placeholder="Quận / Huyện" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500" />
             <textarea value={note} onChange={e => setNote(e.target.value)} placeholder="Ghi chú (tuỳ chọn)" className="border border-rule rounded-md px-4 py-3 text-sm focus:outline-none focus:border-brand-500 col-span-2" rows={3} />

@@ -45,6 +45,10 @@ export interface Product {
   reviewCount?: number;
   /** Available stock count. */
   inStock?: number;
+  /** Hiện phần chọn kích thước (size) trên trang chi tiết. Bỏ trống / true → hiện. */
+  hasSize?: boolean;
+  /** Hiện phần "Gói quà & Đóng gói" trên trang chi tiết. Bỏ trống / true → hiện. */
+  hasPackaging?: boolean;
 }
 
 export interface ProductSpecification {

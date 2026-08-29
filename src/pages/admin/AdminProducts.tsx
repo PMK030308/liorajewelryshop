@@ -95,6 +95,8 @@ const emptyDraft: Product = {
   tint2: '#ffcfdd',
   accent: '#f472a0',
   shape: 'bracelet',
+  hasSize: true,
+  hasPackaging: true,
 };
 
 const PAGE_SIZE = 10;
@@ -562,6 +564,8 @@ export default function AdminProducts() {
             <div className="md:col-span-3 flex flex-wrap gap-3">
               <ToggleChip checked={!!editing.hot} onChange={(c) => setEditing({ ...editing, hot: c })} label="HOT — Sản phẩm nổi bật" />
               <ToggleChip checked={!!editing.sold} onChange={(c) => setEditing({ ...editing, sold: c })} label="Hết hàng (tạm ẩn nút mua)" color="red" />
+              <ToggleChip checked={editing.hasSize !== false} onChange={(c) => setEditing({ ...editing, hasSize: c })} label="Có chọn kích thước (size)" />
+              <ToggleChip checked={editing.hasPackaging !== false} onChange={(c) => setEditing({ ...editing, hasPackaging: c })} label="Có gói quà & đóng gói" />
             </div>
           </FormSection>
 

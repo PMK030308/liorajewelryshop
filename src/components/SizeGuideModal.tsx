@@ -169,7 +169,7 @@ export default function SizeGuideModal({ open, onClose, type = 'ring' }: Props) 
           </section>
 
           <section className="bg-soft border border-rule rounded-md p-4 text-xs text-ink2">
-            <b className="text-ink">Lưu ý:</b> Nếu giữa 2 size, bạn nên chọn size lớn hơn để thoải mái hơn khi đeo. Có thể đem ra cửa hàng LIORA (159 Lý Thường Kiệt, Hà Đông) để được đo miễn phí.
+            <b className="text-ink">Lưu ý:</b> Nếu giữa 2 size, bạn nên chọn size lớn hơn để thoải mái hơn khi đeo. Có thể đem ra cửa hàng LIORA (Tổ 19, KP Miễu, Phường Phước Tân, TP. Biên Hòa, Đồng Nai) để được đo miễn phí.
           </section>
         </div>
       </div>

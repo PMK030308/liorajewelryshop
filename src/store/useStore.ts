@@ -392,7 +392,13 @@ export function useStoreSetup() {
   }, []);
 
   // ---- Bootstrap từ Supabase (sản phẩm + nội dung site + đơn hàng) ----
-  // Sản phẩm + nội dung: bỏ qua khi WP đang ON (WP làm nguồn content). Orders luôn dùng Supabase.
+  // Orders luôn dùng Supabase.
+  // Sản phẩm: LUÔN load từ Supabase (ngay cả khi WP ON) → gộp 2 nguồn WP + Supabase.
+  //   - Slug trùng giữa 2 nguồn → giữ phiên bản đang có (WP wins: WP merge chạy đè lên).
+  //   - Sản phẩm chỉ có trên Supabase (folder/seed) → vẫn hiển thị.
+  //   - Sync LÊN Supabase bị bỏ qua khi WP ON (xem effect sync bên dưới) → KHÔNG đẩy WP products lên Supabase.
+  //   - Realtime products cũng bỏ qua khi WP ON → không bị wipe sản phẩm WP.
+  // Nội dung site (banner/menu/footer/settings): khi WP ON → WP là nguồn chính, bỏ qua Supabase.
   useEffect(() => {
     if (!hasSupabase) return;
     // Orders luôn load từ Supabase (admin xem tất cả, khách xem của mình qua RLS)
@@ -400,10 +406,21 @@ export function useStoreSetup() {
       .then(list => { if (list.length) dispatch({ type: 'SET_ORDERS', payload: list }); })
       .catch(err => console.error('[Liora] load orders từ Supabase thất bại, giữ localStorage:', err));
 
-    if (getWordPressConfig().useWordPress) return; // WP đang dùng → bỏ qua products/site_content
+    // Sản phẩm từ Supabase — gộp additive: thêm sản phẩm Supabase chưa có (theo slug),
+    // KHÔNG xoá sản phẩm WP/seed đang hiển thị (tránh race khi WP merge chạy trước).
     fetchProducts()
-      .then(list => { if (list.length) dispatch({ type: 'SET_PRODUCTS', payload: list }); })
+      .then(list => {
+        if (list.length) {
+          const existing = stateRef.current.products;
+          const existingSlugs = new Set(existing.map(p => p.slug));
+          const newOnes = list.filter(p => !existingSlugs.has(p.slug));
+          if (newOnes.length) dispatch({ type: 'SET_PRODUCTS', payload: [...existing, ...newOnes] });
+        }
+      })
       .catch(err => console.error('[Liora] load products từ Supabase thất bại, giữ seed:', err));
+
+    // Nội dung site: khi WP ON → WP là nguồn chính, bỏ qua Supabase.
+    if (getWordPressConfig().useWordPress) return;
     fetchSiteContent()
       .then(sc => dispatch({ type: 'SET_SITE_CONTENT', payload: sc }))
       .catch(err => console.error('[Liora] load site_content từ Supabase thất bại, giữ mặc định:', err));

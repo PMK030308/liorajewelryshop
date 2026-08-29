@@ -101,7 +101,8 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   const inStock = p.inStock ?? 0;
   const isSold = !!p.sold || inStock === 0;
-  const showSize = true;
+  const showSize = p.hasSize !== false;
+  const showPackaging = p.hasPackaging !== false;
   const productHighlights = p.highlights?.filter(Boolean) || [];
   const productSpecs = p.specifications?.filter(item => item.label && item.value) || [];
   const productCare = p.careInstructions || 'Tránh tiếp xúc nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau khi đeo. Đem đến Liorajewelry để được vệ sinh miễn phí trọn đời.';
@@ -159,7 +160,7 @@ export default function ProductPage({ slug }: { slug: string }) {
   const related = state.products.filter(x => x.subcat === p.subcat && x.slug !== p.slug).slice(0, 4);
 
   // --- Actions ---
-  const packagingFee = PACKAGING_FEE[packaging] ?? 0;
+  const packagingFee = showPackaging ? (PACKAGING_FEE[packaging] ?? 0) : 0;
   const finalPrice = p.price + packagingFee;
 
   const addToCart = () => {
@@ -394,6 +395,7 @@ export default function ProductPage({ slug }: { slug: string }) {
           )}
 
           {/* --- Packaging (hộp/túi) — gói quà cao cấp --- */}
+          {showPackaging && (
           <div>
             <div className="flex items-baseline justify-between mb-2">
               <span className="text-sm font-semibold">Gói quà & Đóng gói</span>
@@ -436,6 +438,7 @@ export default function ProductPage({ slug }: { slug: string }) {
               })}
             </div>
           </div>
+          )}
 
           {/* --- Quantity + Stock --- */}
           <div>
