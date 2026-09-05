@@ -371,6 +371,9 @@ export function useStoreSetup() {
   const skipCartSyncRef = useRef(false);
   // Track user_id đã load xong giỏ hàng → tránh ghi đè cart local lên remote trước khi merge.
   const loadedCartForUserRef = useRef<string | null>(null);
+  // Track đã load xong products từ Supabase → chỉ sync khi state.products = data Supabase
+  // (tránh ghi đè localStorage/seed cũ lên Supabase hoặc xoá nhầm khi chưa load xong).
+  const loadedProductsRef = useRef(false);
 
   // ---- Bootstrap từ WordPress headless (nội dung site + tin tức) ----
   // CHỈ lấy nội dung site + tin tức từ WP. Sản phẩm KHÔNG lấy từ WooCommerce nữa —
@@ -422,6 +425,7 @@ export function useStoreSetup() {
     // Sản phẩm từ Supabase — Supabase là nguồn authoritative (full replace).
     fetchProducts()
       .then(list => {
+        loadedProductsRef.current = true; // đã load xong → cho phép sync lên
         if (list.length) {
           dispatch({ type: 'SET_PRODUCTS', payload: list });
         }
@@ -453,6 +457,7 @@ export function useStoreSetup() {
     // Products realtime LUÔN bật — Supabase là nguồn sản phẩm.
     const unsubProducts = subscribeProducts(list => {
       skipSyncRef.current = true;
+      loadedProductsRef.current = true;
       dispatch({ type: 'SET_PRODUCTS', payload: list });
     });
     // Site content realtime chỉ bật khi WP OFF (khi WP ON → WP là nguồn content).
@@ -548,9 +553,9 @@ export function useStoreSetup() {
   useEffect(() => {
     // Cache offline cho sản phẩm (Supabase là nguồn → cache localStorage luôn OK).
     localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
-    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Sản phẩm LUÔN sync qua Supabase
-    // (WP chỉ còn dùng cho news, không can thiệp sản phẩm). Bỏ qua khi thay đổi đến từ realtime.
-    if (hasSupabase && state.user?.role === 'admin' && !skipSyncRef.current) {
+    // Sync lên Supabase: chỉ admin + CHỈ sau khi đã load products từ Supabase (tránh ghi đè
+    // dữ liệu localStorage/seed cũ lên Supabase hoặc xoá nhầm). Bỏ qua khi thay đổi đến từ realtime.
+    if (hasSupabase && state.user?.role === 'admin' && !skipSyncRef.current && loadedProductsRef.current) {
       syncProducts(state.products);
     }
     // Reset cờ sau khi đã xử lý effect này

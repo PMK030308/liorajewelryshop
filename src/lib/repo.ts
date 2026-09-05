@@ -115,8 +115,13 @@ export function syncProducts(list: Product[]): void {
   if (syncProductsTimer) clearTimeout(syncProductsTimer);
   syncProductsTimer = setTimeout(async () => {
     const items = syncProductsLatest ?? [];
+    if (items.length === 0) {
+      // List rỗng = đáng ngờ (chưa load hoặc load fail) — KHÔNG sync để tránh xoá toàn bộ products.
+      console.warn('[Liora] syncProducts: danh sách rỗng — bỏ qua (tránh xoá toàn bộ products).');
+      return;
+    }
     try {
-      const rows = items.map(p => ({ slug: p.slug, data: p as unknown as Record<string, unknown> }));
+      const rows = items.map(p => ({ slug: p.slug, data: p as unknown as Record<string, unknown>, updated_at: new Date().toISOString() }));
       // upsert tất cả
       const { error: upErr } = await sb
         .from('products')
