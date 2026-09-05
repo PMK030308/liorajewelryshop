@@ -7,6 +7,7 @@ import ImageInput from '../../components/admin/ImageInput';
 import { Product, ShapeKey } from '../../types';
 import Shapes from '../../data/shapes';
 import { getWordPressConfig, fetchWooCommerceProducts } from '../../utils/wordpressService';
+import { deleteProductFromSupabase } from '../../lib/repo';
 import { SearchInput, EmptyState, Modal, ConfirmDialog, Pagination, BulkBar } from '../../components/admin/ui';
 
 const SUBCAT_LABELS: Record<string, string> = {
@@ -202,13 +203,17 @@ export default function AdminProducts() {
   const confirmRemove = () => {
     if (!confirmDelete) return;
     dispatch({ type: 'DELETE_PRODUCT', payload: confirmDelete.slug });
+    void deleteProductFromSupabase(confirmDelete.slug).catch(e => console.error('[Liora] xoá product Supabase thất bại:', e));
     showToast('Đã xóa sản phẩm');
     setConfirmDelete(null);
     setSelected(prev => { const n = new Set(prev); n.delete(confirmDelete.slug); return n; });
   };
 
   const bulkDelete = () => {
-    selected.forEach(slug => dispatch({ type: 'DELETE_PRODUCT', payload: slug }));
+    selected.forEach(slug => {
+      dispatch({ type: 'DELETE_PRODUCT', payload: slug });
+      void deleteProductFromSupabase(slug).catch(e => console.error('[Liora] xoá product Supabase thất bại:', e));
+    });
     showToast(`Đã xóa ${selected.size} sản phẩm`);
     setSelected(new Set());
   };

@@ -115,30 +115,30 @@ export function syncProducts(list: Product[]): void {
   if (syncProductsTimer) clearTimeout(syncProductsTimer);
   syncProductsTimer = setTimeout(async () => {
     const items = syncProductsLatest ?? [];
-    if (items.length === 0) {
-      // List rỗng = đáng ngờ (chưa load hoặc load fail) — KHÔNG sync để tránh xoá toàn bộ products.
-      console.warn('[Liora] syncProducts: danh sách rỗng — bỏ qua (tránh xoá toàn bộ products).');
-      return;
-    }
+    if (items.length === 0) return; // không có gì để upsert
     try {
       const rows = items.map(p => ({ slug: p.slug, data: p as unknown as Record<string, unknown>, updated_at: new Date().toISOString() }));
-      // upsert tất cả
+      // CHỈ upsert (thêm/sửa). KHÔNG xoá theo list — xoá được xử lý riêng qua
+      // deleteProductFromSupabase() để tránh nguy cơ xoá sạch khi state/localStorage chưa khớp Supabase.
       const { error: upErr } = await sb
         .from('products')
         .upsert(rows, { onConflict: 'slug' });
       if (upErr) throw upErr;
-      // xoá slug không còn
-      const slugs = items.map(p => p.slug);
-      const { error: delErr } = await sb
-        .from('products')
-        .delete()
-        .not('slug', 'in', `(${slugs.map(s => `'${s.replace(/'/g, "''")}'`).join(',')})`);
-      if (delErr) throw delErr;
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('[Liora] syncProducts thất bại:', e);
     }
   }, 800);
+}
+
+/**
+ * Xoá 1 sản phẩm trên Supabase theo slug (admin bấm Xóa).
+ * Gọi RIÊNG (không dùng reconcile toàn bộ list) để tránh xoá nhầm hàng loạt.
+ */
+export async function deleteProductFromSupabase(slug: string): Promise<void> {
+  if (!supabase) return;
+  const { error } = await supabase.from('products').delete().eq('slug', slug);
+  if (error) throw error;
 }
 
 // ---------------- Site content ----------------
