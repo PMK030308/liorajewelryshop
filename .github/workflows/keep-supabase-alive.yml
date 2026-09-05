@@ -22,16 +22,53 @@ jobs:
           SUPA_URL: ${{ secrets.SUPA_URL }}
           SUPA_ANON_KEY: ${{ secrets.SUPA_ANON_KEY }}
         run: |
-          echo "→ Ping $SUPA_URL/rest/v1/products?select=slug&limit=1"
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "apikey: $SUPA_ANON_KEY" \
-            -H "Authorization: Bearer $SUPA_ANON_KEY" \
-            "$SUPA_URL/rest/v1/products?select=slug&limit=1")
-          echo "HTTP status: $CODE"
-          # 200 = OK, 401/403 = RLS chặn nhưng project vẫn sống (vẫn tính là active)
-          if [ "$CODE" = "200" ] || [ "$CODE" = "401" ] || [ "$CODE" = "403" ] || [ "$CODE" = "206" ]; then
-            echo "✅ Supabase đang active."
-          else
-            echo "⚠️ Status bất thường ($CODE) — kiểm tra lại Supabase Dashboard."
+          # Tắt set -e để tự xử lý lỗi và báo rõ nguyên nhân
+          set +e
+
+          # Dọn ký tự thừa do paste (xuống dòng CR/LF, dấu cách đầu/cuối)
+          SUPA_URL="$(printf '%s' "$SUPA_URL" | tr -d '\r' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+          SUPA_ANON_KEY="$(printf '%s' "$SUPA_ANON_KEY" | tr -d '\r' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')"
+
+          # Báo rõ nếu Secret rỗng (chưa thêm hoặc sai tên)
+          if [ -z "$SUPA_URL" ] || [ -z "$SUPA_ANON_KEY" ]; then
+            echo "❌ Secret SUPA_URL hoặc SUPA_ANON_KEY đang RỖNG."
+            echo "   → Vào: Settings → Secrets and variables → Actions"
+            echo "   → Thêm đúng 2 secret tên: SUPA_URL và SUPA_ANON_KEY"
             exit 1
           fi
+
+          # Bắt lỗi paste nhầm cả 'TÊN_BIẾN=giá_trị' vào Secret
+          case "$SUPA_URL" in
+            *=*) echo "❌ SUPA_URL có dấu '=' → bạn dán nhầm cả 'VITE_SUPABASE_URL=...'. CHỈ dán phần URL thôi."; exit 1 ;;
+          esac
+          case "$SUPA_ANON_KEY" in
+            *=*) echo "❌ SUPA_ANON_KEY có dấu '=' → bạn dán nhầm cả 'VITE_SUPABASE_ANON_KEY=...'. CHỈ dán phần key thôi."; exit 1 ;;
+          esac
+          case "$SUPA_URL" in
+            http*) : ;;
+            *) echo "❌ SUPA_URL không bắt đầu bằng http(s)://. Sửa lại Secret (chỉ dán URL, không dấu ngoặc kép)."; exit 1 ;;
+          esac
+          case "$SUPA_ANON_KEY" in
+            sb_*|eyJ*) : ;;
+            *) echo "⚠️ SUPA_ANON_KEY không giống định dạng Supabase (sb_publishable_... hoặc eyJ...). Kiểm tra lại."; exit 1 ;;
+          esac
+
+          echo "→ Ping Supabase (URL & key đã ẩn)..."
+          BODY=$(curl -s -w $'\n%{http_code}' \
+            -H "apikey: $SUPA_ANON_KEY" \
+            -H "Authorization: Bearer $SUPA_ANON_KEY" \
+            "$SUPA_URL/rest/v1/products?select=slug&limit=1" 2>&1)
+          CURL_EXIT=$?
+          CODE=$(printf '%s' "$BODY" | tail -n1)
+          echo "curl exit code: $CURL_EXIT | HTTP status: $CODE"
+
+          if [ "$CURL_EXIT" -ne 0 ]; then
+            echo "⚠️ curl lỗi (exit $CURL_EXIT). Có thể URL sai hoặc project đang pause (vào Supabase Dashboard bấm Restore)."
+            exit 1
+          fi
+
+          # 200/206 = OK; 401/403 = RLS chặn nhưng project vẫn sống (vẫn tính active)
+          case "$CODE" in
+            200|201|206|401|403) echo "✅ Supabase đang active." ;;
+            *) echo "⚠️ HTTP status bất thường ($CODE). Kiểm tra Supabase Dashboard."; exit 1 ;;
+          esac
