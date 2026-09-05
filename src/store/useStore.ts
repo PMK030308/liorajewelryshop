@@ -331,7 +331,7 @@ export function useStore(): StoreContextType {
   return ctx;
 }
 
-import { getWordPressConfig, fetchWooCommerceProducts, fetchWordPressPosts, fetchWordPressSiteContent } from '../utils/wordpressService';
+import { getWordPressConfig, fetchWordPressPosts, fetchWordPressSiteContent } from '../utils/wordpressService';
 
 /** Hook that wires up all side-effects — used inside StoreProvider.tsx */
 export function useStoreSetup() {
@@ -345,24 +345,12 @@ export function useStoreSetup() {
   // (tránh vòng lặp: remote update → dispatch → sync → remote update → ...).
   const skipSyncRef = useRef(false);
 
-  // ---- Bootstrap từ WordPress headless (sản phẩm + nội dung site + tin tức) ----
-  // Khi useWordPress ON: WP là nguồn content. Mỗi nguồn fail độc lập (allSettled) → giữ seed/localStorage.
+  // ---- Bootstrap từ WordPress headless (nội dung site + tin tức) ----
+  // CHỈ lấy nội dung site + tin tức từ WP. Sản phẩm KHÔNG lấy từ WooCommerce nữa —
+  // Supabase là nguồn sản phẩm (xem effect Supabase bên dưới: load + sync + realtime).
   useEffect(() => {
     const config = getWordPressConfig();
     if (!config.useWordPress || !config.apiUrl) return;
-
-    const productsP = fetchWooCommerceProducts(config)
-      .then(products => {
-        if (products && products.length > 0) {
-          // MERGE: giữ sản phẩm cũ (seed/local) + thêm/cập nhật sản phẩm từ WP.
-          // Sản phẩm WP trùng slug sẽ override sản phẩm cũ, sản phẩm mới sẽ được thêm vào.
-          const existing = stateRef.current.products;
-          const wpSlugs = new Set(products.map(p => p.slug));
-          const keptOld = existing.filter(p => !wpSlugs.has(p.slug));
-          dispatch({ type: 'SET_PRODUCTS', payload: [...products, ...keptOld] });
-        }
-      })
-      .catch(err => { console.error('[Liora] load products từ WooCommerce thất bại, giữ seed:', err); });
 
     const contentP = fetchWordPressSiteContent(config)
       .then(partial => {
@@ -388,16 +376,14 @@ export function useStoreSetup() {
       })
       .catch(err => { console.error('[Liora] load news từ WP thất bại, giữ seed:', err); });
 
-    void Promise.allSettled([productsP, contentP, newsP]);
+    void Promise.allSettled([contentP, newsP]);
   }, []);
 
   // ---- Bootstrap từ Supabase (sản phẩm + nội dung site + đơn hàng) ----
   // Orders luôn dùng Supabase.
-  // Sản phẩm: LUÔN load từ Supabase (ngay cả khi WP ON) → gộp 2 nguồn WP + Supabase.
-  //   - Slug trùng giữa 2 nguồn → giữ phiên bản đang có (WP wins: WP merge chạy đè lên).
-  //   - Sản phẩm chỉ có trên Supabase (folder/seed) → vẫn hiển thị.
-  //   - Sync LÊN Supabase bị bỏ qua khi WP ON (xem effect sync bên dưới) → KHÔNG đẩy WP products lên Supabase.
-  //   - Realtime products cũng bỏ qua khi WP ON → không bị wipe sản phẩm WP.
+  // Sản phẩm: Supabase là nguồn authoritative (full replace) — không phụ thuộc WP.
+  //   - Sync LÊN Supabase khi admin sửa (xem effect sync bên dưới).
+  //   - Realtime products LUÔN bật → thay đổi hiện ngay trên mọi tab.
   // Nội dung site (banner/menu/footer/settings): khi WP ON → WP là nguồn chính, bỏ qua Supabase.
   useEffect(() => {
     if (!hasSupabase) return;
@@ -406,15 +392,11 @@ export function useStoreSetup() {
       .then(list => { if (list.length) dispatch({ type: 'SET_ORDERS', payload: list }); })
       .catch(err => console.error('[Liora] load orders từ Supabase thất bại, giữ localStorage:', err));
 
-    // Sản phẩm từ Supabase — gộp additive: thêm sản phẩm Supabase chưa có (theo slug),
-    // KHÔNG xoá sản phẩm WP/seed đang hiển thị (tránh race khi WP merge chạy trước).
+    // Sản phẩm từ Supabase — Supabase là nguồn authoritative (full replace).
     fetchProducts()
       .then(list => {
         if (list.length) {
-          const existing = stateRef.current.products;
-          const existingSlugs = new Set(existing.map(p => p.slug));
-          const newOnes = list.filter(p => !existingSlugs.has(p.slug));
-          if (newOnes.length) dispatch({ type: 'SET_PRODUCTS', payload: [...existing, ...newOnes] });
+          dispatch({ type: 'SET_PRODUCTS', payload: list });
         }
       })
       .catch(err => console.error('[Liora] load products từ Supabase thất bại, giữ seed:', err));
@@ -435,15 +417,18 @@ export function useStoreSetup() {
       skipSyncRef.current = true;
       dispatch({ type: 'SET_ORDERS', payload: list });
     });
-    if (getWordPressConfig().useWordPress) return () => unsubOrders();
+    // Products realtime LUÔN bật — Supabase là nguồn sản phẩm.
     const unsubProducts = subscribeProducts(list => {
       skipSyncRef.current = true;
       dispatch({ type: 'SET_PRODUCTS', payload: list });
     });
-    const unsubSite = subscribeSiteContent(sc => {
-      skipSyncRef.current = true;
-      dispatch({ type: 'SET_SITE_CONTENT', payload: sc });
-    });
+    // Site content realtime chỉ bật khi WP OFF (khi WP ON → WP là nguồn content).
+    const unsubSite = getWordPressConfig().useWordPress
+      ? () => {}
+      : subscribeSiteContent(sc => {
+          skipSyncRef.current = true;
+          dispatch({ type: 'SET_SITE_CONTENT', payload: sc });
+        });
     return () => { unsubProducts(); unsubSite(); unsubOrders(); };
   }, []);
 
@@ -491,14 +476,11 @@ export function useStoreSetup() {
   }, [state.newsletterSubs]);
 
   useEffect(() => {
-    // Cache offline (luôn giữ để app chạy được khi Supabase chưa xong)
-    const config = getWordPressConfig();
-    if (!config.useWordPress) {
-      localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
-    }
-    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Bỏ qua khi WP đang ON
-    // và bỏ qua khi thay đổi đến từ realtime (tránh vòng lặp sync).
-    if (hasSupabase && !config.useWordPress && state.user?.role === 'admin' && !skipSyncRef.current) {
+    // Cache offline cho sản phẩm (Supabase là nguồn → cache localStorage luôn OK).
+    localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
+    // Sync lên Supabase: chỉ admin mới có quyền ghi (RLS). Sản phẩm LUÔN sync qua Supabase
+    // (WP chỉ còn dùng cho news, không can thiệp sản phẩm). Bỏ qua khi thay đổi đến từ realtime.
+    if (hasSupabase && state.user?.role === 'admin' && !skipSyncRef.current) {
       syncProducts(state.products);
     }
     // Reset cờ sau khi đã xử lý effect này
