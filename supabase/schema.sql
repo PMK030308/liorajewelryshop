@@ -27,7 +27,17 @@ create table if not exists public.site_content (
   data       jsonb not null,
   updated_at timestamptz not null default now()
 );
-alter table public.site_content add constraint site_content_singleton check (id = 1);
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'site_content_singleton'
+      and conrelid = 'public.site_content'::regclass
+  ) then
+    alter table public.site_content add constraint site_content_singleton check (id = 1);
+  end if;
+end
+$$;
 
 -- ============================================================
 -- Trigger: khi auth.users có user mới → tự tạo dòng profiles (role = customer)
@@ -85,18 +95,29 @@ $$;
 
 -- ---------- profiles ----------
 -- chủ tài khoản đọc/sửa của mình; admin đọc được tất cả
+drop policy if exists "profiles: self select"       on public.profiles;
+drop policy if exists "profiles: self update"       on public.profiles;
+drop policy if exists "profiles: admin update role" on public.profiles;
 create policy "profiles: self select"  on public.profiles for select using (auth.uid() = id or public.is_admin());
 create policy "profiles: self update"   on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
 create policy "profiles: admin update role" on public.profiles for update using (public.is_admin()) with check (public.is_admin());
 
 -- ---------- products ----------
 -- ai cũng đọc được (khách xem shop); chỉ admin ghi
+drop policy if exists "products: public read"  on public.products;
+drop policy if exists "products: admin write"  on public.products;
+drop policy if exists "products: admin update" on public.products;
+drop policy if exists "products: admin delete" on public.products;
 create policy "products: public read"   on public.products for select using (true);
 create policy "products: admin write"   on public.products for insert with check (public.is_admin());
 create policy "products: admin update"  on public.products for update  using (public.is_admin()) with check (public.is_admin());
 create policy "products: admin delete"  on public.products for delete  using (public.is_admin());
 
 -- ---------- site_content ----------
+drop policy if exists "site_content: public read"  on public.site_content;
+drop policy if exists "site_content: admin write"  on public.site_content;
+drop policy if exists "site_content: admin update" on public.site_content;
+drop policy if exists "site_content: admin delete" on public.site_content;
 create policy "site_content: public read" on public.site_content for select using (true);
 create policy "site_content: admin write" on public.site_content for insert with check (public.is_admin());
 create policy "site_content: admin update" on public.site_content for update using (public.is_admin()) with check (public.is_admin());
@@ -139,6 +160,10 @@ create table if not exists public.orders (
 alter table public.orders enable row level security;
 
 -- Khách chỉ xem đơn của chính mình; admin xem tất cả
+drop policy if exists "orders: self read"   on public.orders;
+drop policy if exists "orders: self insert" on public.orders;
+drop policy if exists "orders: admin update" on public.orders;
+drop policy if exists "orders: admin delete" on public.orders;
 create policy "orders: self read"   on public.orders for select using (auth.uid() = user_id or public.is_admin());
 -- Khách có thể tạo đơn cho chính mình; admin có thể tạo bất kỳ
 create policy "orders: self insert" on public.orders for insert with check (auth.uid() = user_id or public.is_admin());
