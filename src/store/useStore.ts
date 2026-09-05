@@ -3,7 +3,7 @@ import type { Dispatch } from 'react';
 import { CartItem, ContactMessage, NewsletterSub, Order, OrderStatus, Product, Review, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 import { hasSupabase } from '../lib/supabase';
-import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent, fetchOrders, subscribeOrders, updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder } from '../lib/repo';
+import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent, fetchOrders, subscribeOrders, updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder, fetchUserCart, syncUserCart, subscribeUserCart } from '../lib/repo';
 import { getCurrentUser, onAuthChange } from '../lib/auth';
 
 export interface State {
@@ -57,6 +57,8 @@ export type Action =
   | { type: 'SHOW_TOAST'; payload: string }
   | { type: 'HIDE_TOAST' }
   | { type: 'CLEAR_CART' }
+  | { type: 'SET_CART'; payload: CartItem[] }
+  | { type: 'SET_WISHLIST'; payload: string[] }
   | { type: 'RESET_PDP' }
   // ---- Auth ----
   | { type: 'LOGIN'; payload: User }
@@ -245,6 +247,8 @@ export function reducer(state: State, action: Action): State {
     case 'SHOW_TOAST':   return { ...state, toast: action.payload };
     case 'HIDE_TOAST':   return { ...state, toast: '' };
     case 'CLEAR_CART':   return { ...state, cart: [] };
+    case 'SET_CART':     return { ...state, cart: action.payload };
+    case 'SET_WISHLIST': return { ...state, wishlist: action.payload };
     case 'RESET_PDP':    return { ...state, pdpImageIdx: 0, pdpQty: 1, pdpSize: null };
 
     // ---- Auth ----
@@ -333,6 +337,25 @@ export function useStore(): StoreContextType {
 
 import { getWordPressConfig, fetchWordPressPosts, fetchWordPressSiteContent } from '../utils/wordpressService';
 
+// Gộp giỏ hàng remote + local: cộng qty cho cùng cartId (cap 20), thêm item mới.
+function mergeCart(remote: CartItem[], local: CartItem[]): CartItem[] {
+  const map = new Map<string, CartItem>();
+  for (const it of remote) map.set(it.cartId, { ...it });
+  for (const it of local) {
+    const ex = map.get(it.cartId);
+    if (ex) ex.qty = Math.min(20, ex.qty + it.qty);
+    else map.set(it.cartId, { ...it });
+  }
+  return Array.from(map.values());
+}
+// Gộp wishlist remote + local: union theo slug, giữ thứ tự remote rồi đến local.
+function mergeWishlist(remote: string[], local: string[]): string[] {
+  const seen = new Set(remote);
+  const out = [...remote];
+  for (const s of local) if (!seen.has(s)) { seen.add(s); out.push(s); }
+  return out;
+}
+
 /** Hook that wires up all side-effects — used inside StoreProvider.tsx */
 export function useStoreSetup() {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -344,6 +367,10 @@ export function useStoreSetup() {
   // Guard: khi cập nhật đến từ realtime (người khác thay đổi), KHÔNG sync ngược lên lại
   // (tránh vòng lặp: remote update → dispatch → sync → remote update → ...).
   const skipSyncRef = useRef(false);
+  // Riêng cho cart/wishlist: bỏ qua sync khi thay đổi đến từ realtime/login-load.
+  const skipCartSyncRef = useRef(false);
+  // Track user_id đã load xong giỏ hàng → tránh ghi đè cart local lên remote trước khi merge.
+  const loadedCartForUserRef = useRef<string | null>(null);
 
   // ---- Bootstrap từ WordPress headless (nội dung site + tin tức) ----
   // CHỈ lấy nội dung site + tin tức từ WP. Sản phẩm KHÔNG lấy từ WooCommerce nữa —
@@ -417,6 +444,12 @@ export function useStoreSetup() {
       skipSyncRef.current = true;
       dispatch({ type: 'SET_ORDERS', payload: list });
     });
+    // Cart + wishlist realtime: đồng bộ giỏ hàng giữa các thiết bị (cùng tài khoản).
+    const unsubCart = subscribeUserCart(uc => {
+      skipCartSyncRef.current = true;
+      dispatch({ type: 'SET_CART', payload: uc.cart });
+      dispatch({ type: 'SET_WISHLIST', payload: uc.wishlist });
+    });
     // Products realtime LUÔN bật — Supabase là nguồn sản phẩm.
     const unsubProducts = subscribeProducts(list => {
       skipSyncRef.current = true;
@@ -429,7 +462,7 @@ export function useStoreSetup() {
           skipSyncRef.current = true;
           dispatch({ type: 'SET_SITE_CONTENT', payload: sc });
         });
-    return () => { unsubProducts(); unsubSite(); unsubOrders(); };
+    return () => { unsubProducts(); unsubSite(); unsubOrders(); unsubCart(); };
   }, []);
 
   // ---- Auth: khôi phục session + lắng nghe thay đổi ----
@@ -450,6 +483,43 @@ export function useStoreSetup() {
   useEffect(() => {
     localStorage.setItem('liora_wishlist', JSON.stringify(state.wishlist));
   }, [state.wishlist]);
+
+  // ---- Cart + wishlist: đồng bộ theo tài khoản (cross-device) ----
+  // Khi user đăng nhập → load giỏ hàng đã lưu từ Supabase + gộp với giỏ local.
+  useEffect(() => {
+    if (!hasSupabase) return;
+    const uid = state.user?.id ?? null;
+    if (!uid) { loadedCartForUserRef.current = null; return; }
+    if (loadedCartForUserRef.current === uid) return;
+    fetchUserCart()
+      .then(uc => {
+        loadedCartForUserRef.current = uid;
+        if (!uc) {
+          // Chưa có cart lưu trên Supabase → đẩy cart local hiện tại lên.
+          syncUserCart(stateRef.current.cart, stateRef.current.wishlist);
+          return;
+        }
+        const mergedCart = mergeCart(uc.cart, stateRef.current.cart);
+        const mergedWish = mergeWishlist(uc.wishlist, stateRef.current.wishlist);
+        skipCartSyncRef.current = true; // tránh effect sync ghi đè ngay sau dispatch
+        dispatch({ type: 'SET_CART', payload: mergedCart });
+        dispatch({ type: 'SET_WISHLIST', payload: mergedWish });
+        // Đẩy kết quả merge (gồm item local) lên Supabase để các thiết bị khác nhận.
+        syncUserCart(mergedCart, mergedWish);
+      })
+      .catch(err => {
+        loadedCartForUserRef.current = uid;
+        console.error('[Liora] load user_carts thất bại:', err);
+      });
+  }, [state.user?.id]);
+
+  // Khi cart/wishlist đổi (user đã đăng nhập) → sync lên Supabase.
+  useEffect(() => {
+    if (!hasSupabase || !state.user) return;
+    if (loadedCartForUserRef.current !== state.user.id) return; // chưa load xong → chờ
+    if (skipCartSyncRef.current) { skipCartSyncRef.current = false; return; }
+    syncUserCart(state.cart, state.wishlist);
+  }, [state.cart, state.wishlist, state.user?.id]);
 
   useEffect(() => {
     localStorage.setItem('liora_user', JSON.stringify(state.user));

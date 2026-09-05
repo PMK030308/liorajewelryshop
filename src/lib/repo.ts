@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import type { Product, SiteContent, Order } from '../types';
+import type { Product, SiteContent, Order, CartItem } from '../types';
 
 /**
  * Repo — đọc/ghi sản phẩm, nội dung site & đơn hàng lên Supabase.
@@ -233,4 +233,92 @@ export async function deleteOrder(id: string): Promise<void> {
     .delete()
     .eq('id', id);
   if (error) throw error;
+}
+
+// ---------------- User cart + wishlist (cross-device sync) ----------------
+
+export interface UserCart {
+  cart: CartItem[];
+  wishlist: string[];
+}
+
+/**
+ * Lấy giỏ hàng + wishlist của user hiện tại từ Supabase (RLS lọc theo auth.uid()).
+ * Trả null nếu user chưa có dòng user_carts (lần đầu).
+ */
+export async function fetchUserCart(): Promise<UserCart | null> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const { data, error } = await supabase
+    .from('user_carts')
+    .select('cart, wishlist')
+    .maybeSingle();
+  if (error) throw error;
+  if (!data) return null;
+  return {
+    cart: (data.cart as CartItem[]) ?? [],
+    wishlist: (data.wishlist as string[]) ?? [],
+  };
+}
+
+let syncUserCartTimer: ReturnType<typeof setTimeout> | null = null;
+let syncUserCartLatest: UserCart | null = null;
+
+/**
+ * Upsert giỏ hàng + wishlist của user hiện tại lên Supabase. Debounce 600ms.
+ * Chỉ gọi cho user đã đăng nhập (RLS yêu cầu user_id = auth.uid()).
+ */
+export function syncUserCart(cart: CartItem[], wishlist: string[]): void {
+  const sb = supabase;
+  if (!sb) return;
+  syncUserCartLatest = { cart, wishlist };
+  if (syncUserCartTimer) clearTimeout(syncUserCartTimer);
+  syncUserCartTimer = setTimeout(async () => {
+    const payload = syncUserCartLatest;
+    if (!payload) return;
+    try {
+      const { data: userData } = await sb.auth.getUser();
+      const uid = userData.user?.id;
+      if (!uid) return; // chưa đăng nhập → bỏ qua (giỏ hàng chỉ lưu localStorage)
+      const { error } = await sb
+        .from('user_carts')
+        .upsert(
+          {
+            user_id: uid,
+            cart: payload.cart as unknown as Record<string, unknown>,
+            wishlist: payload.wishlist as unknown as Record<string, unknown>,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id' },
+        );
+      if (error) throw error;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('[Liora] syncUserCart thất bại:', e);
+    }
+  }, 600);
+}
+
+/**
+ * Lắng nghe thay đổi bảng user_carts (realtime) → thiết bị khác đổi giỏ hàng thì cập nhật.
+ */
+export function subscribeUserCart(onChange: (uc: UserCart) => void): () => void {
+  if (!supabase) return () => {};
+  const channel = supabase
+    .channel('realtime:user_carts')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'user_carts' },
+      async () => {
+        try {
+          const uc = await fetchUserCart();
+          if (uc) onChange(uc);
+        } catch (e) {
+          console.error('[Liora] realtime user_carts fetch thất bại:', e);
+        }
+      },
+    )
+    .subscribe();
+  return () => {
+    supabase?.removeChannel(channel);
+  };
 }

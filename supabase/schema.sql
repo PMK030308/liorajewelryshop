@@ -184,6 +184,37 @@ end
 $$;
 
 -- ============================================================
+-- user_carts: giỏ hàng + wishlist đồng bộ theo tài khoản (cross-device)
+-- Mỗi user có 1 dòng (user_id = auth.users id). RLS: user chỉ truy cập dòng của mình.
+-- ============================================================
+create table if not exists public.user_carts (
+  user_id    uuid primary key references auth.users(id) on delete cascade,
+  cart       jsonb not null default '[]'::jsonb,    -- CartItem[]
+  wishlist   jsonb not null default '[]'::jsonb,   -- string[] (slug)
+  updated_at timestamptz not null default now()
+);
+
+alter table public.user_carts enable row level security;
+
+drop policy if exists "user_carts: owner all" on public.user_carts;
+create policy "user_carts: owner all" on public.user_carts
+  for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- Realtime cho bảng user_carts → đổi giỏ hàng ở thiết bị A thì thiết bị B thấy ngay
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'user_carts'
+  ) then
+    alter publication supabase_realtime add table public.user_carts;
+  end if;
+end
+$$;
+
+-- ============================================================
 -- Ghi chú:
 -- - Admin user được tạo bằng script `npm run seed-supabase` (dùng service key),
 --   sau đó script update profiles.role = 'admin' cho user đó.
