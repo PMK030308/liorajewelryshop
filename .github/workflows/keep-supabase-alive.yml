@@ -1,0 +1,37 @@
+# Giữ Supabase Free tier luôn active — tránh bị pause sau 7 ngày không hoạt động.
+# Chạy mỗi ngày lúc 06:00 UTC, ping 1 request nhẹ tới REST API của project.
+#
+# YÊU CẦU: thêm 2 GitHub Secrets (repo → Settings → Secrets and variables → Actions):
+#   SUPA_URL      = https://xxxx.supabase.co        (= VITE_SUPABASE_URL trong .env)
+#   SUPA_ANON_KEY = eyJ...anon...                   (= VITE_SUPABASE_ANON_KEY trong .env)
+name: Keep Supabase Alive
+
+on:
+  schedule:
+    # Chạy mỗi ngày lúc 06:00 UTC (đảm bảo khoảng cách < 7 ngày → không bị pause)
+    - cron: '0 6 * * *'
+  # Cho phép chạy thử thủ công
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPA_URL: ${{ secrets.SUPA_URL }}
+          SUPA_ANON_KEY: ${{ secrets.SUPA_ANON_KEY }}
+        run: |
+          echo "→ Ping $SUPA_URL/rest/v1/products?select=slug&limit=1"
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: $SUPA_ANON_KEY" \
+            -H "Authorization: Bearer $SUPA_ANON_KEY" \
+            "$SUPA_URL/rest/v1/products?select=slug&limit=1")
+          echo "HTTP status: $CODE"
+          # 200 = OK, 401/403 = RLS chặn nhưng project vẫn sống (vẫn tính là active)
+          if [ "$CODE" = "200" ] || [ "$CODE" = "401" ] || [ "$CODE" = "403" ] || [ "$CODE" = "206" ]; then
+            echo "✅ Supabase đang active."
+          else
+            echo "⚠️ Status bất thường ($CODE) — kiểm tra lại Supabase Dashboard."
+            exit 1
+          fi
