@@ -478,8 +478,37 @@ export default function AdminProducts() {
           {/* SECTION 4 — Hình ảnh */}
           <FormSection step={4} title="Hình ảnh" desc="Tải ảnh trực tiếp từ máy hoặc nhập URL. Ảnh hover là ảnh model đeo sản phẩm — sẽ hiện khi khách di chuột vào thẻ." fullWidth>
             <div className="md:col-span-3 grid sm:grid-cols-2 gap-5">
-              <ImageInput label="Ảnh sản phẩm chính" value={editing.image} onChange={(v) => setEditing({ ...editing, image: v })} hint="Ảnh flat, nền trắng/xám" />
-              <ImageInput label="Ảnh hover (model đeo)" value={editing.imageHover} onChange={(v) => setEditing({ ...editing, imageHover: v })} hint="Tuỳ chọn — ảnh lifestyle/người mẫu" />
+              <ImageInput slug={editing.slug} label="Ảnh sản phẩm chính" value={editing.image} onChange={(v) => setEditing({ ...editing, image: v })} hint="Ảnh flat, nền trắng/xám · upload lên Storage" />
+              <ImageInput slug={editing.slug} label="Ảnh hover (model đeo)" value={editing.imageHover} onChange={(v) => setEditing({ ...editing, imageHover: v })} hint="Tuỳ chọn — ảnh lifestyle/người mẫu" />
+            </div>
+
+            {/* Gallery — nhiều ảnh phụ (upload Storage) */}
+            <div className="md:col-span-3 mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-semibold text-ink2">Ảnh gallery (nhiều góc nhìn phụ)</label>
+                <button type="button" onClick={() => setEditing({ ...editing, gallery: [...(editing.gallery || []), ''] })}
+                  className="text-[11px] font-semibold text-brand-700 hover:text-brand-800 inline-flex items-center gap-1">
+                  <Plus size={12} /> Thêm ảnh
+                </button>
+              </div>
+              {(editing.gallery || []).length === 0 && (
+                <div className="text-[11px] text-mute">Chưa có ảnh gallery. Bấm "Thêm ảnh" để tải các góc nhìn khác (hiện trên trang chi tiết).</div>
+              )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                {(editing.gallery || []).map((g, i) => (
+                  <div key={i} className="relative">
+                    <ImageInput slug={editing.slug} label={`Ảnh ${i + 1}`} value={g} onChange={(v) => {
+                      const next = [...(editing.gallery || [])];
+                      next[i] = v || '';
+                      setEditing({ ...editing, gallery: next });
+                    }} />
+                    <button type="button" onClick={() => setEditing({ ...editing, gallery: (editing.gallery || []).filter((_, j) => j !== i) })}
+                      className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white shadow border border-rule text-red-500 hover:bg-red-50 flex items-center justify-center z-10" aria-label="Xoá ảnh gallery">
+                      <X size={12} strokeWidth={2} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
             <details className="md:col-span-3 mt-2 group">
               <summary className="cursor-pointer text-xs text-mute hover:text-brand-500 select-none flex items-center gap-1.5">
@@ -573,6 +602,38 @@ export default function AdminProducts() {
               <ToggleChip checked={!!editing.sold} onChange={(c) => setEditing({ ...editing, sold: c })} label="Hết hàng (tạm ẩn nút mua)" color="red" />
               <ToggleChip checked={editing.hasSize !== false} onChange={(c) => setEditing({ ...editing, hasSize: c })} label="Có chọn kích thước (size)" />
               <ToggleChip checked={editing.hasPackaging !== false} onChange={(c) => setEditing({ ...editing, hasPackaging: c })} label="Có gói quà & đóng gói" />
+            </div>
+          </FormSection>
+
+          {/* SECTION 7 — Biến thể (vd: hộp / túi vải / túi giấy) */}
+          <FormSection step={7} title="Biến thể sản phẩm" desc="Cho sản phẩm có nhiều lựa chọn với giá khác nhau (vd: Hộp đựng có 3 loại: hộp / túi vải / túi giấy). Khách chọn 1 trên trang chi tiết." fullWidth>
+            <div className="md:col-span-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[11px] text-mute">Nếu có biến thể, giá hiển thị sẽ theo biến thể khách chọn (thay vì giá chung).</span>
+                <button type="button" onClick={() => setEditing({ ...editing, variants: [...(editing.variants || []), { label: '', price: editing.price ?? 0 }] })}
+                  className="text-[11px] font-semibold text-brand-700 hover:text-brand-800 inline-flex items-center gap-1">
+                  <Plus size={12} /> Thêm biến thể
+                </button>
+              </div>
+              {(editing.variants || []).length === 0 && (
+                <div className="text-[11px] text-mute">Chưa có biến thể. Để trống nếu sản phẩm chỉ có 1 loại.</div>
+              )}
+              <div className="space-y-2">
+                {(editing.variants || []).map((v, i) => (
+                  <div key={i} className="flex items-center gap-2 border border-rule rounded-md p-2 bg-white">
+                    <input value={v.label} placeholder="Tên biến thể (vd: Túi vải)"
+                      onChange={e => { const next = [...(editing.variants || [])]; next[i] = { ...next[i], label: e.target.value }; setEditing({ ...editing, variants: next }); }}
+                      className="flex-1 border border-rule rounded px-2 py-1.5 text-sm focus:outline-none focus:border-brand-500" />
+                    <input type="number" value={v.price} placeholder="Giá"
+                      onChange={e => { const next = [...(editing.variants || [])]; next[i] = { ...next[i], price: Number(e.target.value) || 0 }; setEditing({ ...editing, variants: next }); }}
+                      className="w-28 border border-rule rounded px-2 py-1.5 text-sm focus:outline-none focus:border-brand-500" />
+                    <button type="button" onClick={() => setEditing({ ...editing, variants: (editing.variants || []).filter((_, j) => j !== i) })}
+                      className="w-8 h-8 rounded text-red-500 hover:bg-red-50 flex items-center justify-center" aria-label="Xoá biến thể">
+                      <X size={14} strokeWidth={2} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </FormSection>
 

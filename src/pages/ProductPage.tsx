@@ -48,6 +48,7 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   // --- Local state ---
   const [packaging, setPackaging] = useState('tui-vai');
+  const [selectedVariant, setSelectedVariant] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [stockAlertEmail, setStockAlertEmail] = useState('');
@@ -76,6 +77,9 @@ export default function ProductPage({ slug }: { slug: string }) {
     if (!state.pdpSize) dispatch({ type: 'SET_PDP_SIZE', payload: SIZES[0] });
   }, [state.pdpSize, dispatch]);
 
+  // Reset lựa chọn biến thể khi chuyển sang sản phẩm khác
+  useEffect(() => { setSelectedVariant(0); }, [p.slug]);
+
   // Push to recently viewed
   useEffect(() => {
     if (p?.slug) pushRecentlyViewed(p.slug);
@@ -103,6 +107,9 @@ export default function ProductPage({ slug }: { slug: string }) {
   const isSold = !!p.sold || inStock === 0;
   const showSize = p.hasSize !== false;
   const showPackaging = p.hasPackaging !== false;
+  // Biến thể (vd: hộp / túi vải / túi giấy) — mỗi biến thể có giá riêng
+  const variants = (p.variants || []).filter(v => v.label && v.label.trim());
+  const activeVariant = variants.length ? variants[Math.min(selectedVariant, variants.length - 1)] : null;
   const productHighlights = p.highlights?.filter(Boolean) || [];
   const productSpecs = p.specifications?.filter(item => item.label && item.value) || [];
   const productCare = p.careInstructions || 'Tránh tiếp xúc nước hoa, hoá chất, nước biển. Cất trong hộp khi không sử dụng. Lau bằng vải mềm sau khi đeo. Đem đến Liorajewelry để được vệ sinh miễn phí trọn đời.';
@@ -161,19 +168,21 @@ export default function ProductPage({ slug }: { slug: string }) {
 
   // --- Actions ---
   const packagingFee = showPackaging ? (PACKAGING_FEE[packaging] ?? 0) : 0;
-  const finalPrice = p.price + packagingFee;
+  const basePrice = activeVariant ? activeVariant.price : p.price;
+  const finalPrice = basePrice + packagingFee;
 
   const addToCart = () => {
     if (isSold) { showToast('Sản phẩm tạm hết hàng'); return; }
-    const cartId = `${p.slug}__${state.pdpSize}__${packaging}`;
-    const displayName = p.name;
+    const variantLabel = activeVariant?.label || '';
+    const cartId = `${p.slug}__${variantLabel}__${state.pdpSize}__${packaging}`;
+    const displayName = variantLabel ? `${p.name} — ${variantLabel}` : p.name;
     dispatch({
       type: 'ADD_TO_CART',
       payload: {
         cartId, slug: p.slug, name: displayName, price: finalPrice,
         qty: state.pdpQty, size: state.pdpSize || undefined,
         tint: p.tint, tint2: p.tint2, accent: p.accent, shape: p.shape,
-        image: mainImage,
+        image: activeVariant?.image || mainImage,
       },
     });
     showToast('Đã thêm vào giỏ hàng');
@@ -354,6 +363,28 @@ export default function ProductPage({ slug }: { slug: string }) {
               <div className="text-xs text-brand-700 mt-1.5">Đã bao gồm phí đóng gói: {fmt(packagingFee)}</div>
             )}
           </div>
+
+          {/* --- Variant selector (vd: hộp / túi vải / túi giấy) --- */}
+          {variants.length > 0 && (
+            <div>
+              <div className="flex items-baseline justify-between mb-2.5">
+                <span className="text-sm font-semibold text-ink">Chọn loại</span>
+                <span className="text-[11px] text-mute">{variants.length} lựa chọn</span>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                {variants.map((v, i) => {
+                  const active = i === Math.min(selectedVariant, variants.length - 1);
+                  return (
+                    <button key={i} type="button" onClick={() => setSelectedVariant(i)}
+                      className={`px-3.5 py-2 rounded-md border text-sm font-medium transition-colors ${active ? 'border-brand-700 bg-brand-700 text-white' : 'border-rule bg-white text-ink hover:border-brand-400'}`}>
+                      {v.label}
+                      <span className={`ml-1.5 text-[11px] ${active ? 'text-white/80' : 'text-mute'}`}>{fmt(v.price)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* --- Size selector — vòng tay, tinh tế --- */}
           {showSize && (
