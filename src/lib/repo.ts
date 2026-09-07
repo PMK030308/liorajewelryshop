@@ -12,22 +12,31 @@ import type { Product, SiteContent, Order, CartItem } from '../types';
  * Lắng nghe thay đổi bảng products theo thời gian thực.
  * Trả về hàm unsubscribe (gọi khi cleanup).
  */
-export function subscribeProducts(onChange: (products: Product[]) => void): () => void {
+export interface ProductChange {
+  event: 'INSERT' | 'UPDATE' | 'DELETE';
+  slug: string;
+  product: Product | null;
+}
+
+/**
+ * Lắng nghe thay đổi bảng products theo thời gian thực — gửi SURGICAL (từng sp),
+ * KHÔNG refetch toàn bộ list → tránh flicker và nặng khi data chứa ảnh base64 lớn.
+ */
+export function subscribeProducts(onChange: (change: ProductChange) => void): () => void {
   if (!supabase) return () => {};
   const channel = supabase
     .channel('realtime:products')
     .on(
       'postgres_changes',
       { event: '*', schema: 'public', table: 'products' },
-      async () => {
-        // Lấy lại toàn bộ danh sách theo thứ tự updated_at
-        try {
-          const list = await fetchProducts();
-          onChange(list);
-        } catch (e) {
-          console.error('[Liora] realtime products fetch thất bại:', e);
-        }
-      }
+      (payload) => {
+        const event = (payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE') ?? 'UPDATE';
+        const newRow = payload.new as { slug?: string; data?: Product } | null;
+        const oldRow = payload.old as { slug?: string } | null;
+        const slug = newRow?.slug ?? oldRow?.slug ?? '';
+        const product = newRow?.data ?? null;
+        onChange({ event, slug, product });
+      },
     )
     .subscribe();
   return () => {
@@ -100,35 +109,20 @@ export async function fetchProducts(): Promise<Product[]> {
     .filter(Boolean);
 }
 
-let syncProductsTimer: ReturnType<typeof setTimeout> | null = null;
-let syncProductsLatest: Product[] | null = null;
-
 /**
- * Đồng bộ toàn bộ danh sách sản phẩm lên Supabase (admin).
- * Debounce 800ms — gộp nhiều thay đổi liên tiếp (edit nhanh trong admin).
- * Upsert all + xoá các slug không còn trong list.
+ * Upsert 1 sản phẩm lên Supabase (admin bấm Lưu khi thêm/sửa).
+ * Upsert TỪNG sp (không upsert cả list) → realtime echo chỉ về 1 sp, tránh
+ * refetch/replace toàn bộ list (gây flicker + nặng khi data chứa ảnh base64 lớn).
  */
-export function syncProducts(list: Product[]): void {
-  const sb = supabase;
-  if (!sb) return;
-  syncProductsLatest = list;
-  if (syncProductsTimer) clearTimeout(syncProductsTimer);
-  syncProductsTimer = setTimeout(async () => {
-    const items = syncProductsLatest ?? [];
-    if (items.length === 0) return; // không có gì để upsert
-    try {
-      const rows = items.map(p => ({ slug: p.slug, data: p as unknown as Record<string, unknown>, updated_at: new Date().toISOString() }));
-      // CHỈ upsert (thêm/sửa). KHÔNG xoá theo list — xoá được xử lý riêng qua
-      // deleteProductFromSupabase() để tránh nguy cơ xoá sạch khi state/localStorage chưa khớp Supabase.
-      const { error: upErr } = await sb
-        .from('products')
-        .upsert(rows, { onConflict: 'slug' });
-      if (upErr) throw upErr;
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.error('[Liora] syncProducts thất bại:', e);
-    }
-  }, 800);
+export async function upsertProductToSupabase(product: Product): Promise<void> {
+  if (!supabase) return;
+  const { error } = await supabase
+    .from('products')
+    .upsert(
+      { slug: product.slug, data: product as unknown as Record<string, unknown>, updated_at: new Date().toISOString() },
+      { onConflict: 'slug' },
+    );
+  if (error) throw error;
 }
 
 /**

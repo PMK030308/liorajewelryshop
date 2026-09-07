@@ -7,7 +7,7 @@ import ImageInput from '../../components/admin/ImageInput';
 import { Product, ShapeKey } from '../../types';
 import Shapes from '../../data/shapes';
 import { getWordPressConfig, fetchWooCommerceProducts } from '../../utils/wordpressService';
-import { deleteProductFromSupabase } from '../../lib/repo';
+import { deleteProductFromSupabase, upsertProductToSupabase } from '../../lib/repo';
 import { SearchInput, EmptyState, Modal, ConfirmDialog, Pagination, BulkBar } from '../../components/admin/ui';
 
 const SUBCAT_LABELS: Record<string, string> = {
@@ -197,6 +197,8 @@ export default function AdminProducts() {
       dispatch({ type: 'UPDATE_PRODUCT', payload });
       showToast('Đã cập nhật sản phẩm');
     }
+    // Sync sản phẩm NÀY lên Supabase (upsert 1 sp — admin). Echo realtime sẽ về surgical (chỉ sp này).
+    void upsertProductToSupabase(payload).catch(e => console.error('[Liora] upsert product Supabase thất bại:', e));
     setEditing(null);
   };
 

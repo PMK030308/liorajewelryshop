@@ -3,7 +3,7 @@ import type { Dispatch } from 'react';
 import { CartItem, ContactMessage, NewsletterSub, Order, OrderStatus, Product, Review, SiteContent, SortOption, User } from '../types';
 import { DEFAULT_SITE_CONTENT, PRODUCTS as SEED_PRODUCTS } from '../data';
 import { hasSupabase } from '../lib/supabase';
-import { fetchProducts, fetchSiteContent, syncProducts, syncSiteContent, subscribeProducts, subscribeSiteContent, fetchOrders, subscribeOrders, updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder, fetchUserCart, syncUserCart, subscribeUserCart } from '../lib/repo';
+import { fetchProducts, fetchSiteContent, syncSiteContent, subscribeProducts, subscribeSiteContent, fetchOrders, subscribeOrders, updateOrder as repoUpdateOrder, deleteOrder as repoDeleteOrder, fetchUserCart, syncUserCart, subscribeUserCart } from '../lib/repo';
 import { getCurrentUser, onAuthChange } from '../lib/auth';
 
 export interface State {
@@ -73,6 +73,7 @@ export type Action =
   // ---- Products CRUD (admin) ----
   | { type: 'ADD_PRODUCT'; payload: Product }
   | { type: 'UPDATE_PRODUCT'; payload: Product }
+  | { type: 'UPSERT_PRODUCT'; payload: Product }
   | { type: 'DELETE_PRODUCT'; payload: string }
   | { type: 'RESET_PRODUCTS' }
   | { type: 'SET_PRODUCTS'; payload: Product[] }
@@ -293,6 +294,15 @@ export function reducer(state: State, action: Action): State {
           p.slug === action.payload.slug ? action.payload : p
         ),
       };
+    case 'UPSERT_PRODUCT': {
+      const idx = state.products.findIndex(p => p.slug === action.payload.slug);
+      if (idx >= 0) {
+        const products = state.products.slice();
+        products[idx] = action.payload;
+        return { ...state, products };
+      }
+      return { ...state, products: [action.payload, ...state.products] };
+    }
     case 'DELETE_PRODUCT':
       return { ...state, products: state.products.filter(p => p.slug !== action.payload) };
     case 'RESET_PRODUCTS':
@@ -454,11 +464,15 @@ export function useStoreSetup() {
       dispatch({ type: 'SET_CART', payload: uc.cart });
       dispatch({ type: 'SET_WISHLIST', payload: uc.wishlist });
     });
-    // Products realtime LUÔN bật — Supabase là nguồn sản phẩm.
-    const unsubProducts = subscribeProducts(list => {
+    // Products realtime LUÔN bật — cập nhật SURGICAL (từng sp), không refetch cả list.
+    const unsubProducts = subscribeProducts(({ event, slug, product }) => {
       skipSyncRef.current = true;
       loadedProductsRef.current = true;
-      dispatch({ type: 'SET_PRODUCTS', payload: list });
+      if (event === 'DELETE') {
+        dispatch({ type: 'DELETE_PRODUCT', payload: slug });
+      } else if (product) {
+        dispatch({ type: 'UPSERT_PRODUCT', payload: product });
+      }
     });
     // Site content realtime chỉ bật khi WP OFF (khi WP ON → WP là nguồn content).
     const unsubSite = getWordPressConfig().useWordPress
@@ -553,14 +567,10 @@ export function useStoreSetup() {
   useEffect(() => {
     // Cache offline cho sản phẩm (Supabase là nguồn → cache localStorage luôn OK).
     localStorage.setItem('liora_products_v2', JSON.stringify(state.products));
-    // Sync lên Supabase: chỉ admin + CHỈ sau khi đã load products từ Supabase (tránh ghi đè
-    // dữ liệu localStorage/seed cũ lên Supabase hoặc xoá nhầm). Bỏ qua khi thay đổi đến từ realtime.
-    if (hasSupabase && state.user?.role === 'admin' && !skipSyncRef.current && loadedProductsRef.current) {
-      syncProducts(state.products);
-    }
-    // Reset cờ sau khi đã xử lý effect này
+    // Sync lên Supabase giờ thực hiện EXPLICIT trong AdminProducts.save() (upsertProductToSupabase) —
+    // KHÔNG sync theo effect này để tránh upsert redundant lúc login/bootstrap (gây echo đè edit cục bộ).
     skipSyncRef.current = false;
-  }, [state.products, state.user]);
+  }, [state.products]);
 
   useEffect(() => {
     const config = getWordPressConfig();
