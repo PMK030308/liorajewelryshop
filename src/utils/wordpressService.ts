@@ -77,7 +77,8 @@ export async function fetchWordPressPosts(config = getWordPressConfig()): Promis
 
   const allPosts: any[] = [];
   let page = 1;
-  const perPage = 100; // WP REST API tối đa 100 bài/trang
+  // WP server trả 500 khi per_page=100 + _embed (quá memory). 30 là an toàn (test 200 OK), function tự phân trang lấy hết bài.
+  const perPage = 30;
   // Cờ an toàn chống vòng lặp vô hạn
   let safety = 0;
 
