@@ -8,8 +8,8 @@ name: Keep Supabase Alive
 
 on:
   schedule:
-    # Chạy mỗi ngày lúc 06:00 UTC (đảm bảo khoảng cách < 7 ngày → không bị pause)
-    - cron: '0 6 * * *'
+    # Chạy mỗi 30 phút — giữ Supabase warm (chống cold start 61s) + không bị pause 7 ngày.
+    - cron: '*/30 * * * *'
   # Cho phép chạy thử thủ công
   workflow_dispatch:
 
