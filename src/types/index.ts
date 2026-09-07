@@ -49,11 +49,22 @@ export interface Product {
   hasSize?: boolean;
   /** Hiện phần "Gói quà & Đóng gói" trên trang chi tiết. Bỏ trống / true → hiện. */
   hasPackaging?: boolean;
+  /** Biến thể sản phẩm (vd: hộp / túi vải / túi giấy) — mỗi biến thể có label + giá riêng. Khách chọn 1 trên trang chi tiết. */
+  variants?: ProductVariant[];
 }
 
 export interface ProductSpecification {
   label: string;
   value: string;
+}
+
+export interface ProductVariant {
+  /** Tên biến thể (vd: "Túi vải"). */
+  label: string;
+  /** Giá riêng của biến thể (đồng). */
+  price: number;
+  /** Ảnh riêng của biến thể (URL Storage) — tuỳ chọn. */
+  image?: string;
 }
 
 export interface CartItem {

@@ -135,6 +135,35 @@ export async function deleteProductFromSupabase(slug: string): Promise<void> {
   if (error) throw error;
 }
 
+/**
+ * Upload 1 ảnh sản phẩm lên Supabase Storage (bucket public 'product-images') → trả public URL.
+ * Dùng cho admin khi thêm/sửa ảnh (image chính + gallery). Yêu cầu policy admin upload trên bucket.
+ */
+export async function uploadProductImage(slug: string, file: File, idx: number): Promise<string> {
+  if (!supabase) throw new Error('Supabase chưa cấu hình');
+  const rawExt = (file.name.split('.').pop() || 'img').toLowerCase();
+  const ext = rawExt === 'jpeg' ? 'jpg' : rawExt;
+  const filePath = `${slug}-${idx}-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage
+    .from('product-images')
+    .upload(filePath, file, { contentType: file.type || 'image/*', upsert: false });
+  if (error) throw error;
+  const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
+  return data.publicUrl;
+}
+
+/** Xoá 1 ảnh khỏi Storage (khi admin bỏ ảnh). Trả về true nếu xoá được (hoặc file đã không còn). */
+export async function deleteProductImage(url: string): Promise<void> {
+  if (!supabase) return;
+  // Lấy path từ public URL: .../product-images/<path>
+  const marker = '/product-images/';
+  const idx = url.indexOf(marker);
+  if (idx < 0) return;
+  const filePath = decodeURIComponent(url.slice(idx + marker.length));
+  const { error } = await supabase.storage.from('product-images').remove([filePath]);
+  if (error) throw error;
+}
+
 // ---------------- Site content ----------------
 export async function fetchSiteContent(): Promise<SiteContent> {
   if (!supabase) throw new Error('Supabase chưa cấu hình');
